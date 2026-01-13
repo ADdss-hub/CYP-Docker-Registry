@@ -174,10 +174,11 @@ func (s *SBOMService) GetSBOM(imageRef string) (*SBOM, error) {
 	sbom, ok := s.sboms.Load(imageRef)
 	if !ok {
 		// Try to load from disk
-		sbom = s.loadSBOM(imageRef)
-		if sbom == nil {
+		loaded := s.loadSBOM(imageRef)
+		if loaded == nil {
 			return nil, errors.New("SBOM not found")
 		}
+		return loaded, nil
 	}
 	return sbom.(*SBOM), nil
 }

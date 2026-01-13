@@ -141,16 +141,18 @@ func (s *SignatureService) VerifyImage(req *VerifyRequest) (*VerifyResult, error
 
 	// Look up signature
 	info, ok := s.signatures.Load(req.ImageRef)
+	var sigInfo *SignatureInfo
 	if !ok {
 		// Try to load from disk
-		info = s.loadSignature(req.ImageRef)
-		if info == nil {
+		loaded := s.loadSignature(req.ImageRef)
+		if loaded == nil {
 			result.Error = "no signature found"
 			return result, nil
 		}
+		sigInfo = loaded
+	} else {
+		sigInfo = info.(*SignatureInfo)
 	}
-
-	sigInfo := info.(*SignatureInfo)
 
 	// Verify signature
 	expectedDigest := s.calculateDigest(req.ImageRef)
@@ -175,10 +177,11 @@ func (s *SignatureService) VerifyImage(req *VerifyRequest) (*VerifyResult, error
 func (s *SignatureService) GetSignature(imageRef string) (*SignatureInfo, error) {
 	info, ok := s.signatures.Load(imageRef)
 	if !ok {
-		info = s.loadSignature(imageRef)
-		if info == nil {
+		loaded := s.loadSignature(imageRef)
+		if loaded == nil {
 			return nil, errors.New("signature not found")
 		}
+		return loaded, nil
 	}
 	return info.(*SignatureInfo), nil
 }
