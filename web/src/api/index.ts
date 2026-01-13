@@ -6,4 +6,6 @@ export * from './images'
 export * from './version'
 
 // Re-export request utility
-export { default as request } from '@/utils/request'
+import request from '@/utils/request'
+export { request }
+export default request

@@ -349,7 +349,7 @@ const announceBlob = async (digest: string) => {
   }
 }
 
-const truncateId = (id: string) => {
+const truncateId = (id?: string) => {
   if (!id) return '-'
   if (id.length <= 16) return id
   return `${id.slice(0, 8)}...${id.slice(-8)}`
@@ -404,7 +404,8 @@ const natStatusText = (type: string) => {
   return texts[type] || type || '未知'
 }
 
-const copyToClipboard = (text: string) => {
+const copyToClipboard = (text?: string) => {
+  if (!text) return
   navigator.clipboard.writeText(text)
   ElMessage.success('已复制到剪贴板')
 }

@@ -548,7 +548,7 @@ const submitTarget = async () => {
   }
 }
 
-const verifyTarget = async (name: string) => {
+const verifyTarget = async (_name: string) => {
   ElMessage.info('请上传要验证的文件')
   // 实际实现需要文件上传
 }
