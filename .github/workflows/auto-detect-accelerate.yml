@@ -144,6 +144,19 @@ jobs:
 
       - name: Build and push
         uses: docker/build-push-action@v5
+        id: docker-build
+        continue-on-error: true
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Retry Build and push (if cache failed)
+        if: steps.docker-build.outcome == 'failure'
+        uses: docker/build-push-action@v5
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
