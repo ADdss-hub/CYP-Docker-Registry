@@ -14,6 +14,7 @@ type AutomationEngine struct {
 	tasks     map[string]*ScheduledTask
 	running   map[string]context.CancelFunc
 	logger    *zap.Logger
+	config    *AutomationConfig
 	mu        sync.RWMutex
 	isRunning bool
 	stopCh    chan struct{}
@@ -71,12 +72,20 @@ func NewAutomationEngine(config *AutomationConfig, logger *zap.Logger) *Automati
 		tasks:   make(map[string]*ScheduledTask),
 		running: make(map[string]context.CancelFunc),
 		logger:  logger,
+		config:  config,
 		stopCh:  make(chan struct{}),
 	}
 }
 
 // Start starts the automation engine.
 func (e *AutomationEngine) Start() error {
+	if !e.config.Enabled {
+		if e.logger != nil {
+			e.logger.Info("Automation engine is disabled")
+		}
+		return nil
+	}
+
 	e.mu.Lock()
 	if e.isRunning {
 		e.mu.Unlock()
@@ -92,7 +101,11 @@ func (e *AutomationEngine) Start() error {
 	go e.scheduler()
 
 	if e.logger != nil {
-		e.logger.Info("Automation engine started")
+		e.logger.Info("Automation engine started",
+			zap.Int("max_concurrent", e.config.MaxConcurrent),
+			zap.Int("retry_attempts", e.config.RetryAttempts),
+			zap.Duration("retry_delay", e.config.RetryDelay),
+		)
 	}
 
 	return nil
