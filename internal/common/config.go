@@ -110,7 +110,7 @@ func setDefaults(v *viper.Viper) {
 	// Update defaults
 	v.SetDefault("update.check_interval", "24h")
 	v.SetDefault("update.auto_update", false)
-	v.SetDefault("update.update_url", "https://api.github.com/repos/CYP/container-registry/releases/latest")
+	v.SetDefault("update.update_url", "https://api.github.com/repos/CYP/cyp-registry/releases/latest")
 
 	// Auth defaults
 	v.SetDefault("auth.enabled", false)

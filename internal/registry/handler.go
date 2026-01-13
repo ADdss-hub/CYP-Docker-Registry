@@ -2,7 +2,7 @@
 package registry
 
 import (
-	"container-registry/internal/common"
+	"cyp-registry/internal/common"
 	"io"
 	"net/http"
 	"strconv"
@@ -69,7 +69,6 @@ func (h *Handler) registerAPIRoutes(api *gin.RouterGroup) {
 		images.DELETE("/:name/:tag", h.deleteImage)
 	}
 }
-
 
 // ============================================================================
 // Docker Registry V2 API Handlers
@@ -153,7 +152,6 @@ func (h *Handler) headManifest(c *gin.Context) {
 	c.Header("Content-Length", strconv.Itoa(len(data)))
 	c.Status(http.StatusOK)
 }
-
 
 // getBlob handles GET /v2/:name/blobs/:digest
 func (h *Handler) getBlob(c *gin.Context) {
@@ -305,7 +303,6 @@ func (h *Handler) listTags(c *gin.Context) {
 		"tags": tags,
 	})
 }
-
 
 // ============================================================================
 // Web API Handlers

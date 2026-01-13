@@ -1,4 +1,4 @@
-# Container Registry - Configuration Template
+# CYP-Registry - Configuration Template
 # Author: CYP | Contact: nasDSSCYP@outlook.com
 #
 # Copy this file to config.yaml and modify as needed:
@@ -71,7 +71,7 @@ update:
   # Enable automatic updates (requires restart)
   auto_update: false
   # URL for checking latest release
-  update_url: "https://api.github.com/repos/CYP/container-registry/releases/latest"
+  update_url: "https://api.github.com/repos/CYP/cyp-registry/releases/latest"
 
 # =============================================================================
 # Authentication Configuration (Legacy - see Security section)

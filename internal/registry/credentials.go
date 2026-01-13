@@ -20,7 +20,7 @@ const (
 	// EncryptedPrefix is the prefix for encrypted values.
 	EncryptedPrefix = "encrypted:"
 	// DefaultEncryptionKey is used when no key is provided (should be overridden in production).
-	DefaultEncryptionKey = "container-registry-default-key!!"
+	DefaultEncryptionKey = "cyp-registry-default-key!!!!!!!!"
 )
 
 // Credential represents a stored credential for a registry.
@@ -62,7 +62,6 @@ func NewCredentialManager(storagePath string, encryptionKey string) (*Credential
 		encryptionKey: hash[:],
 	}, nil
 }
-
 
 // getCredentialFilePath returns the path to the credentials file.
 func (cm *CredentialManager) getCredentialFilePath() string {
@@ -165,7 +164,6 @@ func (cm *CredentialManager) decrypt(ciphertext string) (string, error) {
 
 	return string(plaintext), nil
 }
-
 
 // SaveCredential saves a credential for a registry with encrypted password.
 func (cm *CredentialManager) SaveCredential(registryURL, username, password string) error {

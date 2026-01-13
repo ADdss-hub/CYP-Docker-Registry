@@ -1,7 +1,7 @@
 package gateway
 
 import (
-	"container-registry/internal/common"
+	"cyp-registry/internal/common"
 	"time"
 
 	"github.com/gin-gonic/gin"

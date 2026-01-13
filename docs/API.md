@@ -1,6 +1,6 @@
 # API 文档
 
-容器镜像个人仓库 API 文档
+CYP-Registry API 文档
 
 **作者：** CYP | **联系方式：** nasDSSCYP@outlook.com
 

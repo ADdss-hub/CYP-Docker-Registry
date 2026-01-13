@@ -1,4 +1,4 @@
-// Package service provides business logic services for the container registry.
+// Package service provides business logic services for CYP-Registry.
 package service
 
 import (
@@ -7,7 +7,7 @@ import (
 	"errors"
 	"time"
 
-	"container-registry/internal/dao"
+	"cyp-registry/internal/dao"
 
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
@@ -86,10 +86,10 @@ func (s *ShareService) CreateShareLink(req *CreateShareRequest, userID int64) (*
 	}
 
 	daoLink := &dao.ShareLink{
-		Code:     code,
-		ImageRef: req.ImageRef,
+		Code:      code,
+		ImageRef:  req.ImageRef,
 		CreatedBy: userID,
-		MaxUsage: req.MaxUsage,
+		MaxUsage:  req.MaxUsage,
 	}
 
 	if passwordHash != "" {

@@ -9,10 +9,10 @@ import (
 	"path/filepath"
 	"syscall"
 
-	"container-registry/internal/common"
-	"container-registry/internal/dao"
-	"container-registry/internal/gateway"
-	"container-registry/internal/version"
+	"cyp-registry/internal/common"
+	"cyp-registry/internal/dao"
+	"cyp-registry/internal/gateway"
+	"cyp-registry/internal/version"
 
 	"go.uber.org/zap"
 )

@@ -1,4 +1,4 @@
-# Container Registry - Multi-stage Dockerfile
+# CYP-Registry - Multi-stage Dockerfile
 # Author: CYP | Contact: nasDSSCYP@outlook.com
 
 # =============================================================================
@@ -23,7 +23,7 @@ COPY VERSION ./
 
 # Build the binary
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
-    -ldflags="-w -s -X container-registry/internal/version.BuildTime=$(date -u +%Y-%m-%dT%H:%M:%SZ) -X container-registry/internal/version.GitCommit=$(git rev-parse --short HEAD 2>/dev/null || echo 'unknown')" \
+    -ldflags="-w -s -X cyp-registry/internal/version.BuildTime=$(date -u +%Y-%m-%dT%H:%M:%SZ) -X cyp-registry/internal/version.GitCommit=$(git rev-parse --short HEAD 2>/dev/null || echo 'unknown')" \
     -o server ./cmd/server
 
 # =============================================================================
@@ -52,7 +52,7 @@ FROM alpine:3.19
 
 # Labels
 LABEL maintainer="CYP <nasDSSCYP@outlook.com>"
-LABEL description="Container Registry - Private Docker Image Registry"
+LABEL description="CYP-Registry - Private Docker Image Registry"
 LABEL version="0.1.0"
 
 # Install runtime dependencies

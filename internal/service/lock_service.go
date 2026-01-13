@@ -1,4 +1,4 @@
-// Package service provides business logic services for the container registry.
+// Package service provides business logic services for CYP-Registry.
 package service
 
 import (
@@ -10,27 +10,27 @@ import (
 
 // LockService provides system lock management.
 type LockService struct {
-	mu           sync.RWMutex
-	isLocked     bool
-	lockReason   string
-	lockType     string
-	lockedAt     time.Time
-	lockedByIP   string
-	lockedByUser string
-	unlockAt     time.Time
+	mu            sync.RWMutex
+	isLocked      bool
+	lockReason    string
+	lockType      string
+	lockedAt      time.Time
+	lockedByIP    string
+	lockedByUser  string
+	unlockAt      time.Time
 	requireManual bool
-	logger       *zap.Logger
+	logger        *zap.Logger
 }
 
 // LockConfig holds lock configuration.
 type LockConfig struct {
-	Enabled            bool
+	Enabled             bool
 	LockOnBypassAttempt bool
-	LockDuration       time.Duration
-	RequireManual      bool
-	HardwareLock       HardwareLockConfig
-	NetworkLock        NetworkLockConfig
-	ServiceLock        ServiceLockConfig
+	LockDuration        time.Duration
+	RequireManual       bool
+	HardwareLock        HardwareLockConfig
+	NetworkLock         NetworkLockConfig
+	ServiceLock         ServiceLockConfig
 }
 
 // HardwareLockConfig holds hardware lock configuration.

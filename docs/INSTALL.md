@@ -1,6 +1,6 @@
 # 安装文档
 
-容器镜像个人仓库安装和配置指南
+CYP-Registry 安装和配置指南
 
 **作者：** CYP | **联系方式：** nasDSSCYP@outlook.com
 
@@ -42,8 +42,8 @@
 
 ```bash
 # 1. 克隆项目
-git clone https://github.com/CYP/container-registry.git
-cd container-registry
+git clone https://github.com/CYP/cyp-registry.git
+cd cyp-registry
 
 # 2. 复制配置文件
 cp configs/config.yaml.example configs/config.yaml
@@ -116,21 +116,21 @@ docker-compose up -d --build
 
 ```bash
 # 构建镜像
-docker build -t container-registry:latest .
+docker build -t cyp-registry:latest .
 
 # 创建数据目录
 mkdir -p ./data/blobs ./data/meta ./data/cache
 
 # 运行容器
 docker run -d \
-  --name container-registry \
+  --name cyp-registry \
   -p 8080:8080 \
   -v $(pwd)/data/blobs:/app/data/blobs \
   -v $(pwd)/data/meta:/app/data/meta \
   -v $(pwd)/data/cache:/app/data/cache \
   -v $(pwd)/configs:/app/configs:ro \
   --restart unless-stopped \
-  container-registry:latest
+  cyp-registry:latest
 ```
 
 ### 数据持久化
@@ -148,8 +148,8 @@ Docker 部署使用以下卷存储数据：
 ```bash
 # 备份所有数据
 docker run --rm \
-  -v container-registry-blobs:/blobs \
-  -v container-registry-meta:/meta \
+  -v cyp-registry-blobs:/blobs \
+  -v cyp-registry-meta:/meta \
   -v $(pwd)/backup:/backup \
   alpine tar czf /backup/registry-backup.tar.gz /blobs /meta
 ```
@@ -189,7 +189,7 @@ npm run build
 ### 目录结构
 
 ```
-container-registry/
+cyp-registry/
 ├── server              # 后端可执行文件
 ├── VERSION             # 版本号文件
 ├── configs/
@@ -255,7 +255,7 @@ accelerator:
 update:
   check_interval: "24h"   # 检查更新间隔
   auto_update: false      # 自动更新
-  update_url: "https://api.github.com/repos/CYP/container-registry/releases/latest"
+  update_url: "https://api.github.com/repos/CYP/cyp-registry/releases/latest"
 ```
 
 #### 认证配置
@@ -342,7 +342,7 @@ docker pull localhost:8080/username/image:tag
 ```bash
 # Docker 部署
 docker-compose down
-docker volume rm container-registry-blobs container-registry-meta container-registry-cache
+docker volume rm cyp-registry-blobs cyp-registry-meta cyp-registry-cache
 docker-compose up -d
 
 # 手动部署

@@ -1,4 +1,4 @@
-// Package service provides business logic services for the container registry.
+// Package service provides business logic services for CYP-Registry.
 package service
 
 import (
@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"container-registry/internal/dao"
+	"cyp-registry/internal/dao"
 
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"

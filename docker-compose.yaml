@@ -1,4 +1,4 @@
-# Container Registry - Docker Compose Configuration
+# CYP-Registry - Docker Compose Configuration
 # Author: CYP | Contact: nasDSSCYP@outlook.com
 #
 # Usage:
@@ -14,8 +14,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: container-registry:latest
-    container_name: container-registry
+    image: cyp-registry:latest
+    container_name: cyp-registry
     restart: unless-stopped
     ports:
       # Main API port (Web UI, Docker Registry V2 API, Management API)
@@ -47,15 +47,15 @@ volumes:
   # Named volumes for persistent storage
   registry-blobs:
     driver: local
-    name: container-registry-blobs
+    name: cyp-registry-blobs
   registry-meta:
     driver: local
-    name: container-registry-meta
+    name: cyp-registry-meta
   registry-cache:
     driver: local
-    name: container-registry-cache
+    name: cyp-registry-cache
 
 networks:
   registry-network:
     driver: bridge
-    name: container-registry-network
+    name: cyp-registry-network

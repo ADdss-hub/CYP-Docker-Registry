@@ -1,4 +1,4 @@
-// Package service provides business logic services for the container registry.
+// Package service provides business logic services for CYP-Registry.
 package service
 
 import (
@@ -8,7 +8,7 @@ import (
 	"errors"
 	"time"
 
-	"container-registry/internal/dao"
+	"cyp-registry/internal/dao"
 
 	"go.uber.org/zap"
 )
@@ -38,8 +38,8 @@ type CreateTokenRequest struct {
 
 // CreateTokenResponse represents the response when creating a token.
 type CreateTokenResponse struct {
-	Token       *Token `json:"token"`
-	PlainToken  string `json:"plain_token"` // Only returned once
+	Token      *Token `json:"token"`
+	PlainToken string `json:"plain_token"` // Only returned once
 }
 
 // NewTokenService creates a new TokenService instance.

@@ -1,8 +1,8 @@
-// Package updater provides auto-update functionality for the container registry.
+// Package updater provides auto-update functionality for CYP-Registry.
 package updater
 
 import (
-	"container-registry/internal/version"
+	"cyp-registry/internal/version"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -68,7 +68,6 @@ func NewUpdaterService(updateURL, downloadPath string) *UpdaterService {
 		},
 	}
 }
-
 
 // CheckUpdate checks for available updates.
 func (u *UpdaterService) CheckUpdate() (*VersionInfo, error) {
@@ -183,7 +182,6 @@ func parseInt(s string) int {
 	n, _ := strconv.Atoi(s)
 	return n
 }
-
 
 // DownloadUpdate downloads the update package.
 func (u *UpdaterService) DownloadUpdate(targetVersion string) error {
@@ -322,7 +320,6 @@ func (u *UpdaterService) setError(message string) {
 	u.status.Message = message
 	u.mu.Unlock()
 }
-
 
 // ApplyUpdate applies the downloaded update.
 func (u *UpdaterService) ApplyUpdate() error {

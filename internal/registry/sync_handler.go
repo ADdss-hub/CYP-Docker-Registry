@@ -2,7 +2,7 @@
 package registry
 
 import (
-	"container-registry/internal/common"
+	"cyp-registry/internal/common"
 	"net/http"
 	"strconv"
 
@@ -44,7 +44,6 @@ func (h *SyncHandler) RegisterRoutes(apiGroup *gin.RouterGroup) {
 		sync.GET("/image/:name/:tag", h.getImageSyncHistory)
 	}
 }
-
 
 // ============================================================================
 // Credential Handlers
@@ -135,7 +134,6 @@ func (h *SyncHandler) deleteCredential(c *gin.Context) {
 		"registry": registry,
 	})
 }
-
 
 // ============================================================================
 // Sync Handlers

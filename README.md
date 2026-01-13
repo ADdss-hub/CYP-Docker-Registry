@@ -30,8 +30,8 @@ docker run -d \
 ### Docker Compose
 
 ```bash
-git clone https://github.com/CYP/registry.git
-cd registry
+git clone https://github.com/CYP/cyp-registry.git
+cd cyp-registry
 docker-compose up -d
 ```
 
@@ -85,7 +85,7 @@ MIT License - 详见 [LICENSE](docs/LICENSE.md)
 
 - 作者: CYP
 - 邮箱: nasDSSCYP@outlook.com
-- GitHub: https://github.com/CYP/registry
+- GitHub: https://github.com/CYP/cyp-registry
 
 ---
 

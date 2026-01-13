@@ -1,4 +1,4 @@
-// Package service provides business logic services for the container registry.
+// Package service provides business logic services for CYP-Registry.
 package service
 
 import (
@@ -35,15 +35,15 @@ type SignatureConfig struct {
 
 // SignatureInfo represents signature information for an image.
 type SignatureInfo struct {
-	ImageRef      string            `json:"image_ref"`
-	Digest        string            `json:"digest"`
-	Signature     string            `json:"signature"`
-	SignedBy      string            `json:"signed_by"`
-	SignedAt      time.Time         `json:"signed_at"`
-	KeyID         string            `json:"key_id"`
-	Verified      bool              `json:"verified"`
-	Attestations  []string          `json:"attestations,omitempty"`
-	Metadata      map[string]string `json:"metadata,omitempty"`
+	ImageRef     string            `json:"image_ref"`
+	Digest       string            `json:"digest"`
+	Signature    string            `json:"signature"`
+	SignedBy     string            `json:"signed_by"`
+	SignedAt     time.Time         `json:"signed_at"`
+	KeyID        string            `json:"key_id"`
+	Verified     bool              `json:"verified"`
+	Attestations []string          `json:"attestations,omitempty"`
+	Metadata     map[string]string `json:"metadata,omitempty"`
 }
 
 // SignRequest represents a request to sign an image.

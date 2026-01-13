@@ -1,4 +1,4 @@
-// Package service provides business logic services for the container registry.
+// Package service provides business logic services for CYP-Registry.
 package service
 
 import (
@@ -19,26 +19,26 @@ type SystemService struct {
 
 // SystemInfo represents system information.
 type SystemInfo struct {
-	Version     string            `json:"version"`
-	BuildTime   string            `json:"build_time"`
-	GoVersion   string            `json:"go_version"`
-	OS          string            `json:"os"`
-	Arch        string            `json:"arch"`
-	NumCPU      int               `json:"num_cpu"`
-	Hostname    string            `json:"hostname"`
-	Uptime      string            `json:"uptime"`
-	StartTime   time.Time         `json:"start_time"`
-	Environment string            `json:"environment"`
-	Features    map[string]bool   `json:"features"`
+	Version     string          `json:"version"`
+	BuildTime   string          `json:"build_time"`
+	GoVersion   string          `json:"go_version"`
+	OS          string          `json:"os"`
+	Arch        string          `json:"arch"`
+	NumCPU      int             `json:"num_cpu"`
+	Hostname    string          `json:"hostname"`
+	Uptime      string          `json:"uptime"`
+	StartTime   time.Time       `json:"start_time"`
+	Environment string          `json:"environment"`
+	Features    map[string]bool `json:"features"`
 }
 
 // SystemStats represents system statistics.
 type SystemStats struct {
-	MemoryUsage    MemoryStats    `json:"memory_usage"`
-	GoroutineCount int            `json:"goroutine_count"`
-	CPUUsage       float64        `json:"cpu_usage"`
-	DiskUsage      DiskStats      `json:"disk_usage"`
-	Uptime         time.Duration  `json:"uptime"`
+	MemoryUsage    MemoryStats   `json:"memory_usage"`
+	GoroutineCount int           `json:"goroutine_count"`
+	CPUUsage       float64       `json:"cpu_usage"`
+	DiskUsage      DiskStats     `json:"disk_usage"`
+	Uptime         time.Duration `json:"uptime"`
 }
 
 // MemoryStats represents memory statistics.
@@ -53,17 +53,17 @@ type MemoryStats struct {
 
 // DiskStats represents disk statistics.
 type DiskStats struct {
-	Total     uint64  `json:"total"`
-	Used      uint64  `json:"used"`
-	Free      uint64  `json:"free"`
-	UsedPct   float64 `json:"used_pct"`
+	Total   uint64  `json:"total"`
+	Used    uint64  `json:"used"`
+	Free    uint64  `json:"free"`
+	UsedPct float64 `json:"used_pct"`
 }
 
 // HealthStatus represents system health status.
 type HealthStatus struct {
-	Status     string            `json:"status"`
-	Checks     []HealthCheck     `json:"checks"`
-	Timestamp  time.Time         `json:"timestamp"`
+	Status    string        `json:"status"`
+	Checks    []HealthCheck `json:"checks"`
+	Timestamp time.Time     `json:"timestamp"`
 }
 
 // HealthCheck represents a single health check result.
@@ -97,12 +97,12 @@ func (s *SystemService) GetSystemInfo() *SystemInfo {
 		StartTime:   s.startTime,
 		Environment: s.detectEnvironment(),
 		Features: map[string]bool{
-			"accelerator":  true,
-			"p2p":          false,
-			"signature":    true,
-			"sbom":         true,
-			"audit":        true,
-			"auto_lock":    true,
+			"accelerator": true,
+			"p2p":         false,
+			"signature":   true,
+			"sbom":        true,
+			"audit":       true,
+			"auto_lock":   true,
 		},
 	}
 }

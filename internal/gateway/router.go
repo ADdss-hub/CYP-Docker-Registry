@@ -1,16 +1,16 @@
-// Package gateway provides the API gateway for the container registry.
+// Package gateway provides the API gateway for CYP-Registry.
 package gateway
 
 import (
-	"container-registry/internal/accelerator"
-	"container-registry/internal/common"
-	"container-registry/internal/detector"
-	"container-registry/internal/handler"
-	"container-registry/internal/middleware"
-	"container-registry/internal/registry"
-	"container-registry/internal/service"
-	"container-registry/internal/updater"
-	"container-registry/internal/version"
+	"cyp-registry/internal/accelerator"
+	"cyp-registry/internal/common"
+	"cyp-registry/internal/detector"
+	"cyp-registry/internal/handler"
+	"cyp-registry/internal/middleware"
+	"cyp-registry/internal/registry"
+	"cyp-registry/internal/service"
+	"cyp-registry/internal/updater"
+	"cyp-registry/internal/version"
 
 	"github.com/gin-gonic/gin"
 )
@@ -355,7 +355,6 @@ func (r *Router) setupRoutes() {
 		}
 	}
 }
-
 
 // Engine returns the underlying gin engine.
 func (r *Router) Engine() *gin.Engine {

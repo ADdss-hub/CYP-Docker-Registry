@@ -6,19 +6,19 @@ import (
 	"sync"
 	"time"
 
-	"container-registry/pkg/signature"
+	"cyp-registry/pkg/signature"
 
 	"go.uber.org/zap"
 )
 
 // TUFService TUF服务
 type TUFService struct {
-	manager    *signature.TUFManager
-	config     *signature.TUFConfig
-	logger     *zap.Logger
-	ctx        context.Context
-	cancel     context.CancelFunc
-	refreshMu  sync.Mutex
+	manager   *signature.TUFManager
+	config    *signature.TUFConfig
+	logger    *zap.Logger
+	ctx       context.Context
+	cancel    context.CancelFunc
+	refreshMu sync.Mutex
 }
 
 // NewTUFService 创建TUF服务

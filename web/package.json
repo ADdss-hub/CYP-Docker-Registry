@@ -1,5 +1,5 @@
 {
-  "name": "container-registry-web",
+  "name": "cyp-registry-web",
   "version": "1.0.0",
   "private": true,
   "type": "module",

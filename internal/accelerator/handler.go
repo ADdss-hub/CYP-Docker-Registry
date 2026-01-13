@@ -2,7 +2,7 @@
 package accelerator
 
 import (
-	"container-registry/internal/common"
+	"cyp-registry/internal/common"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -47,7 +47,6 @@ func (h *Handler) RegisterRoutes(group *gin.RouterGroup) {
 		upstreams.GET("/:name/health", h.checkUpstreamHealth)
 	}
 }
-
 
 // ============================================================================
 // Proxy Pull Handlers
@@ -148,7 +147,6 @@ func (h *Handler) listCacheEntries(c *gin.Context) {
 		"count":   len(entries),
 	})
 }
-
 
 // ============================================================================
 // Upstream Management Handlers

@@ -1,4 +1,4 @@
-module container-registry
+module cyp-registry
 
 go 1.21
 

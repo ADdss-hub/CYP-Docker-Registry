@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"container-registry/pkg/p2p"
+	"cyp-registry/pkg/p2p"
 
 	"go.uber.org/zap"
 )
@@ -28,19 +28,19 @@ type P2PService struct {
 
 // P2PStatus P2P状态
 type P2PStatus struct {
-	Enabled        bool              `json:"enabled"`
-	Running        bool              `json:"running"`
-	PeerID         string            `json:"peer_id"`
-	Addresses      []string          `json:"addresses"`
-	PeerCount      int               `json:"peer_count"`
-	ConnectedPeers int               `json:"connected_peers"`
-	BytesSent      int64             `json:"bytes_sent"`
-	BytesReceived  int64             `json:"bytes_received"`
-	BlobsShared    int64             `json:"blobs_shared"`
-	BlobsReceived  int64             `json:"blobs_received"`
-	Uptime         string            `json:"uptime"`
-	NATStatus      *p2p.NATStatus    `json:"nat_status"`
-	ShareMode      string            `json:"share_mode"`
+	Enabled        bool           `json:"enabled"`
+	Running        bool           `json:"running"`
+	PeerID         string         `json:"peer_id"`
+	Addresses      []string       `json:"addresses"`
+	PeerCount      int            `json:"peer_count"`
+	ConnectedPeers int            `json:"connected_peers"`
+	BytesSent      int64          `json:"bytes_sent"`
+	BytesReceived  int64          `json:"bytes_received"`
+	BlobsShared    int64          `json:"blobs_shared"`
+	BlobsReceived  int64          `json:"blobs_received"`
+	Uptime         string         `json:"uptime"`
+	NATStatus      *p2p.NATStatus `json:"nat_status"`
+	ShareMode      string         `json:"share_mode"`
 }
 
 // P2PPeerInfo P2P节点信息

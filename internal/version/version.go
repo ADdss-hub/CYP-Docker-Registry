@@ -1,4 +1,4 @@
-// Package version provides version information for the container registry.
+// Package version provides version information for CYP-Registry.
 package version
 
 import (

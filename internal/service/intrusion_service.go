@@ -1,4 +1,4 @@
-// Package service provides business logic services for the container registry.
+// Package service provides business logic services for CYP-Registry.
 package service
 
 import (
@@ -18,26 +18,26 @@ type IntrusionService struct {
 
 // IntrusionConfig holds intrusion detection configuration.
 type IntrusionConfig struct {
-	Enabled             bool
-	MaxLoginAttempts    int
-	MaxTokenAttempts    int
-	MaxAPIAttempts      int
-	LockDuration        time.Duration
-	ProgressiveDelay    bool
-	Rules               []IntrusionRule
-	RealTimeMonitoring  bool
-	LogAllAccess        bool
-	NotifyOnLock        bool
-	NotifyChannels      []string
+	Enabled            bool
+	MaxLoginAttempts   int
+	MaxTokenAttempts   int
+	MaxAPIAttempts     int
+	LockDuration       time.Duration
+	ProgressiveDelay   bool
+	Rules              []IntrusionRule
+	RealTimeMonitoring bool
+	LogAllAccess       bool
+	NotifyOnLock       bool
+	NotifyChannels     []string
 }
 
 // IntrusionRule represents an intrusion detection rule.
 type IntrusionRule struct {
-	Name        string   `json:"name" yaml:"name"`
-	Description string   `json:"description" yaml:"description"`
-	Action      string   `json:"action" yaml:"action"` // lock, warn, ban
-	Threshold   int      `json:"threshold" yaml:"threshold"`
-	AllowedHours string  `json:"allowed_hours,omitempty" yaml:"allowed_hours"`
+	Name             string   `json:"name" yaml:"name"`
+	Description      string   `json:"description" yaml:"description"`
+	Action           string   `json:"action" yaml:"action"` // lock, warn, ban
+	Threshold        int      `json:"threshold" yaml:"threshold"`
+	AllowedHours     string   `json:"allowed_hours,omitempty" yaml:"allowed_hours"`
 	AllowedCountries []string `json:"allowed_countries,omitempty" yaml:"allowed_countries"`
 }
 

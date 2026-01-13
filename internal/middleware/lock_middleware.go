@@ -1,4 +1,4 @@
-// Package middleware provides security middleware for the container registry.
+// Package middleware provides security middleware for CYP-Registry.
 package middleware
 
 import (

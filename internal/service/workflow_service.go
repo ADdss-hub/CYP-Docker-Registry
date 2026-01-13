@@ -1,4 +1,4 @@
-// Package service provides business logic services for the container registry.
+// Package service provides business logic services for CYP-Registry.
 package service
 
 import (
@@ -11,32 +11,32 @@ import (
 
 // WorkflowService provides workflow management services.
 type WorkflowService struct {
-	workflows  sync.Map // map[string]*Workflow
-	jobs       sync.Map // map[string]*Job
-	logger     *zap.Logger
-	isPaused   bool
-	mu         sync.RWMutex
+	workflows sync.Map // map[string]*Workflow
+	jobs      sync.Map // map[string]*Job
+	logger    *zap.Logger
+	isPaused  bool
+	mu        sync.RWMutex
 }
 
 // Workflow represents an automated workflow.
 type Workflow struct {
-	ID          string            `json:"id"`
-	Name        string            `json:"name"`
-	Description string            `json:"description,omitempty"`
-	Trigger     WorkflowTrigger   `json:"trigger"`
-	Steps       []WorkflowStep    `json:"steps"`
-	Enabled     bool              `json:"enabled"`
-	CreatedAt   time.Time         `json:"created_at"`
-	UpdatedAt   time.Time         `json:"updated_at"`
-	LastRunAt   time.Time         `json:"last_run_at,omitempty"`
-	LastStatus  string            `json:"last_status,omitempty"`
+	ID          string          `json:"id"`
+	Name        string          `json:"name"`
+	Description string          `json:"description,omitempty"`
+	Trigger     WorkflowTrigger `json:"trigger"`
+	Steps       []WorkflowStep  `json:"steps"`
+	Enabled     bool            `json:"enabled"`
+	CreatedAt   time.Time       `json:"created_at"`
+	UpdatedAt   time.Time       `json:"updated_at"`
+	LastRunAt   time.Time       `json:"last_run_at,omitempty"`
+	LastStatus  string          `json:"last_status,omitempty"`
 }
 
 // WorkflowTrigger defines when a workflow should run.
 type WorkflowTrigger struct {
-	Type     string            `json:"type"` // schedule, event, manual
+	Type     string            `json:"type"`               // schedule, event, manual
 	Schedule string            `json:"schedule,omitempty"` // cron expression
-	Event    string            `json:"event,omitempty"` // push, pull, delete
+	Event    string            `json:"event,omitempty"`    // push, pull, delete
 	Filter   map[string]string `json:"filter,omitempty"`
 }
 
@@ -51,14 +51,14 @@ type WorkflowStep struct {
 
 // Job represents a running workflow job.
 type Job struct {
-	ID          string       `json:"id"`
-	WorkflowID  string       `json:"workflow_id"`
-	Status      string       `json:"status"` // pending, running, completed, failed, cancelled
-	StartedAt   time.Time    `json:"started_at"`
-	CompletedAt time.Time    `json:"completed_at,omitempty"`
-	Steps       []JobStep    `json:"steps"`
-	Error       string       `json:"error,omitempty"`
-	Logs        []string     `json:"logs,omitempty"`
+	ID          string    `json:"id"`
+	WorkflowID  string    `json:"workflow_id"`
+	Status      string    `json:"status"` // pending, running, completed, failed, cancelled
+	StartedAt   time.Time `json:"started_at"`
+	CompletedAt time.Time `json:"completed_at,omitempty"`
+	Steps       []JobStep `json:"steps"`
+	Error       string    `json:"error,omitempty"`
+	Logs        []string  `json:"logs,omitempty"`
 }
 
 // JobStep represents a step execution in a job.

@@ -1,4 +1,4 @@
-// Package model defines all data models for the container registry.
+// Package model defines all data models for CYP-Registry.
 package model
 
 import (
@@ -30,14 +30,14 @@ type Session struct {
 
 // PersonalAccessToken represents a personal access token.
 type PersonalAccessToken struct {
-	ID          int64     `json:"id" db:"id"`
-	UserID      int64     `json:"user_id" db:"user_id"`
-	Name        string    `json:"name" db:"name"`
-	TokenHash   string    `json:"-" db:"token_hash"`
-	Scopes      []string  `json:"scopes" db:"scopes"`
-	ExpiresAt   time.Time `json:"expires_at" db:"expires_at"`
-	LastUsedAt  time.Time `json:"last_used_at,omitempty" db:"last_used_at"`
-	CreatedAt   time.Time `json:"created_at" db:"created_at"`
+	ID         int64     `json:"id" db:"id"`
+	UserID     int64     `json:"user_id" db:"user_id"`
+	Name       string    `json:"name" db:"name"`
+	TokenHash  string    `json:"-" db:"token_hash"`
+	Scopes     []string  `json:"scopes" db:"scopes"`
+	ExpiresAt  time.Time `json:"expires_at" db:"expires_at"`
+	LastUsedAt time.Time `json:"last_used_at,omitempty" db:"last_used_at"`
+	CreatedAt  time.Time `json:"created_at" db:"created_at"`
 }
 
 // AccessAttempt represents an access attempt for audit logging.
@@ -56,14 +56,14 @@ type AccessAttempt struct {
 
 // LockStatus represents the system lock status.
 type LockStatus struct {
-	IsLocked       bool      `json:"is_locked" db:"is_locked"`
-	LockReason     string    `json:"lock_reason" db:"lock_reason"`
-	LockType       string    `json:"lock_type" db:"lock_type"` // bypass_attempt, rule_triggered
-	LockedAt       time.Time `json:"locked_at" db:"locked_at"`
-	LockedByIP     string    `json:"locked_by_ip" db:"locked_by_ip"`
-	LockedByUser   string    `json:"locked_by_user,omitempty" db:"locked_by_user"`
-	UnlockAt       time.Time `json:"unlock_at,omitempty" db:"unlock_at"`
-	RequireManual  bool      `json:"require_manual" db:"require_manual"`
+	IsLocked      bool      `json:"is_locked" db:"is_locked"`
+	LockReason    string    `json:"lock_reason" db:"lock_reason"`
+	LockType      string    `json:"lock_type" db:"lock_type"` // bypass_attempt, rule_triggered
+	LockedAt      time.Time `json:"locked_at" db:"locked_at"`
+	LockedByIP    string    `json:"locked_by_ip" db:"locked_by_ip"`
+	LockedByUser  string    `json:"locked_by_user,omitempty" db:"locked_by_user"`
+	UnlockAt      time.Time `json:"unlock_at,omitempty" db:"unlock_at"`
+	RequireManual bool      `json:"require_manual" db:"require_manual"`
 }
 
 // IntrusionRule represents an intrusion detection rule.
@@ -86,15 +86,15 @@ type Organization struct {
 
 // ShareLink represents a share link for images.
 type ShareLink struct {
-	ID          int64     `json:"id" db:"id"`
-	Code        string    `json:"code" db:"code"`
-	ImageRef    string    `json:"image_ref" db:"image_ref"`
-	CreatedBy   int64     `json:"created_by" db:"created_by"`
-	Password    string    `json:"-" db:"password"`
-	MaxUsage    int       `json:"max_usage" db:"max_usage"`
-	UsageCount  int       `json:"usage_count" db:"usage_count"`
-	ExpiresAt   time.Time `json:"expires_at" db:"expires_at"`
-	CreatedAt   time.Time `json:"created_at" db:"created_at"`
+	ID         int64     `json:"id" db:"id"`
+	Code       string    `json:"code" db:"code"`
+	ImageRef   string    `json:"image_ref" db:"image_ref"`
+	CreatedBy  int64     `json:"created_by" db:"created_by"`
+	Password   string    `json:"-" db:"password"`
+	MaxUsage   int       `json:"max_usage" db:"max_usage"`
+	UsageCount int       `json:"usage_count" db:"usage_count"`
+	ExpiresAt  time.Time `json:"expires_at" db:"expires_at"`
+	CreatedAt  time.Time `json:"created_at" db:"created_at"`
 }
 
 // LoginRequest represents a login request.

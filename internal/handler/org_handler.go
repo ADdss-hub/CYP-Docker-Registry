@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"container-registry/internal/service"
+	"cyp-registry/internal/service"
 
 	"github.com/gin-gonic/gin"
 )

@@ -1,4 +1,4 @@
-// Package middleware provides security middleware for the container registry.
+// Package middleware provides security middleware for CYP-Registry.
 package middleware
 
 import (
@@ -19,12 +19,12 @@ func InitLogger(l *zap.Logger) {
 
 // AuthConfig holds authentication configuration.
 type AuthConfig struct {
-	Enabled           bool
-	MaxLoginAttempts  int
-	MaxTokenAttempts  int
-	MaxAPIAttempts    int
-	LockDuration      time.Duration
-	EnforceIPBinding  bool
+	Enabled          bool
+	MaxLoginAttempts int
+	MaxTokenAttempts int
+	MaxAPIAttempts   int
+	LockDuration     time.Duration
+	EnforceIPBinding bool
 }
 
 // AuthMiddleware provides authentication middleware functionality.

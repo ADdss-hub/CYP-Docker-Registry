@@ -1,4 +1,4 @@
-// Package service provides business logic services for the container registry.
+// Package service provides business logic services for CYP-Registry.
 package service
 
 import (
@@ -22,45 +22,45 @@ type SBOMService struct {
 
 // SBOMConfig holds SBOM configuration.
 type SBOMConfig struct {
-	Enabled       bool
-	Generator     string // syft, trivy
-	Format        string // spdx-json, cyclonedx-json
-	AutoGenerate  bool
+	Enabled        bool
+	Generator      string // syft, trivy
+	Format         string // spdx-json, cyclonedx-json
+	AutoGenerate   bool
 	GenerateOnPush bool
-	StoragePath   string
-	VulnScan      bool
-	VulnScanner   string // trivy, grype
+	StoragePath    string
+	VulnScan       bool
+	VulnScanner    string // trivy, grype
 }
 
 // SBOM represents a Software Bill of Materials.
 type SBOM struct {
-	ID            int64              `json:"id"`
-	ImageRef      string             `json:"image_ref"`
-	Digest        string             `json:"digest"`
-	Format        string             `json:"format"`
-	Generator     string             `json:"generator"`
-	GeneratedAt   time.Time          `json:"generated_at"`
-	Packages      []SBOMPackage      `json:"packages"`
-	Dependencies  []SBOMDependency   `json:"dependencies,omitempty"`
-	Vulnerabilities []Vulnerability  `json:"vulnerabilities,omitempty"`
-	Metadata      map[string]string  `json:"metadata,omitempty"`
+	ID              int64             `json:"id"`
+	ImageRef        string            `json:"image_ref"`
+	Digest          string            `json:"digest"`
+	Format          string            `json:"format"`
+	Generator       string            `json:"generator"`
+	GeneratedAt     time.Time         `json:"generated_at"`
+	Packages        []SBOMPackage     `json:"packages"`
+	Dependencies    []SBOMDependency  `json:"dependencies,omitempty"`
+	Vulnerabilities []Vulnerability   `json:"vulnerabilities,omitempty"`
+	Metadata        map[string]string `json:"metadata,omitempty"`
 }
 
 // SBOMPackage represents a package in the SBOM.
 type SBOMPackage struct {
-	Name         string   `json:"name"`
-	Version      string   `json:"version"`
-	Type         string   `json:"type"` // npm, pip, apk, deb, etc.
-	License      string   `json:"license,omitempty"`
-	PURL         string   `json:"purl,omitempty"`
-	CPE          string   `json:"cpe,omitempty"`
-	Checksums    []string `json:"checksums,omitempty"`
+	Name      string   `json:"name"`
+	Version   string   `json:"version"`
+	Type      string   `json:"type"` // npm, pip, apk, deb, etc.
+	License   string   `json:"license,omitempty"`
+	PURL      string   `json:"purl,omitempty"`
+	CPE       string   `json:"cpe,omitempty"`
+	Checksums []string `json:"checksums,omitempty"`
 }
 
 // SBOMDependency represents a dependency relationship.
 type SBOMDependency struct {
-	Package    string   `json:"package"`
-	DependsOn  []string `json:"depends_on"`
+	Package   string   `json:"package"`
+	DependsOn []string `json:"depends_on"`
 }
 
 // Vulnerability represents a security vulnerability.

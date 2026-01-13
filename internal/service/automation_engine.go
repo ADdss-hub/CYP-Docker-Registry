@@ -1,4 +1,4 @@
-// Package service provides business logic services for the container registry.
+// Package service provides business logic services for CYP-Registry.
 package service
 
 import (
@@ -11,12 +11,12 @@ import (
 
 // AutomationEngine provides automated task scheduling and execution.
 type AutomationEngine struct {
-	tasks      map[string]*ScheduledTask
-	running    map[string]context.CancelFunc
-	logger     *zap.Logger
-	mu         sync.RWMutex
-	isRunning  bool
-	stopCh     chan struct{}
+	tasks     map[string]*ScheduledTask
+	running   map[string]context.CancelFunc
+	logger    *zap.Logger
+	mu        sync.RWMutex
+	isRunning bool
+	stopCh    chan struct{}
 }
 
 // ScheduledTask represents a scheduled automation task.
