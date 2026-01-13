@@ -245,7 +245,7 @@ func (s *SignatureService) generateSignature(digest, keyID string) string {
 }
 
 // verifySignature verifies a signature.
-func (s *SignatureService) verifySignature(digest, signature, keyID string) bool {
+func (s *SignatureService) verifySignature(_, signature, _ string) bool {
 	// Simplified verification
 	// In production, use proper cryptographic verification
 	return len(signature) == 64 // SHA256 hex length

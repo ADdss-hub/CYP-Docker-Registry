@@ -385,7 +385,7 @@ func (e *AutomationEngine) registerDefaultTasks() {
 }
 
 // calculateNextRun calculates the next run time based on cron expression.
-func (e *AutomationEngine) calculateNextRun(schedule string) time.Time {
+func (e *AutomationEngine) calculateNextRun(_ string) time.Time {
 	// Simplified cron parsing - in production use a proper cron library
 	// Format: minute hour day month weekday
 	now := time.Now()
@@ -395,7 +395,7 @@ func (e *AutomationEngine) calculateNextRun(schedule string) time.Time {
 }
 
 // Task execution implementations
-func (e *AutomationEngine) runCleanupTask(ctx context.Context, task *ScheduledTask) error {
+func (e *AutomationEngine) runCleanupTask(_ context.Context, task *ScheduledTask) error {
 	// Implementation for cleanup task
 	if e.logger != nil {
 		e.logger.Info("Running cleanup task", zap.String("task_id", task.ID))
@@ -403,7 +403,7 @@ func (e *AutomationEngine) runCleanupTask(ctx context.Context, task *ScheduledTa
 	return nil
 }
 
-func (e *AutomationEngine) runSyncTask(ctx context.Context, task *ScheduledTask) error {
+func (e *AutomationEngine) runSyncTask(_ context.Context, task *ScheduledTask) error {
 	// Implementation for sync task
 	if e.logger != nil {
 		e.logger.Info("Running sync task", zap.String("task_id", task.ID))
@@ -411,7 +411,7 @@ func (e *AutomationEngine) runSyncTask(ctx context.Context, task *ScheduledTask)
 	return nil
 }
 
-func (e *AutomationEngine) runScanTask(ctx context.Context, task *ScheduledTask) error {
+func (e *AutomationEngine) runScanTask(_ context.Context, task *ScheduledTask) error {
 	// Implementation for vulnerability scan task
 	if e.logger != nil {
 		e.logger.Info("Running scan task", zap.String("task_id", task.ID))
@@ -419,7 +419,7 @@ func (e *AutomationEngine) runScanTask(ctx context.Context, task *ScheduledTask)
 	return nil
 }
 
-func (e *AutomationEngine) runBackupTask(ctx context.Context, task *ScheduledTask) error {
+func (e *AutomationEngine) runBackupTask(_ context.Context, task *ScheduledTask) error {
 	// Implementation for backup task
 	if e.logger != nil {
 		e.logger.Info("Running backup task", zap.String("task_id", task.ID))
@@ -427,7 +427,7 @@ func (e *AutomationEngine) runBackupTask(ctx context.Context, task *ScheduledTas
 	return nil
 }
 
-func (e *AutomationEngine) runSignTask(ctx context.Context, task *ScheduledTask) error {
+func (e *AutomationEngine) runSignTask(_ context.Context, task *ScheduledTask) error {
 	// Implementation for auto-sign task
 	if e.logger != nil {
 		e.logger.Info("Running sign task", zap.String("task_id", task.ID))
@@ -435,7 +435,7 @@ func (e *AutomationEngine) runSignTask(ctx context.Context, task *ScheduledTask)
 	return nil
 }
 
-func (e *AutomationEngine) runSBOMTask(ctx context.Context, task *ScheduledTask) error {
+func (e *AutomationEngine) runSBOMTask(_ context.Context, task *ScheduledTask) error {
 	// Implementation for SBOM generation task
 	if e.logger != nil {
 		e.logger.Info("Running SBOM task", zap.String("task_id", task.ID))

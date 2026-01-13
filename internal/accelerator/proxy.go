@@ -62,7 +62,6 @@ func getDefaultUpstreams() []UpstreamSource {
 	}
 }
 
-
 // ProxyPull pulls an image layer through the proxy, using cache if available.
 func (p *ProxyService) ProxyPull(name, digest string) (io.ReadCloser, int64, error) {
 	// Check cache first
@@ -186,7 +185,7 @@ func (p *ProxyService) pullManifestFromUpstream(upstream UpstreamSource, name, r
 }
 
 // cacheAndReturn caches the blob and returns a reader.
-func (p *ProxyService) cacheAndReturn(digest string, reader io.ReadCloser, size int64) (io.ReadCloser, int64, error) {
+func (p *ProxyService) cacheAndReturn(digest string, reader io.ReadCloser, _ int64) (io.ReadCloser, int64, error) {
 	defer reader.Close()
 
 	// Store in cache
@@ -198,7 +197,6 @@ func (p *ProxyService) cacheAndReturn(digest string, reader io.ReadCloser, size 
 	// Return from cache
 	return p.cache.Get(digest)
 }
-
 
 // GetUpstreams returns upstreams sorted by priority.
 func (p *ProxyService) GetUpstreams() []UpstreamSource {
