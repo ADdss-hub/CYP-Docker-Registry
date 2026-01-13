@@ -1,0 +1,41 @@
+# 树莓派环境配置模板
+# 适用于 Raspberry Pi 部署
+
+app:
+  name: "CYP-Registry"
+  log_level: "warn"
+
+server:
+  host: "0.0.0.0"
+  port: 8080
+
+storage:
+  blob_path: "/opt/cyp-registry/data/blobs"
+  meta_path: "/opt/cyp-registry/data/meta"
+  cache_path: "/opt/cyp-registry/data/cache"
+  max_cache_size: "5GB"
+
+accelerator:
+  enabled: true
+  upstreams:
+    - name: "Docker Hub"
+      url: "https://registry-1.docker.io"
+      priority: 1
+
+security:
+  force_login: true
+  session_timeout: "12h"
+  max_login_attempts: 5
+  lock_duration: "30m"
+
+hardware:
+  cpu_cores: 4
+  memory_limit: "1GB"
+  storage_type: "sd"
+  storage_optimization: true
+  battery_powered: false
+
+compression:
+  enabled: true
+  algorithm: "gzip"
+  level: 1

@@ -1,0 +1,250 @@
+# Container Registry - Configuration Template
+# Author: CYP | Contact: nasDSSCYP@outlook.com
+#
+# Copy this file to config.yaml and modify as needed:
+#   cp config.yaml.example config.yaml
+#
+# All paths are relative to the application root directory.
+# When running in Docker, use /app/data/* paths.
+
+# =============================================================================
+# Server Configuration
+# =============================================================================
+server:
+  # Server listening port
+  port: 8080
+  # Server listening host (0.0.0.0 for all interfaces)
+  host: "0.0.0.0"
+  # Request timeout in seconds
+  timeout: 30
+  # Maximum request body size (e.g., "100MB", "1GB")
+  max_body_size: "1GB"
+
+# =============================================================================
+# Storage Configuration
+# =============================================================================
+storage:
+  # Path for storing image blob data
+  blob_path: "./data/blobs"
+  # Path for storing metadata (JSON files)
+  meta_path: "./data/meta"
+  # Path for accelerator cache
+  cache_path: "./data/cache"
+  # Maximum cache size (e.g., "10GB", "100GB")
+  max_cache_size: "10GB"
+
+# =============================================================================
+# Image Accelerator Configuration
+# =============================================================================
+accelerator:
+  # Enable/disable image acceleration feature
+  enabled: true
+  # Upstream registry sources (ordered by priority, lower number = higher priority)
+  upstreams:
+    - name: "Docker Hub"
+      url: "https://registry-1.docker.io"
+      priority: 1
+      enabled: true
+    - name: "阿里云镜像"
+      url: "https://registry.cn-hangzhou.aliyuncs.com"
+      priority: 2
+      enabled: true
+    - name: "腾讯云镜像"
+      url: "https://mirror.ccs.tencentyun.com"
+      priority: 3
+      enabled: false
+    - name: "华为云镜像"
+      url: "https://swr.cn-north-4.myhuaweicloud.com"
+      priority: 4
+      enabled: false
+  # Connection timeout for upstream requests (seconds)
+  upstream_timeout: 30
+  # Number of retries for failed upstream requests
+  retry_count: 3
+
+# =============================================================================
+# Auto Update Configuration
+# =============================================================================
+update:
+  # Interval for checking updates (e.g., "24h", "12h", "1h")
+  check_interval: "24h"
+  # Enable automatic updates (requires restart)
+  auto_update: false
+  # URL for checking latest release
+  update_url: "https://api.github.com/repos/CYP/container-registry/releases/latest"
+
+# =============================================================================
+# Authentication Configuration (Legacy - see Security section)
+# =============================================================================
+auth:
+  # Enable/disable authentication for registry operations
+  enabled: false
+  # Basic auth username (leave empty if auth disabled)
+  username: ""
+  # Basic auth password (leave empty if auth disabled)
+  password: ""
+
+# =============================================================================
+# Security Configuration (Zero Trust Architecture)
+# =============================================================================
+security:
+  # Force login for all access
+  force_login:
+    enabled: true
+    mode: "strict"  # strict/lenient
+    whitelist:
+      enabled: false
+      ips: ["127.0.0.1", "::1"]
+      endpoints: ["/api/v1/health", "/metrics"]
+
+  # Session management
+  session:
+    timeout: "24h"
+    remember_me: "7d"
+    max_concurrent: 5
+    enforce_ip_binding: true
+
+  # Failed attempts policy
+  failed_attempts:
+    max_login_attempts: 3
+    max_token_attempts: 5
+    max_api_attempts: 10
+    lock_duration: "1h"
+    progressive_delay: true
+
+  # Auto lock configuration
+  auto_lock:
+    enabled: true
+    lock_on_bypass_attempt: true
+    hardware:
+      lock_cpu_percent: 10
+      lock_memory_percent: 10
+    network:
+      block_incoming: true
+      block_outgoing: false
+      block_duration: "1h"
+    service:
+      pause_all_workflows: true
+      allow_readonly_mode: true
+      shutdown_grace_period: "30s"
+    unlock:
+      require_manual: true
+      auto_unlock_after: ""
+      unlock_command: "./scripts/unlock.sh"
+
+  # Intrusion detection rules
+  intrusion_detection:
+    enabled: true
+    rules:
+      - name: "direct_url_access"
+        description: "Direct URL access bypassing login"
+        action: "lock"
+        threshold: 1
+      - name: "forged_jwt"
+        description: "Forged JWT token"
+        action: "lock"
+        threshold: 1
+      - name: "token_replay"
+        description: "Replay of expired token"
+        action: "lock"
+        threshold: 2
+      - name: "ip_change_mid_session"
+        description: "IP change during session"
+        action: "warn"
+        threshold: 1
+      - name: "login_failure"
+        description: "Login failure"
+        action: "lock"
+        threshold: 3
+    real_time_monitoring: true
+    log_all_access: true
+    notify_on_lock: true
+    notify_channels: ["webhook", "email"]
+
+  # Share link security
+  share_links:
+    require_password: true
+    max_duration: "24h"
+    max_usage_count: 100
+    auto_revoke_on_suspicion: true
+
+  # Audit logging
+  audit:
+    log_all_requests: true
+    log_failed_auth: true
+    log_lock_events: true
+    blockchain_hash: true
+    immutable_storage: true
+    retention: "1y"
+    alert_on_tamper: true
+    log_file_path: "./data/audit.log"
+
+# =============================================================================
+# JWT Configuration
+# =============================================================================
+jwt:
+  # Secret key for signing JWT tokens (CHANGE THIS IN PRODUCTION!)
+  secret: "your-super-secret-key-change-in-production"
+  # Token expiry duration
+  expiry: "24h"
+  # Issuer name
+  issuer: "CYP-Registry"
+
+# =============================================================================
+# Public Registry Sync Configuration
+# =============================================================================
+sync:
+  # Default target registry for sync operations
+  default_registry: "docker.io"
+  # Credentials file path (encrypted)
+  credentials_path: "./data/meta/credentials.json"
+
+# =============================================================================
+# Logging Configuration
+# =============================================================================
+logging:
+  # Log level: debug, info, warn, error
+  level: "info"
+  # Log format: json, console
+  format: "json"
+  # Log output: stdout, file path
+  output: "stdout"
+
+# =============================================================================
+# Web UI Configuration
+# =============================================================================
+web:
+  # Enable/disable web UI
+  enabled: true
+  # Path to static web files
+  static_path: "./web/dist"
+  # Items per page in list views
+  page_size: 20
+
+# =============================================================================
+# Notification Configuration
+# =============================================================================
+notify:
+  channels:
+    websocket:
+      enabled: true
+    webhook:
+      enabled: false
+      url: ""
+      secret: ""
+    email:
+      enabled: false
+      smtp_host: ""
+      smtp_port: 587
+      username: ""
+      password: ""
+      to: []
+  triggers:
+    - name: "system_locked"
+      level: "critical"
+      channels: ["webhook", "email"]
+      throttle: "0"
+    - name: "auth_failure"
+      level: "warn"
+      channels: ["websocket"]
+      throttle: "1m"

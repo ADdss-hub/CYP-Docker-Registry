@@ -1,0 +1,47 @@
+{
+  "name": "@cyp/unified-version-system",
+  "version": "1.0.0",
+  "description": "统一版本管理系统 - 模块化、自动化的语义化版本管理工具",
+  "main": "version-manager-unified.js",
+  "bin": {
+    "uvm": "./bin/uvm.js",
+    "unified-version": "./bin/uvm.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "version",
+    "semver",
+    "semantic-versioning",
+    "version-management",
+    "changelog",
+    "version-history",
+    "automation"
+  ],
+  "author": "CYP <nasDSSCYP@outlook.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-repo/unified-version-system.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-repo/unified-version-system/issues"
+  },
+  "homepage": "https://github.com/your-repo/unified-version-system#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "modules/",
+    "docs/",
+    "bin/",
+    "version-manager-unified.js",
+    "README.md",
+    "ARCHITECTURE.md",
+    "QUICK_START.md",
+    "COMMANDS.md",
+    "FORMAT_SPECIFICATION.md",
+    "LICENSE"
+  ]
+}

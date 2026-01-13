@@ -1,0 +1,49 @@
+# AWS 云环境配置模板
+# 适用于 AWS EC2/ECS 部署
+
+app:
+  name: "CYP-Registry"
+  log_level: "info"
+
+server:
+  host: "0.0.0.0"
+  port: 8080
+
+storage:
+  blob_path: "/app/data/blobs"
+  meta_path: "/app/data/meta"
+  cache_path: "/app/data/cache"
+  max_cache_size: "100GB"
+
+accelerator:
+  enabled: true
+  upstreams:
+    - name: "Docker Hub"
+      url: "https://registry-1.docker.io"
+      priority: 1
+    - name: "Amazon ECR Public"
+      url: "https://public.ecr.aws"
+      priority: 2
+
+security:
+  force_login: true
+  session_timeout: "24h"
+  max_login_attempts: 3
+  lock_duration: "1h"
+
+cloud:
+  provider: "aws"
+  metadata_timeout: "5s"
+  auto_scaling:
+    enabled: true
+    scale_notify: true
+  storage:
+    type: "hybrid"
+    s3_bucket: ""
+    s3_region: "us-east-1"
+
+p2p:
+  enabled: true
+  max_connections: 100
+  enable_relay: true
+  enable_nat_port_map: true

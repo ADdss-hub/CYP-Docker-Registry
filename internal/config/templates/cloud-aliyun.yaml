@@ -1,0 +1,130 @@
+# CYP-Registry 阿里云环境配置模板
+# 适用于阿里云 ECS、ACK、函数计算等环境
+
+environment:
+  type: "cloud-aliyun"
+  auto_detected: true
+
+# 服务器配置
+server:
+  host: "0.0.0.0"
+  port: 8080
+  mode: "release"
+
+# 存储配置 - 阿里云优化
+storage:
+  blob_path: "/data/blobs"
+  meta_path: "/data/meta"
+  cache_path: "/data/cache"
+  max_cache_size: "20GB"
+  
+  # OSS 配置
+  oss:
+    enabled: false
+    bucket: "${ALIYUN_OSS_BUCKET}"
+    endpoint: "${ALIYUN_OSS_ENDPOINT}"
+    access_key_id: "${ALIYUN_ACCESS_KEY_ID}"
+    access_key_secret: "${ALIYUN_ACCESS_KEY_SECRET}"
+    prefix: "registry/"
+
+# 加速配置 - 阿里云镜像源
+accelerator:
+  enabled: true
+  cache_size: "20GB"
+  ttl: 7200
+  upstreams:
+    - name: "aliyun-mirror"
+      url: "https://registry.cn-hangzhou.aliyuncs.com"
+      priority: 1
+    - name: "docker-hub"
+      url: "https://registry-1.docker.io"
+      priority: 2
+
+# P2P 配置 - 阿里云 VPC 优化
+p2p:
+  enabled: true
+  max_connections: 100
+  enable_relay: true
+  enable_nat_port_map: false  # VPC 内不需要 NAT 穿透
+  bandwidth_limit: "500Mbps"
+
+# 压缩配置 - 高性能实例
+compression:
+  enabled: true
+  algorithm: "zstd"
+  level: 5
+  parallel: true
+
+# 安全配置
+security:
+  force_login:
+    enabled: true
+    mode: "strict"
+  
+  failed_attempts:
+    max_login_attempts: 3
+    max_token_attempts: 5
+    lock_duration: "1h"
+  
+  auto_lock:
+    enabled: true
+    hardware:
+      lock_cpu_percent: 10
+      lock_memory_percent: 10
+  
+  intrusion_detection:
+    enabled: true
+    rules:
+      - name: "direct_url_access"
+        action: "lock"
+        threshold: 1
+      - name: "geolocation_anomaly"
+        action: "warn"
+        threshold: 3
+        allowed_countries: ["CN"]
+
+# 签名配置
+signature:
+  enabled: true
+  mode: "warn"
+  key_management:
+    type: "kms"
+    kms_provider: "aliyun"
+    kms_key_id: "${ALIYUN_KMS_KEY_ID}"
+    kms_region: "${ALIYUN_REGION}"
+
+# SBOM 配置
+sbom:
+  enabled: true
+  generator: "syft"
+  format: "spdx-json"
+  vulnerability:
+    enabled: true
+    scanner: "trivy"
+
+# 监控配置 - 阿里云 ARMS
+monitoring:
+  enabled: true
+  provider: "aliyun-arms"
+  arms_license_key: "${ALIYUN_ARMS_LICENSE_KEY}"
+  metrics_path: "/metrics"
+
+# 日志配置 - 阿里云 SLS
+logging:
+  level: "info"
+  format: "json"
+  sls:
+    enabled: false
+    endpoint: "${ALIYUN_SLS_ENDPOINT}"
+    project: "${ALIYUN_SLS_PROJECT}"
+    logstore: "${ALIYUN_SLS_LOGSTORE}"
+
+# 通知配置 - 钉钉
+notify:
+  channels:
+    dingtalk:
+      enabled: false
+      webhook: "${DINGTALK_WEBHOOK}"
+      secret: "${DINGTALK_SECRET}"
+    websocket:
+      enabled: true

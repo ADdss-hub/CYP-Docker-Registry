@@ -1,0 +1,120 @@
+# CYP-Registry QNAP NAS 环境配置模板
+# 适用于 QNAP NAS 设备
+
+environment:
+  type: "nas-qnap"
+  auto_detected: true
+
+# 服务器配置 - 低功耗优化
+server:
+  host: "0.0.0.0"
+  port: 8080
+  mode: "release"
+
+# 存储配置 - QNAP 优化
+storage:
+  blob_path: "/share/Container/cyp-registry/blobs"
+  meta_path: "/share/Container/cyp-registry/meta"
+  cache_path: "/share/Container/cyp-registry/cache"
+  max_cache_size: "5GB"
+  
+  # HDD 优化
+  hdd_optimization: true
+  write_buffer_size: "64MB"
+  sync_interval: "30s"
+
+# 加速配置 - 带宽限制
+accelerator:
+  enabled: true
+  cache_size: "5GB"
+  ttl: 14400  # 4小时
+  upstreams:
+    - name: "docker-hub"
+      url: "https://registry-1.docker.io"
+      priority: 1
+  
+  # 带宽限制
+  bandwidth:
+    download_limit: "50Mbps"
+    upload_limit: "20Mbps"
+
+# P2P 配置 - 禁用（NAS 通常不需要）
+p2p:
+  enabled: false
+
+# 压缩配置 - 低 CPU 优化
+compression:
+  enabled: true
+  algorithm: "gzip"  # gzip 比 zstd 更省 CPU
+  level: 1  # 最低压缩级别
+  parallel: false  # 单线程
+
+# 资源限制 - QNAP 优化
+resources:
+  cpu_limit: 2
+  memory_limit: "1GB"
+  io_priority: "low"
+
+# 安全配置
+security:
+  force_login:
+    enabled: true
+    mode: "strict"
+  
+  failed_attempts:
+    max_login_attempts: 3
+    lock_duration: "30m"
+  
+  auto_lock:
+    enabled: true
+    hardware:
+      lock_cpu_percent: 5
+      lock_memory_percent: 10
+
+# 签名配置 - 简化
+signature:
+  enabled: true
+  mode: "warn"
+  key_management:
+    type: "local"
+    local_path: "/share/Container/cyp-registry/keys"
+
+# SBOM 配置 - 按需生成
+sbom:
+  enabled: true
+  generator: "syft"
+  auto_generate:
+    enabled: false  # 手动触发
+    on_push: false
+
+# 清理配置 - 积极清理
+storage_cleanup:
+  enabled: true
+  schedule: "0 3 * * *"  # 每天凌晨3点
+  policies:
+    - name: "clean_old_tags"
+      keep_days: 14
+      keep_count: 3
+    - name: "clean_cache"
+      max_age: "7d"
+
+# 健康检查 - 低频率
+health:
+  check:
+    enabled: true
+    interval: "15m"  # 15分钟检查一次
+
+# 通知配置
+notify:
+  channels:
+    websocket:
+      enabled: true
+    file:
+      enabled: true
+      path: "/share/Container/cyp-registry/logs/audit.log"
+
+# QNAP 特定配置
+qnap:
+  container_station_integration: true
+  use_qpkg_storage: false
+  enable_qts_notifications: false

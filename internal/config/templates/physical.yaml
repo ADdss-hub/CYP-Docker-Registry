@@ -1,0 +1,182 @@
+# CYP-Registry 物理机环境配置模板
+# 适用于裸金属服务器、工作站等物理机环境
+
+environment:
+  type: "physical"
+  auto_detected: true
+
+# 服务器配置 - 高性能
+server:
+  host: "0.0.0.0"
+  port: 8080
+  mode: "release"
+
+# 存储配置 - 物理机优化
+storage:
+  blob_path: "/var/lib/cyp-registry/blobs"
+  meta_path: "/var/lib/cyp-registry/meta"
+  cache_path: "/var/lib/cyp-registry/cache"
+  max_cache_size: "50GB"
+  
+  # 存储类型自动检测
+  storage_type: "auto"  # auto/ssd/hdd/nvme
+  
+  # SSD 优化
+  ssd_optimization: true
+  direct_io: true
+  
+  # RAID 配置
+  raid_aware: true
+
+# 加速配置 - 高性能
+accelerator:
+  enabled: true
+  cache_size: "50GB"
+  ttl: 3600
+  upstreams:
+    - name: "docker-hub"
+      url: "https://registry-1.docker.io"
+      priority: 1
+    - name: "gcr"
+      url: "https://gcr.io"
+      priority: 2
+    - name: "ghcr"
+      url: "https://ghcr.io"
+      priority: 3
+
+# P2P 配置 - 完整功能
+p2p:
+  enabled: true
+  max_connections: 200
+  enable_relay: true
+  enable_nat_port_map: true
+  bandwidth_limit: "1Gbps"
+  data_dir: "/var/lib/cyp-registry/p2p"
+
+# 压缩配置 - 高性能
+compression:
+  enabled: true
+  algorithm: "zstd"
+  level: 6
+  parallel: true
+  threads: 0  # 自动检测 CPU 核心数
+
+# 安全配置
+security:
+  force_login:
+    enabled: true
+    mode: "strict"
+  
+  failed_attempts:
+    max_login_attempts: 3
+    max_token_attempts: 5
+    lock_duration: "1h"
+  
+  auto_lock:
+    enabled: true
+    hardware:
+      lock_cpu_percent: 10
+      lock_memory_percent: 10
+    network:
+      block_incoming: true
+  
+  intrusion_detection:
+    enabled: true
+    rules:
+      - name: "direct_url_access"
+        action: "lock"
+        threshold: 1
+      - name: "forged_jwt"
+        action: "lock"
+        threshold: 1
+      - name: "brute_force"
+        action: "lock"
+        threshold: 5
+        window: "5m"
+
+# 签名配置
+signature:
+  enabled: true
+  mode: "enforce"
+  key_management:
+    type: "local"
+    local_path: "/var/lib/cyp-registry/keys"
+  auto_sign:
+    enabled: true
+    sign_on_push: true
+
+# SBOM 配置
+sbom:
+  enabled: true
+  generator: "syft"
+  format: "spdx-json"
+  auto_generate:
+    enabled: true
+    on_push: true
+    parallel: 4
+  vulnerability:
+    enabled: true
+    scanner: "trivy"
+    auto_scan: true
+
+# 同步配置
+sync:
+  enabled: true
+  interval: "4h"
+  parallel: 5
+  retry:
+    attempts: 5
+    backoff: "exponential"
+
+# 清理配置
+storage_cleanup:
+  enabled: true
+  schedule: "0 2 * * *"
+  policies:
+    - name: "clean_old_tags"
+      keep_days: 60
+      keep_count: 10
+    - name: "clean_untagged"
+      enabled: true
+      max_age: "7d"
+
+# 健康检查
+health:
+  check:
+    enabled: true
+    interval: "5m"
+  checks:
+    - name: "disk_space"
+      type: "disk"
+      path: "/var/lib/cyp-registry"
+      min_free: "10GB"
+    - name: "memory_usage"
+      type: "memory"
+      max_percent: 85
+
+# 监控配置
+monitoring:
+  enabled: true
+  metrics_path: "/metrics"
+  prometheus:
+    enabled: true
+    port: 9090
+
+# 通知配置
+notify:
+  channels:
+    websocket:
+      enabled: true
+    webhook:
+      enabled: false
+    email:
+      enabled: false
+    file:
+      enabled: true
+      path: "/var/log/cyp-registry/audit.log"
+
+# 系统配置
+system:
+  auto_update: false
+  backup_before_update: true
+  update_channel: "stable"

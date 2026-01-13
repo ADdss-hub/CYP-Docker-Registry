@@ -1,0 +1,61 @@
+# Container Registry - Docker Compose Configuration
+# Author: CYP | Contact: nasDSSCYP@outlook.com
+#
+# Usage:
+#   Start:   docker-compose up -d
+#   Stop:    docker-compose down
+#   Logs:    docker-compose logs -f
+#   Rebuild: docker-compose up -d --build
+
+version: '3.8'
+
+services:
+  registry:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: container-registry:latest
+    container_name: container-registry
+    restart: unless-stopped
+    ports:
+      # Main API port (Web UI, Docker Registry V2 API, Management API)
+      - "8080:8080"
+    volumes:
+      # Persistent data storage
+      - registry-blobs:/app/data/blobs
+      - registry-meta:/app/data/meta
+      - registry-cache:/app/data/cache
+      # Configuration (mount your custom config here)
+      - ./configs:/app/configs:ro
+    environment:
+      - TZ=Asia/Shanghai
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - registry-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  # Named volumes for persistent storage
+  registry-blobs:
+    driver: local
+    name: container-registry-blobs
+  registry-meta:
+    driver: local
+    name: container-registry-meta
+  registry-cache:
+    driver: local
+    name: container-registry-cache
+
+networks:
+  registry-network:
+    driver: bridge
+    name: container-registry-network

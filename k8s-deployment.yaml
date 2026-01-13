@@ -1,0 +1,272 @@
+# CYP-Registry Kubernetes Deployment
+# 零信任容器镜像私有仓库 K8s 部署配置
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cyp-registry
+  labels:
+    app: cyp-registry
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cyp-registry-config
+  namespace: cyp-registry
+data:
+  config.yaml: |
+    server:
+      host: "0.0.0.0"
+      port: 8080
+      mode: "release"
+    
+    storage:
+      blob_path: "/data/blobs"
+      meta_path: "/data/meta"
+      cache_path: "/data/cache"
+      max_cache_size: "10GB"
+    
+    security:
+      force_login: true
+      max_login_attempts: 3
+      lock_on_intrusion: true
+      audit_blockchain: true
+      jwt_secret: "${JWT_SECRET}"
+    
+    accelerator:
+      enabled: true
+      upstreams:
+        - name: "docker-hub"
+          url: "https://registry-1.docker.io"
+          priority: 1
+        - name: "gcr"
+          url: "https://gcr.io"
+          priority: 2
+    
+    signature:
+      enabled: true
+      mode: "warn"
+      key_path: "/data/signatures"
+    
+    sbom:
+      enabled: true
+      generator: "syft"
+      format: "spdx-json"
+      storage_path: "/data/sboms"
+      vuln_scan: true
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cyp-registry-secrets
+  namespace: cyp-registry
+type: Opaque
+stringData:
+  jwt-secret: "change-me-in-production-use-strong-secret"
+  admin-password: "admin123"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cyp-registry-data
+  namespace: cyp-registry
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: standard
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cyp-registry
+  namespace: cyp-registry
+  labels:
+    app: cyp-registry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cyp-registry
+  template:
+    metadata:
+      labels:
+        app: cyp-registry
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: cyp-registry
+          image: cyp-registry:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: cyp-registry-secrets
+                  key: jwt-secret
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cyp-registry-secrets
+                  key: admin-password
+          volumeMounts:
+            - name: config
+              mountPath: /app/configs
+              readOnly: true
+            - name: data
+              mountPath: /data
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+      volumes:
+        - name: config
+          configMap:
+            name: cyp-registry-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: cyp-registry-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cyp-registry
+  namespace: cyp-registry
+  labels:
+    app: cyp-registry
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: cyp-registry
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cyp-registry
+  namespace: cyp-registry
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - registry.example.com
+      secretName: cyp-registry-tls
+  rules:
+    - host: registry.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: cyp-registry
+                port:
+                  name: http
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: cyp-registry
+  namespace: cyp-registry
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: cyp-registry
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: cyp-registry
+  namespace: cyp-registry
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: cyp-registry
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cyp-registry
+  namespace: cyp-registry
+spec:
+  podSelector:
+    matchLabels:
+      app: cyp-registry
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 8080
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 80

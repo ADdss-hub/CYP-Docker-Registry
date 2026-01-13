@@ -1,0 +1,42 @@
+# 群晖 NAS 环境配置模板
+# 适用于 Synology NAS 部署
+
+app:
+  name: "CYP-Registry"
+  log_level: "info"
+
+server:
+  host: "0.0.0.0"
+  port: 8080
+
+storage:
+  blob_path: "/volume1/docker/cyp-registry/blobs"
+  meta_path: "/volume1/docker/cyp-registry/meta"
+  cache_path: "/volume1/docker/cyp-registry/cache"
+  max_cache_size: "50GB"
+
+accelerator:
+  enabled: true
+  upstreams:
+    - name: "Docker Hub"
+      url: "https://registry-1.docker.io"
+      priority: 1
+    - name: "阿里云"
+      url: "https://registry.cn-hangzhou.aliyuncs.com"
+      priority: 2
+
+security:
+  force_login: true
+  session_timeout: "24h"
+  max_login_attempts: 3
+  lock_duration: "1h"
+
+nas:
+  device: "synology"
+  low_power_mode: true
+  max_memory_usage: "60%"
+  hdd_optimization: true
+  enable_sleep_mode: false
+  network:
+    adaptive_qos: true
+    max_bandwidth: "0"
