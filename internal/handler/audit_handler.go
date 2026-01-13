@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"cyp-registry/internal/dao"
+	"cyp-docker-registry/internal/dao"
 
 	"github.com/gin-gonic/gin"
 )

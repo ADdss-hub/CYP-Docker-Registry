@@ -1,4 +1,5 @@
-# CYP-Registry - Configuration Template
+# CYP-Docker-Registry - Configuration Template
+# Version: v1.0.0
 # Author: CYP | Contact: nasDSSCYP@outlook.com
 #
 # Copy this file to config.yaml and modify as needed:
@@ -71,7 +72,7 @@ update:
   # Enable automatic updates (requires restart)
   auto_update: false
   # URL for checking latest release
-  update_url: "https://api.github.com/repos/CYP/cyp-registry/releases/latest"
+  update_url: "https://api.github.com/repos/CYP/cyp-docker-registry/releases/latest"
 
 # =============================================================================
 # Authentication Configuration (Legacy - see Security section)
@@ -188,7 +189,7 @@ jwt:
   # Token expiry duration
   expiry: "24h"
   # Issuer name
-  issuer: "CYP-Registry"
+  issuer: "CYP-Docker-Registry"
 
 # =============================================================================
 # Public Registry Sync Configuration

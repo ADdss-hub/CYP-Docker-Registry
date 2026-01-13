@@ -1,5 +1,6 @@
 #!/bin/sh
-# CYP-Registry 容器入口脚本
+# CYP-Docker-Registry 容器入口脚本
+# Version: v1.0.0
 # Author: CYP | Contact: nasDSSCYP@outlook.com
 
 set -e
@@ -21,7 +22,7 @@ log_error() {
 print_banner() {
     echo ""
     echo "╔════════════════════════════════════════════════╗"
-    echo "║           CYP-Registry v1.0.0                  ║"
+    echo "║        CYP-Docker-Registry v1.0.0              ║"
     echo "║     零信任容器镜像私有仓库管理系统             ║"
     echo "╚════════════════════════════════════════════════╝"
     echo ""
@@ -117,7 +118,7 @@ main() {
     check_config
     init_database
     
-    log_info "启动 CYP-Registry 服务..."
+    log_info "启动 CYP-Docker-Registry 服务..."
     log_info "监听地址: ${HOST}:${PORT}"
     
     # 启动服务器

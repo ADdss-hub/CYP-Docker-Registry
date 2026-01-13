@@ -1,5 +1,6 @@
 #!/bin/bash
-# CYP-Registry 智能安装脚本
+# CYP-Docker-Registry 智能安装脚本
+# Version: v1.0.0
 # 自动检测环境并配置最优参数
 
 set -e
@@ -17,14 +18,14 @@ AUTHOR="CYP"
 EMAIL="nasDSSCYP@outlook.com"
 
 # 默认配置
-INSTALL_DIR="/opt/cyp-registry"
-DATA_DIR="/opt/cyp-registry/data"
-CONFIG_FILE="/opt/cyp-registry/config.yaml"
+INSTALL_DIR="/opt/cyp-docker-registry"
+DATA_DIR="/opt/cyp-docker-registry/data"
+CONFIG_FILE="/opt/cyp-docker-registry/config.yaml"
 PORT=8080
 
 echo -e "${BLUE}"
 echo "╔════════════════════════════════════════════════╗"
-echo "║        CYP-Registry 智能安装脚本               ║"
+echo "║   CYP-Docker-Registry 智能安装脚本 v1.0.0    ║"
 echo "║        版本: v${VERSION}                           ║"
 echo "╚════════════════════════════════════════════════╝"
 echo -e "${NC}"
@@ -194,12 +195,12 @@ generate_config() {
     
     # 生成基础配置
     cat > "$CONFIG_FILE" <<EOF
-# CYP-Registry 配置文件
+# CYP-Docker-Registry 配置文件
 # 环境: $ENV_TYPE
 # 生成时间: $(date)
 
 app:
-  name: "CYP-Registry"
+  name: "CYP-Docker-Registry"
   version: "v${VERSION}"
   port: ${PORT}
   host: "0.0.0.0"
@@ -265,9 +266,9 @@ generate_docker_compose() {
 version: '3.8'
 
 services:
-  cyp-registry:
-    image: cyp/registry:latest
-    container_name: cyp-registry
+  cyp-docker-registry:
+    image: cyp/docker-registry:latest
+    container_name: cyp-docker-registry
     restart: unless-stopped
     ports:
       - "${PORT}:8080"
@@ -290,9 +291,9 @@ EOF
 generate_unlock_script() {
     cat > "$INSTALL_DIR/scripts/unlock.sh" <<'SCRIPT'
 #!/bin/bash
-# CYP-Registry 解锁脚本
+# CYP-Docker-Registry 解锁脚本
 
-echo "CYP-Registry 解锁工具"
+echo "CYP-Docker-Registry 解锁工具"
 echo "====================="
 
 read -p "请输入管理员密码: " -s PASSWORD
@@ -334,7 +335,7 @@ print_completion() {
     echo "启动命令:"
     echo "  cd $INSTALL_DIR && docker-compose up -d"
     echo ""
-    echo -e "${BLUE}感谢使用 CYP-Registry！${NC}"
+    echo -e "${BLUE}感谢使用 CYP-Docker-Registry！${NC}"
     echo -e "${BLUE}作者: $AUTHOR | 邮箱: $EMAIL${NC}"
 }
 

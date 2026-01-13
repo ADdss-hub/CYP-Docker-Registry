@@ -1,4 +1,4 @@
-# CYP-Registry 物理机环境配置模板
+# CYP-Docker-Registry 物理机环境配置模板
 # 适用于裸金属服务器、工作站等物理机环境
 
 environment:
@@ -13,9 +13,9 @@ server:
 
 # 存储配置 - 物理机优化
 storage:
-  blob_path: "/var/lib/cyp-registry/blobs"
-  meta_path: "/var/lib/cyp-registry/meta"
-  cache_path: "/var/lib/cyp-registry/cache"
+  blob_path: "/var/lib/cyp-docker-registry/blobs"
+  meta_path: "/var/lib/cyp-docker-registry/meta"
+  cache_path: "/var/lib/cyp-docker-registry/cache"
   max_cache_size: "50GB"
   
   # 存储类型自动检测
@@ -51,7 +51,7 @@ p2p:
   enable_relay: true
   enable_nat_port_map: true
   bandwidth_limit: "1Gbps"
-  data_dir: "/var/lib/cyp-registry/p2p"
+  data_dir: "/var/lib/cyp-docker-registry/p2p"
 
 # 压缩配置 - 高性能
 compression:
@@ -100,7 +100,7 @@ signature:
   mode: "enforce"
   key_management:
     type: "local"
-    local_path: "/var/lib/cyp-registry/keys"
+    local_path: "/var/lib/cyp-docker-registry/keys"
   auto_sign:
     enabled: true
     sign_on_push: true
@@ -148,7 +148,7 @@ health:
   checks:
     - name: "disk_space"
       type: "disk"
-      path: "/var/lib/cyp-registry"
+      path: "/var/lib/cyp-docker-registry"
       min_free: "10GB"
     - name: "memory_usage"
       type: "memory"
@@ -173,7 +173,7 @@ notify:
       enabled: false
     file:
       enabled: true
-      path: "/var/log/cyp-registry/audit.log"
+      path: "/var/log/cyp-docker-registry/audit.log"
 
 # 系统配置
 system:

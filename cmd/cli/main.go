@@ -1,4 +1,4 @@
-// Package main is the entry point for the CYP-Registry CLI tool.
+// Package main is the entry point for the CYP-Docker-Registry CLI tool.
 package main
 
 import (
@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	appName = "CYP-Registry CLI"
+	appName = "CYP-Docker-Registry CLI"
 	version = "1.0.0"
 )
 
@@ -60,7 +60,7 @@ func main() {
 }
 
 func printUsage() {
-	fmt.Println("CYP-Registry CLI Tool")
+	fmt.Println("CYP-Docker-Registry CLI Tool")
 	fmt.Println("")
 	fmt.Println("Usage:")
 	fmt.Println("  cyp-cli [flags] <command> [args]")

@@ -1,4 +1,4 @@
-// Package middleware provides security middleware for CYP-Registry.
+// Package middleware provides security middleware for CYP-Docker-Registry.
 package middleware
 
 import (

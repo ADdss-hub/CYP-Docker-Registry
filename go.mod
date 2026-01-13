@@ -1,4 +1,4 @@
-module cyp-registry
+module cyp-docker-registry
 
 go 1.21
 

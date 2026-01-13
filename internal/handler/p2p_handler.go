@@ -4,7 +4,7 @@ package handler
 import (
 	"net/http"
 
-	"cyp-registry/internal/service"
+	"cyp-docker-registry/internal/service"
 
 	"github.com/gin-gonic/gin"
 )

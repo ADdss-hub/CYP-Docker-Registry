@@ -1,8 +1,8 @@
-# CYP-Registry 安全指南
+# CYP-Docker-Registry 安全指南
 
 ## 概述
 
-CYP-Registry 采用零信任架构设计，所有访问必须经过认证，任何绕过尝试都会触发系统锁定。
+CYP-Docker-Registry 采用零信任架构设计，所有访问必须经过认证，任何绕过尝试都会触发系统锁定。
 
 ## 核心安全特性
 
@@ -67,23 +67,23 @@ security:
 ### 方法 2: CLI 工具
 
 ```bash
-./cyp-registry cli unlock --password <admin_password>
+./cyp-docker-registry cli unlock --password <admin_password>
 ```
 
 ### 方法 3: Docker 环境
 
 ```bash
-docker exec -it cyp-registry /app/scripts/unlock.sh
+docker exec -it cyp-docker-registry /app/scripts/unlock.sh
 ```
 
 ### 方法 4: 紧急恢复
 
 ```bash
 # 重启容器（如果未启用持久化锁定）
-docker restart cyp-registry
+docker restart cyp-docker-registry
 
 # 或使用恢复密钥
-./cyp-registry cli unlock --recovery-key <recovery_key>
+./cyp-docker-registry cli unlock --recovery-key <recovery_key>
 ```
 
 ## 最佳实践
@@ -104,10 +104,10 @@ docker restart cyp-registry
 
 ## 联系方式
 
-- 安全问题报告: security@cyp-registry.com
+- 安全问题报告: security@cyp-docker-registry.com
 - 邮箱: nasDSSCYP@outlook.com
 
 ---
 
 **版本**: v1.0.0  
-**最后更新**: 2026-01-13
+**最后更新**: 2026-01-14

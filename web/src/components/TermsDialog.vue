@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { ElDialog, ElButton, ElCheckbox, ElScrollbar } from 'element-plus'
 
-const TERMS_ACCEPTED_KEY = 'cyp-registry-terms-accepted'
+const TERMS_ACCEPTED_KEY = 'cyp-docker-registry-terms-accepted'
 
 const visible = ref(false)
 const agreed = ref(false)

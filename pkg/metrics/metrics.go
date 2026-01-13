@@ -1,4 +1,5 @@
-// Package metrics provides monitoring metrics for CYP-Registry.
+// Package metrics provides monitoring metrics for CYP-Docker-Registry.
+// Version: v1.0.0
 package metrics
 
 import (
@@ -226,9 +227,9 @@ var (
 	RegistryStorageBytes *Gauge
 
 	// Security metrics
-	AuthAttemptsTotal   *Counter
-	AuthFailuresTotal   *Counter
-	LockEventsTotal     *Counter
+	AuthAttemptsTotal    *Counter
+	AuthFailuresTotal    *Counter
+	LockEventsTotal      *Counter
 	IntrusionEventsTotal *Counter
 )
 

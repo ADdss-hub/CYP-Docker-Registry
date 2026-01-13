@@ -23,13 +23,13 @@ import (
 
 const (
 	// ProtocolID P2P协议标识
-	ProtocolID = "/cyp-registry/1.0.0"
+	ProtocolID = "/cyp-docker-registry/1.0.0"
 	// BlobProtocolID Blob传输协议
-	BlobProtocolID = "/cyp-registry/blob/1.0.0"
+	BlobProtocolID = "/cyp-docker-registry/blob/1.0.0"
 	// MetaProtocolID 元数据协议
-	MetaProtocolID = "/cyp-registry/meta/1.0.0"
+	MetaProtocolID = "/cyp-docker-registry/meta/1.0.0"
 	// DiscoveryServiceTag mDNS发现标签
-	DiscoveryServiceTag = "cyp-registry-discovery"
+	DiscoveryServiceTag = "cyp-docker-registry-discovery"
 )
 
 // Config P2P节点配置
@@ -223,7 +223,6 @@ func (n *Node) Start() error {
 	return nil
 }
 
-
 // Stop 停止P2P节点
 func (n *Node) Stop() error {
 	n.logger.Info("正在停止P2P节点...")
@@ -405,7 +404,7 @@ func (n *Node) detectNATStatus() string {
 
 // isPrivateAddr 检查是否为私有地址
 func isPrivateAddr(addr string) bool {
-	// 简化检查
+	// 简化检测
 	return len(addr) > 0 && (addr[0:4] == "/ip4" &&
 		(addr[5:8] == "10." || addr[5:12] == "192.168" || addr[5:10] == "172."))
 }

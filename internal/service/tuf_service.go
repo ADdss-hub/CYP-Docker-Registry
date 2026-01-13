@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"cyp-registry/pkg/signature"
+	"cyp-docker-registry/pkg/signature"
 
 	"go.uber.org/zap"
 )

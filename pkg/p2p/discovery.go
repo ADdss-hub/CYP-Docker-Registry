@@ -15,7 +15,7 @@ import (
 
 const (
 	// RendezvousString 集合点字符串
-	RendezvousString = "cyp-registry-rendezvous"
+	RendezvousString = "cyp-docker-registry-rendezvous"
 	// DiscoveryInterval 发现间隔
 	DiscoveryInterval = 30 * time.Second
 )

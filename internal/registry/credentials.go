@@ -20,7 +20,7 @@ const (
 	// EncryptedPrefix is the prefix for encrypted values.
 	EncryptedPrefix = "encrypted:"
 	// DefaultEncryptionKey is used when no key is provided (should be overridden in production).
-	DefaultEncryptionKey = "cyp-registry-default-key!!!!!!!!"
+	DefaultEncryptionKey = "cyp-docker-registry-default-key!"
 )
 
 // Credential represents a stored credential for a registry.

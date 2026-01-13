@@ -1,4 +1,4 @@
-// Package config provides configuration management for CYP-Registry.
+// Package config provides configuration management for CYP-Docker-Registry.
 package config
 
 import (

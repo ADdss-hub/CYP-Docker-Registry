@@ -2,7 +2,7 @@
 package registry
 
 import (
-	"cyp-registry/internal/common"
+	"cyp-docker-registry/internal/common"
 	"io"
 	"net/http"
 	"strconv"

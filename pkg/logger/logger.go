@@ -1,4 +1,5 @@
-// Package logger provides logging utilities for CYP-Registry.
+// Package logger provides logging utilities for CYP-Docker-Registry.
+// Version: v1.0.0
 package logger
 
 import (

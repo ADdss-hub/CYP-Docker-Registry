@@ -1,18 +1,19 @@
-# CYP-Registry Kubernetes Deployment
+# CYP-Docker-Registry Kubernetes Deployment
+# Version: v1.0.0
 # 零信任容器镜像私有仓库 K8s 部署配置
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: cyp-registry
+  name: cyp-docker-registry
   labels:
-    app: cyp-registry
+    app: cyp-docker-registry
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: cyp-registry-config
-  namespace: cyp-registry
+  name: cyp-docker-registry-config
+  namespace: cyp-docker-registry
 data:
   config.yaml: |
     server:
@@ -58,8 +59,8 @@ data:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: cyp-registry-secrets
-  namespace: cyp-registry
+  name: cyp-docker-registry-secrets
+  namespace: cyp-docker-registry
 type: Opaque
 stringData:
   jwt-secret: "change-me-in-production-use-strong-secret"
@@ -68,8 +69,8 @@ stringData:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: cyp-registry-data
-  namespace: cyp-registry
+  name: cyp-docker-registry-data
+  namespace: cyp-docker-registry
 spec:
   accessModes:
     - ReadWriteOnce
@@ -81,27 +82,27 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cyp-registry
-  namespace: cyp-registry
+  name: cyp-docker-registry
+  namespace: cyp-docker-registry
   labels:
-    app: cyp-registry
+    app: cyp-docker-registry
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: cyp-registry
+      app: cyp-docker-registry
   template:
     metadata:
       labels:
-        app: cyp-registry
+        app: cyp-docker-registry
     spec:
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
         fsGroup: 1000
       containers:
-        - name: cyp-registry
-          image: cyp-registry:latest
+        - name: cyp-docker-registry
+          image: cyp-docker-registry:latest
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -111,12 +112,12 @@ spec:
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: cyp-registry-secrets
+                  name: cyp-docker-registry-secrets
                   key: jwt-secret
             - name: ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: cyp-registry-secrets
+                  name: cyp-docker-registry-secrets
                   key: admin-password
           volumeMounts:
             - name: config
@@ -154,18 +155,18 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: cyp-registry-config
+            name: cyp-docker-registry-config
         - name: data
           persistentVolumeClaim:
-            claimName: cyp-registry-data
+            claimName: cyp-docker-registry-data
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: cyp-registry
-  namespace: cyp-registry
+  name: cyp-docker-registry
+  namespace: cyp-docker-registry
   labels:
-    app: cyp-registry
+    app: cyp-docker-registry
 spec:
   type: ClusterIP
   ports:
@@ -174,13 +175,13 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: cyp-registry
+    app: cyp-docker-registry
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: cyp-registry
-  namespace: cyp-registry
+  name: cyp-docker-registry
+  namespace: cyp-docker-registry
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
@@ -191,7 +192,7 @@ spec:
   tls:
     - hosts:
         - registry.example.com
-      secretName: cyp-registry-tls
+      secretName: cyp-docker-registry-tls
   rules:
     - host: registry.example.com
       http:
@@ -200,31 +201,31 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: cyp-registry
+                name: cyp-docker-registry
                 port:
                   name: http
 ---
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: cyp-registry
-  namespace: cyp-registry
+  name: cyp-docker-registry
+  namespace: cyp-docker-registry
 spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app: cyp-registry
+      app: cyp-docker-registry
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: cyp-registry
-  namespace: cyp-registry
+  name: cyp-docker-registry
+  namespace: cyp-docker-registry
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: cyp-registry
+    name: cyp-docker-registry
   minReplicas: 1
   maxReplicas: 5
   metrics:
@@ -244,12 +245,12 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: cyp-registry
-  namespace: cyp-registry
+  name: cyp-docker-registry
+  namespace: cyp-docker-registry
 spec:
   podSelector:
     matchLabels:
-      app: cyp-registry
+      app: cyp-docker-registry
   policyTypes:
     - Ingress
     - Egress

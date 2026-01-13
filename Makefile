@@ -1,4 +1,4 @@
-# CYP-Registry Makefile
+# CYP-Docker-Registry Makefile
 # 构建和管理脚本
 
 .PHONY: all build build-server build-cli build-web clean test lint docker help
@@ -18,12 +18,12 @@ build: build-server build-cli build-web
 # 构建服务器
 build-server:
 	@echo "Building server..."
-	go build $(LDFLAGS) -o bin/cyp-registry ./cmd/server
+	go build $(LDFLAGS) -o bin/cyp-docker-registry ./cmd/server
 
 # 构建 CLI 工具
 build-cli:
 	@echo "Building CLI..."
-	go build $(LDFLAGS) -o bin/cyp-cli ./cmd/cli
+	go build $(LDFLAGS) -o bin/cyp-docker-registry-cli ./cmd/cli
 
 # 构建前端
 build-web:
@@ -66,8 +66,8 @@ deps:
 # Docker 构建
 docker:
 	@echo "Building Docker image..."
-	docker build -t cyp-registry:$(VERSION) .
-	docker tag cyp-registry:$(VERSION) cyp-registry:latest
+	docker build -t cyp-docker-registry:$(VERSION) .
+	docker tag cyp-docker-registry:$(VERSION) cyp-docker-registry:latest
 
 # Docker Compose 启动
 up:
@@ -96,25 +96,25 @@ migrate:
 # 安装到系统
 install: build
 	@echo "Installing..."
-	cp bin/cyp-registry /usr/local/bin/
-	cp bin/cyp-cli /usr/local/bin/
-	mkdir -p /etc/cyp-registry
-	cp configs/config.yaml.example /etc/cyp-registry/config.yaml
+	cp bin/cyp-docker-registry /usr/local/bin/
+	cp bin/cyp-docker-registry-cli /usr/local/bin/
+	mkdir -p /etc/cyp-docker-registry
+	cp configs/config.yaml.example /etc/cyp-docker-registry/config.yaml
 
 # 卸载
 uninstall:
 	@echo "Uninstalling..."
-	rm -f /usr/local/bin/cyp-registry
-	rm -f /usr/local/bin/cyp-cli
+	rm -f /usr/local/bin/cyp-docker-registry
+	rm -f /usr/local/bin/cyp-docker-registry-cli
 
 # 跨平台构建
 build-all:
 	@echo "Building for all platforms..."
-	GOOS=linux GOARCH=amd64 go build $(LDFLAGS) -o bin/cyp-registry-linux-amd64 ./cmd/server
-	GOOS=linux GOARCH=arm64 go build $(LDFLAGS) -o bin/cyp-registry-linux-arm64 ./cmd/server
-	GOOS=darwin GOARCH=amd64 go build $(LDFLAGS) -o bin/cyp-registry-darwin-amd64 ./cmd/server
-	GOOS=darwin GOARCH=arm64 go build $(LDFLAGS) -o bin/cyp-registry-darwin-arm64 ./cmd/server
-	GOOS=windows GOARCH=amd64 go build $(LDFLAGS) -o bin/cyp-registry-windows-amd64.exe ./cmd/server
+	GOOS=linux GOARCH=amd64 go build $(LDFLAGS) -o bin/cyp-docker-registry-linux-amd64 ./cmd/server
+	GOOS=linux GOARCH=arm64 go build $(LDFLAGS) -o bin/cyp-docker-registry-linux-arm64 ./cmd/server
+	GOOS=darwin GOARCH=amd64 go build $(LDFLAGS) -o bin/cyp-docker-registry-darwin-amd64 ./cmd/server
+	GOOS=darwin GOARCH=arm64 go build $(LDFLAGS) -o bin/cyp-docker-registry-darwin-arm64 ./cmd/server
+	GOOS=windows GOARCH=amd64 go build $(LDFLAGS) -o bin/cyp-docker-registry-windows-amd64.exe ./cmd/server
 
 # 发布
 release: clean build-all docker
@@ -151,7 +151,7 @@ version-sync:
 
 # 帮助
 help:
-	@echo "CYP-Registry Makefile"
+	@echo "CYP-Docker-Registry Makefile"
 	@echo ""
 	@echo "Usage:"
 	@echo "  make [target]"
@@ -178,8 +178,8 @@ help:
 	@echo "  help         Show this help"
 	@echo ""
 	@echo "Version Management (UVM):"
-	@echo "  version-patch  Bump patch version (0.1.0 -> 0.1.1)"
-	@echo "  version-minor  Bump minor version (0.1.0 -> 0.2.0)"
-	@echo "  version-major  Bump major version (0.1.0 -> 1.0.0)"
+	@echo "  version-patch  Bump patch version (1.0.0 -> 1.0.1)"
+	@echo "  version-minor  Bump minor version (1.0.0 -> 1.1.0)"
+	@echo "  version-major  Bump major version (1.0.0 -> 2.0.0)"
 	@echo "  version-info   Show version info"
 	@echo "  version-history Generate version history"

@@ -1,11 +1,12 @@
 #!/bin/bash
-# CYP-Registry 解锁脚本
+# CYP-Docker-Registry 解锁脚本
+# Version: v1.0.0
 # 用于在系统被锁定时手动解锁
 
 set -e
 
 echo "╔════════════════════════════════════════════════╗"
-echo "║        CYP-Registry 系统解锁工具               ║"
+echo "║     CYP-Docker-Registry 系统解锁工具          ║"
 echo "╚════════════════════════════════════════════════╝"
 echo ""
 
@@ -68,13 +69,13 @@ else
     echo "✗ 解锁失败: $RESPONSE"
     exit 1
 fi
-# CYP-Registry Unlock Script
+# CYP-Docker-Registry Unlock Script
 # Author: CYP | Contact: nasDSSCYP@outlook.com
 
 set -e
 
 echo "=========================================="
-echo "  CYP-Registry 系统解锁工具"
+echo "  CYP-Docker-Registry 系统解锁工具"
 echo "=========================================="
 echo ""
 

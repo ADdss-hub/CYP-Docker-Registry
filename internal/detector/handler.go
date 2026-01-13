@@ -2,7 +2,7 @@
 package detector
 
 import (
-	"cyp-registry/internal/common"
+	"cyp-docker-registry/internal/common"
 
 	"github.com/gin-gonic/gin"
 )

@@ -2,9 +2,9 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import request from '@/utils/request'
 
-const TOKEN_KEY = 'cyp-registry-token'
-const USER_KEY = 'cyp-registry-user'
-const SESSION_KEY = 'cyp-registry-session'
+const TOKEN_KEY = 'cyp-docker-registry-token'
+const USER_KEY = 'cyp-docker-registry-user'
+const SESSION_KEY = 'cyp-docker-registry-session'
 
 export interface User {
   id: number

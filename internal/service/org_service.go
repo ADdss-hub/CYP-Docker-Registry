@@ -1,11 +1,11 @@
-// Package service provides business logic services for CYP-Registry.
+// Package service provides business logic services for CYP-Docker-Registry.
 package service
 
 import (
 	"errors"
 	"time"
 
-	"cyp-registry/internal/dao"
+	"cyp-docker-registry/internal/dao"
 
 	"go.uber.org/zap"
 )

@@ -82,7 +82,7 @@ func (nt *NATTraversal) Start(ctx context.Context) error {
 }
 
 // detectNATType 检测NAT类型
-func (nt *NATTraversal) detectNATType(ctx context.Context) {
+func (nt *NATTraversal) detectNATType(_ context.Context) {
 	nt.mu.Lock()
 	defer nt.mu.Unlock()
 
@@ -121,7 +121,7 @@ func (nt *NATTraversal) detectNATType(ctx context.Context) {
 }
 
 // findRelays 查找中继节点
-func (nt *NATTraversal) findRelays(ctx context.Context) {
+func (nt *NATTraversal) findRelays(_ context.Context) {
 	// 从DHT查找中继节点
 	if nt.node.dht == nil {
 		return

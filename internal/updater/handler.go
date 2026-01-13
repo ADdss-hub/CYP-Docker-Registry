@@ -1,8 +1,8 @@
-// Package updater provides auto-update functionality for CYP-Registry.
+// Package updater provides auto-update functionality for CYP-Docker-Registry.
 package updater
 
 import (
-	"cyp-registry/internal/common"
+	"cyp-docker-registry/internal/common"
 
 	"github.com/gin-gonic/gin"
 )

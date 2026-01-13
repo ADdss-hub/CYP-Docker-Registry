@@ -29,28 +29,28 @@ const (
 
 // TUFConfig TUF配置
 type TUFConfig struct {
-	RepoPath          string        `yaml:"repo_path" json:"repo_path"`
-	KeysPath          string        `yaml:"keys_path" json:"keys_path"`
-	RootThreshold     int           `yaml:"root_threshold" json:"root_threshold"`
-	TargetsThreshold  int           `yaml:"targets_threshold" json:"targets_threshold"`
-	RootExpiry        time.Duration `yaml:"root_expiry" json:"root_expiry"`
-	TargetsExpiry     time.Duration `yaml:"targets_expiry" json:"targets_expiry"`
-	SnapshotExpiry    time.Duration `yaml:"snapshot_expiry" json:"snapshot_expiry"`
-	TimestampExpiry   time.Duration `yaml:"timestamp_expiry" json:"timestamp_expiry"`
-	ConsistentSnapshot bool         `yaml:"consistent_snapshot" json:"consistent_snapshot"`
+	RepoPath           string        `yaml:"repo_path" json:"repo_path"`
+	KeysPath           string        `yaml:"keys_path" json:"keys_path"`
+	RootThreshold      int           `yaml:"root_threshold" json:"root_threshold"`
+	TargetsThreshold   int           `yaml:"targets_threshold" json:"targets_threshold"`
+	RootExpiry         time.Duration `yaml:"root_expiry" json:"root_expiry"`
+	TargetsExpiry      time.Duration `yaml:"targets_expiry" json:"targets_expiry"`
+	SnapshotExpiry     time.Duration `yaml:"snapshot_expiry" json:"snapshot_expiry"`
+	TimestampExpiry    time.Duration `yaml:"timestamp_expiry" json:"timestamp_expiry"`
+	ConsistentSnapshot bool          `yaml:"consistent_snapshot" json:"consistent_snapshot"`
 }
 
 // DefaultTUFConfig 返回默认TUF配置
 func DefaultTUFConfig() *TUFConfig {
 	return &TUFConfig{
-		RepoPath:          "/app/data/tuf/repository",
-		KeysPath:          "/app/data/tuf/keys",
-		RootThreshold:     1,
-		TargetsThreshold:  1,
-		RootExpiry:        365 * 24 * time.Hour,  // 1年
-		TargetsExpiry:     90 * 24 * time.Hour,   // 90天
-		SnapshotExpiry:    7 * 24 * time.Hour,    // 7天
-		TimestampExpiry:   24 * time.Hour,        // 1天
+		RepoPath:           "/app/data/tuf/repository",
+		KeysPath:           "/app/data/tuf/keys",
+		RootThreshold:      1,
+		TargetsThreshold:   1,
+		RootExpiry:         365 * 24 * time.Hour, // 1年
+		TargetsExpiry:      90 * 24 * time.Hour,  // 90天
+		SnapshotExpiry:     7 * 24 * time.Hour,   // 7天
+		TimestampExpiry:    24 * time.Hour,       // 1天
 		ConsistentSnapshot: true,
 	}
 }
@@ -79,7 +79,7 @@ type TUFSignature struct {
 
 // TUFSigned 已签名的元数据
 type TUFSigned struct {
-	Signatures []TUFSignature `json:"signatures"`
+	Signatures []TUFSignature  `json:"signatures"`
 	Signed     json.RawMessage `json:"signed"`
 }
 
@@ -112,15 +112,15 @@ type TUFTargetsMeta struct {
 
 // TUFTarget 目标文件
 type TUFTarget struct {
-	Length int64             `json:"length"`
-	Hashes map[string]string `json:"hashes"`
+	Length int64                  `json:"length"`
+	Hashes map[string]string      `json:"hashes"`
 	Custom map[string]interface{} `json:"custom,omitempty"`
 }
 
 // TUFDelegations 委托配置
 type TUFDelegations struct {
-	Keys  map[string]*TUFKey   `json:"keys"`
-	Roles []*TUFDelegatedRole  `json:"roles"`
+	Keys  map[string]*TUFKey  `json:"keys"`
+	Roles []*TUFDelegatedRole `json:"roles"`
 }
 
 // TUFDelegatedRole 委托角色
@@ -159,14 +159,14 @@ type TUFMetaFile struct {
 
 // TUFManager TUF管理器
 type TUFManager struct {
-	config   *TUFConfig
-	logger   *zap.Logger
-	keys     map[string]*TUFKey
-	root     *TUFRootMeta
-	targets  *TUFTargetsMeta
-	snapshot *TUFSnapshotMeta
+	config    *TUFConfig
+	logger    *zap.Logger
+	keys      map[string]*TUFKey
+	root      *TUFRootMeta
+	targets   *TUFTargetsMeta
+	snapshot  *TUFSnapshotMeta
 	timestamp *TUFTimestampMeta
-	mu       sync.RWMutex
+	mu        sync.RWMutex
 }
 
 // NewTUFManager 创建TUF管理器
@@ -402,7 +402,6 @@ func (m *TUFManager) createTimestampMeta() error {
 	}
 	return nil
 }
-
 
 // AddTarget 添加目标文件
 func (m *TUFManager) AddTarget(name string, data []byte, custom map[string]interface{}) error {

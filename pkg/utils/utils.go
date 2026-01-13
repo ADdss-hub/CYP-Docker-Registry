@@ -1,4 +1,5 @@
-// Package utils provides utility functions for CYP-Registry.
+// Package utils provides utility functions for CYP-Docker-Registry.
+// Version: v1.0.0
 package utils
 
 import (

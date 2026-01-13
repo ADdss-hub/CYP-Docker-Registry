@@ -2,7 +2,7 @@
 # 适用于 Raspberry Pi 部署
 
 app:
-  name: "CYP-Registry"
+  name: "CYP-Docker-Registry"
   log_level: "warn"
 
 server:
@@ -10,9 +10,9 @@ server:
   port: 8080
 
 storage:
-  blob_path: "/opt/cyp-registry/data/blobs"
-  meta_path: "/opt/cyp-registry/data/meta"
-  cache_path: "/opt/cyp-registry/data/cache"
+  blob_path: "/opt/cyp-docker-registry/data/blobs"
+  meta_path: "/opt/cyp-docker-registry/data/meta"
+  cache_path: "/opt/cyp-docker-registry/data/cache"
   max_cache_size: "5GB"
 
 accelerator:

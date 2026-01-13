@@ -1,8 +1,8 @@
-# CYP-Registry Mirror Test Script
+# CYP-Docker-Registry Mirror Test Script
 # Test connectivity and latency of Docker registry mirrors
 
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "  CYP-Registry Mirror Speed Test" -ForegroundColor Cyan
+Write-Host "  CYP-Docker-Registry Mirror Speed Test" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 

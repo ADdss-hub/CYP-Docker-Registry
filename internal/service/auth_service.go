@@ -1,4 +1,4 @@
-// Package service provides business logic services for CYP-Registry.
+// Package service provides business logic services for CYP-Docker-Registry.
 package service
 
 import (
@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"cyp-registry/internal/dao"
+	"cyp-docker-registry/internal/dao"
 
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
@@ -206,7 +206,7 @@ func (s *AuthService) generateJWT(user *User) (string, error) {
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(s.tokenExpiry)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
-			Issuer:    "CYP-Registry",
+			Issuer:    "CYP-Docker-Registry",
 		},
 	}
 

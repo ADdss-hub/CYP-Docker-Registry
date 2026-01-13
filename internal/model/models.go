@@ -1,4 +1,4 @@
-// Package model defines all data models for CYP-Registry.
+// Package model defines all data models for CYP-Docker-Registry.
 package model
 
 import (

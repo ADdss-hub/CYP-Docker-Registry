@@ -1,4 +1,4 @@
-# CYP-Registry 部署指南
+# CYP-Docker-Registry 部署指南
 
 ## 快速开始
 
@@ -6,23 +6,23 @@
 
 ```bash
 # 拉取镜像
-docker pull cyp-registry:latest
+docker pull cyp-docker-registry:latest
 
 # 运行容器
 docker run -d \
-  --name cyp-registry \
+  --name cyp-docker-registry \
   -p 8080:8080 \
   -v cyp-data:/data \
   -e JWT_SECRET=your-secret-key \
-  cyp-registry:latest
+  cyp-docker-registry:latest
 ```
 
 ### Docker Compose 部署
 
 ```bash
 # 克隆仓库
-git clone https://github.com/CYP/registry.git
-cd registry
+git clone https://github.com/CYP/cyp-docker-registry.git
+cd cyp-docker-registry
 
 # 启动服务
 docker-compose up -d
@@ -35,7 +35,7 @@ docker-compose up -d
 kubectl apply -f k8s-deployment.yaml
 
 # 检查状态
-kubectl get pods -n cyp-registry
+kubectl get pods -n cyp-docker-registry
 ```
 
 ## 环境配置
@@ -114,7 +114,7 @@ curl http://localhost:8080/health
 tar -czvf backup.tar.gz /data
 
 # 或使用 CLI
-./cyp-registry cli backup --output backup.tar.gz
+./cyp-docker-registry cli backup --output backup.tar.gz
 ```
 
 ### 恢复
@@ -124,24 +124,24 @@ tar -czvf backup.tar.gz /data
 tar -xzvf backup.tar.gz -C /data
 
 # 重启服务
-docker restart cyp-registry
+docker restart cyp-docker-registry
 ```
 
 ## 升级
 
 ```bash
 # 拉取新版本
-docker pull cyp-registry:latest
+docker pull cyp-docker-registry:latest
 
 # 停止旧容器
-docker stop cyp-registry
+docker stop cyp-docker-registry
 
 # 启动新容器
 docker run -d \
-  --name cyp-registry \
+  --name cyp-docker-registry \
   -p 8080:8080 \
   -v cyp-data:/data \
-  cyp-registry:latest
+  cyp-docker-registry:latest
 ```
 
 ## 故障排查
@@ -149,7 +149,7 @@ docker run -d \
 ### 查看日志
 
 ```bash
-docker logs cyp-registry
+docker logs cyp-docker-registry
 ```
 
 ### 常见问题
@@ -160,11 +160,11 @@ docker logs cyp-registry
 
 ## 联系支持
 
-- 文档: https://docs.cyp-registry.com
+- 文档: https://docs.cyp-docker-registry.com
 - 邮箱: nasDSSCYP@outlook.com
-- GitHub: https://github.com/CYP/registry
+- GitHub: https://github.com/CYP/cyp-docker-registry
 
 ---
 
 **版本**: v1.0.0  
-**最后更新**: 2026-01-13
+**最后更新**: 2026-01-14

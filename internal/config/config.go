@@ -1,4 +1,4 @@
-// Package config provides configuration management for CYP-Registry.
+// Package config provides configuration management for CYP-Docker-Registry.
 package config
 
 import (
@@ -73,11 +73,11 @@ type FailedAttemptsConfig struct {
 
 // AutoLockConfig holds auto lock settings.
 type AutoLockConfig struct {
-	Enabled             bool                `yaml:"enabled"`
-	LockOnBypassAttempt bool                `yaml:"lock_on_bypass_attempt"`
-	Hardware            HardwareLockConfig  `yaml:"hardware"`
-	Network             NetworkLockConfig   `yaml:"network"`
-	Service             ServiceLockConfig   `yaml:"service"`
+	Enabled             bool               `yaml:"enabled"`
+	LockOnBypassAttempt bool               `yaml:"lock_on_bypass_attempt"`
+	Hardware            HardwareLockConfig `yaml:"hardware"`
+	Network             NetworkLockConfig  `yaml:"network"`
+	Service             ServiceLockConfig  `yaml:"service"`
 }
 
 // HardwareLockConfig holds hardware lock settings.
@@ -100,10 +100,10 @@ type ServiceLockConfig struct {
 
 // IntrusionDetectionConfig holds intrusion detection settings.
 type IntrusionDetectionConfig struct {
-	Enabled            bool                   `yaml:"enabled"`
-	Rules              []IntrusionRule        `yaml:"rules"`
-	RealTimeMonitoring bool                   `yaml:"real_time_monitoring"`
-	NotifyOnLock       bool                   `yaml:"notify_on_lock"`
+	Enabled            bool            `yaml:"enabled"`
+	Rules              []IntrusionRule `yaml:"rules"`
+	RealTimeMonitoring bool            `yaml:"real_time_monitoring"`
+	NotifyOnLock       bool            `yaml:"notify_on_lock"`
 }
 
 // IntrusionRule represents an intrusion detection rule.
@@ -167,13 +167,13 @@ type SignatureConfig struct {
 
 // SBOMConfig holds SBOM settings.
 type SBOMConfig struct {
-	Enabled       bool   `yaml:"enabled"`
-	Generator     string `yaml:"generator"`
-	Format        string `yaml:"format"`
-	StoragePath   string `yaml:"storage_path"`
-	VulnScan      bool   `yaml:"vuln_scan"`
-	VulnScanner   string `yaml:"vuln_scanner"`
-	AutoGenerate  bool   `yaml:"auto_generate"`
+	Enabled      bool   `yaml:"enabled"`
+	Generator    string `yaml:"generator"`
+	Format       string `yaml:"format"`
+	StoragePath  string `yaml:"storage_path"`
+	VulnScan     bool   `yaml:"vuln_scan"`
+	VulnScanner  string `yaml:"vuln_scanner"`
+	AutoGenerate bool   `yaml:"auto_generate"`
 }
 
 // SyncConfig holds sync settings.
@@ -289,7 +289,7 @@ func IsReadOnlyMode() bool {
 // setDefaults sets default values for configuration.
 func setDefaults(c *Config) {
 	if c.App.Name == "" {
-		c.App.Name = "CYP-Registry"
+		c.App.Name = "CYP-Docker-Registry"
 	}
 	if c.App.Version == "" {
 		c.App.Version = "1.0.0"

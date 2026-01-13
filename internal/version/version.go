@@ -1,4 +1,4 @@
-// Package version provides version information for CYP-Registry.
+// Package version provides version information for CYP-Docker-Registry.
 package version
 
 import (

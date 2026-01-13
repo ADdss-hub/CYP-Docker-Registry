@@ -2,7 +2,7 @@
 # 适用于 Docker 容器部署
 
 app:
-  name: "CYP-Registry"
+  name: "CYP-Docker-Registry"
   log_level: "info"
 
 server:

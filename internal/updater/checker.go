@@ -1,8 +1,8 @@
-// Package updater provides auto-update functionality for CYP-Registry.
+// Package updater provides auto-update functionality for CYP-Docker-Registry.
 package updater
 
 import (
-	"cyp-registry/internal/version"
+	"cyp-docker-registry/internal/version"
 	"encoding/json"
 	"fmt"
 	"io"

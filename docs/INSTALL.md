@@ -1,6 +1,6 @@
 # 安装文档
 
-CYP-Registry 安装和配置指南
+CYP-Docker-Registry 安装和配置指南
 
 **作者：** CYP | **联系方式：** nasDSSCYP@outlook.com
 
@@ -42,8 +42,8 @@ CYP-Registry 安装和配置指南
 
 ```bash
 # 1. 克隆项目
-git clone https://github.com/CYP/cyp-registry.git
-cd cyp-registry
+git clone https://github.com/CYP/cyp-docker-registry.git
+cd cyp-docker-registry
 
 # 2. 复制配置文件
 cp configs/config.yaml.example configs/config.yaml
@@ -116,21 +116,21 @@ docker-compose up -d --build
 
 ```bash
 # 构建镜像
-docker build -t cyp-registry:latest .
+docker build -t cyp-docker-registry:latest .
 
 # 创建数据目录
 mkdir -p ./data/blobs ./data/meta ./data/cache
 
 # 运行容器
 docker run -d \
-  --name cyp-registry \
+  --name cyp-docker-registry \
   -p 8080:8080 \
   -v $(pwd)/data/blobs:/app/data/blobs \
   -v $(pwd)/data/meta:/app/data/meta \
   -v $(pwd)/data/cache:/app/data/cache \
   -v $(pwd)/configs:/app/configs:ro \
   --restart unless-stopped \
-  cyp-registry:latest
+  cyp-docker-registry:latest
 ```
 
 ### 数据持久化
@@ -139,17 +139,17 @@ Docker 部署使用以下卷存储数据：
 
 | 卷名称 | 容器路径 | 说明 |
 |-------|---------|------|
-| registry-blobs | /app/data/blobs | 镜像层数据 |
-| registry-meta | /app/data/meta | 元数据和凭证 |
-| registry-cache | /app/data/cache | 加速器缓存 |
+| cyp-docker-registry-blobs | /app/data/blobs | 镜像层数据 |
+| cyp-docker-registry-meta | /app/data/meta | 元数据和凭证 |
+| cyp-docker-registry-cache | /app/data/cache | 加速器缓存 |
 
 **备份数据：**
 
 ```bash
 # 备份所有数据
 docker run --rm \
-  -v cyp-registry-blobs:/blobs \
-  -v cyp-registry-meta:/meta \
+  -v cyp-docker-registry-blobs:/blobs \
+  -v cyp-docker-registry-meta:/meta \
   -v $(pwd)/backup:/backup \
   alpine tar czf /backup/registry-backup.tar.gz /blobs /meta
 ```
@@ -189,7 +189,7 @@ npm run build
 ### 目录结构
 
 ```
-cyp-registry/
+cyp-docker-registry/
 ├── server              # 后端可执行文件
 ├── VERSION             # 版本号文件
 ├── configs/
@@ -255,7 +255,7 @@ accelerator:
 update:
   check_interval: "24h"   # 检查更新间隔
   auto_update: false      # 自动更新
-  update_url: "https://api.github.com/repos/CYP/cyp-registry/releases/latest"
+  update_url: "https://api.github.com/repos/CYP/cyp-docker-registry/releases/latest"
 ```
 
 #### 认证配置
@@ -342,7 +342,7 @@ docker pull localhost:8080/username/image:tag
 ```bash
 # Docker 部署
 docker-compose down
-docker volume rm cyp-registry-blobs cyp-registry-meta cyp-registry-cache
+docker volume rm cyp-docker-registry-blobs cyp-docker-registry-meta cyp-docker-registry-cache
 docker-compose up -d
 
 # 手动部署
@@ -414,4 +414,4 @@ server {
 
 ## 版权声明
 
-Copyright © 2024 CYP. All rights reserved.
+Copyright © 2026 CYP. All rights reserved.

@@ -1,4 +1,4 @@
-// Package service provides business logic services for CYP-Registry.
+// Package service provides business logic services for CYP-Docker-Registry.
 package service
 
 import (

@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"cyp-registry/pkg/p2p"
+	"cyp-docker-registry/pkg/p2p"
 
 	"go.uber.org/zap"
 )

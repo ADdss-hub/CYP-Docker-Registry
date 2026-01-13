@@ -2,7 +2,7 @@
 # 适用于 Synology NAS 部署
 
 app:
-  name: "CYP-Registry"
+  name: "CYP-Docker-Registry"
   log_level: "info"
 
 server:
@@ -10,9 +10,9 @@ server:
   port: 8080
 
 storage:
-  blob_path: "/volume1/docker/cyp-registry/blobs"
-  meta_path: "/volume1/docker/cyp-registry/meta"
-  cache_path: "/volume1/docker/cyp-registry/cache"
+  blob_path: "/volume1/docker/cyp-docker-registry/blobs"
+  meta_path: "/volume1/docker/cyp-docker-registry/meta"
+  cache_path: "/volume1/docker/cyp-docker-registry/cache"
   max_cache_size: "50GB"
 
 accelerator:

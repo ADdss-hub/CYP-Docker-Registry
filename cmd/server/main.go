@@ -9,10 +9,10 @@ import (
 	"path/filepath"
 	"syscall"
 
-	"cyp-registry/internal/common"
-	"cyp-registry/internal/dao"
-	"cyp-registry/internal/gateway"
-	"cyp-registry/internal/version"
+	"cyp-docker-registry/internal/common"
+	"cyp-docker-registry/internal/dao"
+	"cyp-docker-registry/internal/gateway"
+	"cyp-docker-registry/internal/version"
 
 	"go.uber.org/zap"
 )
@@ -20,7 +20,7 @@ import (
 const (
 	author  = "CYP"
 	email   = "nasDSSCYP@outlook.com"
-	appName = "CYP-Registry"
+	appName = "CYP-Docker-Registry"
 )
 
 func main() {
@@ -109,7 +109,7 @@ func printCopyright(logger *zap.Logger) {
 	fmt.Println("========================================")
 	fmt.Printf("  %s v%s\n", appName, version.GetVersion())
 	fmt.Println("========================================")
-	fmt.Printf("  Copyright © 2024 %s. All rights reserved.\n", author)
+	fmt.Printf("  Copyright © 2026 %s. All rights reserved.\n", author)
 	fmt.Printf("  Author: %s\n", author)
 	fmt.Printf("  Contact: %s\n", email)
 	fmt.Println("========================================")

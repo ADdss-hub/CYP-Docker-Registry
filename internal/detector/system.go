@@ -53,7 +53,6 @@ func NewDetectorService() *DetectorService {
 	return &DetectorService{}
 }
 
-
 // GetSystemInfo retrieves current system information.
 func (d *DetectorService) GetSystemInfo() (*SystemInfo, error) {
 	d.mu.Lock()
@@ -144,7 +143,6 @@ func (d *DetectorService) getWindowsVersion() string {
 	return "Windows"
 }
 
-
 // getDockerVersion retrieves Docker version.
 func (d *DetectorService) getDockerVersion() string {
 	out, err := exec.Command("docker", "version", "--format", "{{.Server.Version}}").Output()
@@ -232,7 +230,6 @@ func (d *DetectorService) getMemoryTotal() int64 {
 	}
 	return 0
 }
-
 
 // getDiskInfo retrieves disk total and free space in bytes.
 func (d *DetectorService) getDiskInfo() (total, free int64) {

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import type { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 
-const TOKEN_KEY = 'cyp-registry-token'
+const TOKEN_KEY = 'cyp-docker-registry-token'
 
 // Generate a unique request ID
 function generateRequestID(): string {
@@ -49,8 +49,8 @@ request.interceptors.response.use(
     if (response?.status === 401) {
       // Clear auth data
       localStorage.removeItem(TOKEN_KEY)
-      localStorage.removeItem('cyp-registry-user')
-      localStorage.removeItem('cyp-registry-session')
+      localStorage.removeItem('cyp-docker-registry-user')
+      localStorage.removeItem('cyp-docker-registry-session')
       
       // Redirect to login (avoid circular import)
       if (window.location.pathname !== '/login') {

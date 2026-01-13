@@ -3,7 +3,7 @@
 ## 版权声明
 
 ```
-Copyright © 2024 CYP. All rights reserved.
+Copyright © 2026 CYP. All rights reserved.
 
 作者：CYP
 联系方式：nasDSSCYP@outlook.com
@@ -15,7 +15,7 @@ Copyright © 2024 CYP. All rights reserved.
 
 ### 1. 许可授权
 
-本软件（"容器镜像个人仓库"，以下简称"本软件"）由 CYP（以下简称"作者"）开发并拥有全部知识产权。
+本软件（"CYP-Docker-Registry"，以下简称"本软件"）由 CYP（以下简称"作者"）开发并拥有全部知识产权。
 
 在遵守本许可协议的前提下，作者授予您以下权利：
 
@@ -118,4 +118,4 @@ Copyright © 2024 CYP. All rights reserved.
 
 ---
 
-*最后更新：2024年*
+*最后更新：2026年1月*

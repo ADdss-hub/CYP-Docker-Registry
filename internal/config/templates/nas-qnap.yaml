@@ -1,4 +1,4 @@
-# CYP-Registry QNAP NAS 环境配置模板
+# CYP-Docker-Registry QNAP NAS 环境配置模板
 # 适用于 QNAP NAS 设备
 
 environment:
@@ -13,9 +13,9 @@ server:
 
 # 存储配置 - QNAP 优化
 storage:
-  blob_path: "/share/Container/cyp-registry/blobs"
-  meta_path: "/share/Container/cyp-registry/meta"
-  cache_path: "/share/Container/cyp-registry/cache"
+  blob_path: "/share/Container/cyp-docker-registry/blobs"
+  meta_path: "/share/Container/cyp-docker-registry/meta"
+  cache_path: "/share/Container/cyp-docker-registry/cache"
   max_cache_size: "5GB"
   
   # HDD 优化
@@ -77,7 +77,7 @@ signature:
   mode: "warn"
   key_management:
     type: "local"
-    local_path: "/share/Container/cyp-registry/keys"
+    local_path: "/share/Container/cyp-docker-registry/keys"
 
 # SBOM 配置 - 按需生成
 sbom:
@@ -111,7 +111,7 @@ notify:
       enabled: true
     file:
       enabled: true
-      path: "/share/Container/cyp-registry/logs/audit.log"
+      path: "/share/Container/cyp-docker-registry/logs/audit.log"
 
 # QNAP 特定配置
 qnap:

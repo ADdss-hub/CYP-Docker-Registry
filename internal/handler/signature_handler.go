@@ -1,11 +1,11 @@
-// Package handler provides HTTP handlers for CYP-Registry.
+// Package handler provides HTTP handlers for CYP-Docker-Registry.
 package handler
 
 import (
 	"net/http"
 	"strconv"
 
-	"cyp-registry/internal/service"
+	"cyp-docker-registry/internal/service"
 
 	"github.com/gin-gonic/gin"
 )

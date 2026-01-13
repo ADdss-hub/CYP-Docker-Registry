@@ -1,6 +1,6 @@
 # API 文档
 
-CYP-Registry API 文档
+CYP-Docker-Registry API 文档
 
 **作者：** CYP | **联系方式：** nasDSSCYP@outlook.com
 
@@ -75,7 +75,7 @@ GET /health
   "success": true,
   "data": {
     "status": "healthy",
-    "version": "0.1.0"
+    "version": "1.0.0"
   }
 }
 ```
@@ -92,8 +92,8 @@ GET /api/version
 {
   "success": true,
   "data": {
-    "version": "0.1.0",
-    "full_version": "0.1.0 (unknown @ unknown)"
+    "version": "1.0.0",
+    "full_version": "1.0.0 (unknown @ unknown)"
   }
 }
 ```
@@ -878,7 +878,7 @@ curl -X DELETE http://localhost:8080/api/images/myapp/latest
 
 ## 版权声明
 
-Copyright © 2024 CYP. All rights reserved.
+Copyright © 2026 CYP. All rights reserved.
 
 
 ---
@@ -1184,4 +1184,4 @@ curl http://localhost:8080/api/images \
 ---
 
 **文档版本**: v1.0.0  
-**最后更新**: 2026-01-13
+**最后更新**: 2026-01-14

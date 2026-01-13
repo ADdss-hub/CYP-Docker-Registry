@@ -2,7 +2,7 @@
 package accelerator
 
 import (
-	"cyp-registry/internal/common"
+	"cyp-docker-registry/internal/common"
 	"strconv"
 
 	"github.com/gin-gonic/gin"

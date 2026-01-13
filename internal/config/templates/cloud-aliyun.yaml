@@ -1,4 +1,4 @@
-# CYP-Registry 阿里云环境配置模板
+# CYP-Docker-Registry 阿里云环境配置模板
 # 适用于阿里云 ECS、ACK、函数计算等环境
 
 environment:

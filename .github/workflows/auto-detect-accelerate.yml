@@ -11,6 +11,10 @@ on:
     - cron: '0 2 * * *'  # 每天凌晨2点运行
   workflow_dispatch:
 
+permissions:
+  contents: write
+  packages: write
+
 env:
   GO_VERSION: '1.21'
   NODE_VERSION: '18'
@@ -136,7 +140,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ secrets.DOCKER_USERNAME }}/cyp-registry
+            ${{ secrets.DOCKER_USERNAME }}/cyp-docker-registry
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}
@@ -181,14 +185,15 @@ jobs:
       - name: Build Release Binaries
         run: |
           mkdir -p dist
-          GOOS=linux GOARCH=amd64 go build -o dist/cyp-registry-linux-amd64 ./cmd/server
-          GOOS=linux GOARCH=arm64 go build -o dist/cyp-registry-linux-arm64 ./cmd/server
-          GOOS=darwin GOARCH=amd64 go build -o dist/cyp-registry-darwin-amd64 ./cmd/server
-          GOOS=darwin GOARCH=arm64 go build -o dist/cyp-registry-darwin-arm64 ./cmd/server
-          GOOS=windows GOARCH=amd64 go build -o dist/cyp-registry-windows-amd64.exe ./cmd/server
+          GOOS=linux GOARCH=amd64 go build -o dist/cyp-docker-registry-linux-amd64 ./cmd/server
+          GOOS=linux GOARCH=arm64 go build -o dist/cyp-docker-registry-linux-arm64 ./cmd/server
+          GOOS=darwin GOARCH=amd64 go build -o dist/cyp-docker-registry-darwin-amd64 ./cmd/server
+          GOOS=darwin GOARCH=arm64 go build -o dist/cyp-docker-registry-darwin-arm64 ./cmd/server
+          GOOS=windows GOARCH=amd64 go build -o dist/cyp-docker-registry-windows-amd64.exe ./cmd/server
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: dist/*
           generate_release_notes: true
+          token: ${{ secrets.GITHUB_TOKEN }}

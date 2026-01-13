@@ -56,10 +56,10 @@ type Package struct {
 
 // File represents a file in the image.
 type File struct {
-	Path     string   `json:"path"`
-	Checksum string   `json:"checksum"`
-	Size     int64    `json:"size"`
-	Type     string   `json:"type"`
+	Path     string `json:"path"`
+	Checksum string `json:"checksum"`
+	Size     int64  `json:"size"`
+	Type     string `json:"type"`
 }
 
 // NewGenerator creates a new Generator instance.
@@ -67,7 +67,7 @@ func NewGenerator(config *GeneratorConfig) *Generator {
 	if config == nil {
 		config = &GeneratorConfig{
 			Format:    "spdx-json",
-			Generator: "cyp-registry",
+			Generator: "cyp-docker-registry",
 		}
 	}
 
@@ -120,11 +120,11 @@ func (g *Generator) Export(sbom *SBOM, format string) ([]byte, error) {
 // exportSPDX exports SBOM in SPDX format.
 func (g *Generator) exportSPDX(sbom *SBOM) ([]byte, error) {
 	spdx := map[string]interface{}{
-		"spdxVersion": "SPDX-2.3",
-		"dataLicense": "CC0-1.0",
-		"SPDXID":      "SPDXRef-DOCUMENT",
-		"name":        sbom.Image.Name,
-		"documentNamespace": "https://cyp-registry.local/sbom/" + sbom.Image.Digest,
+		"spdxVersion":       "SPDX-2.3",
+		"dataLicense":       "CC0-1.0",
+		"SPDXID":            "SPDXRef-DOCUMENT",
+		"name":              sbom.Image.Name,
+		"documentNamespace": "https://cyp-docker-registry.local/sbom/" + sbom.Image.Digest,
 		"creationInfo": map[string]interface{}{
 			"created": sbom.GeneratedAt.Format(time.RFC3339),
 			"creators": []string{

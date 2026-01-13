@@ -1,16 +1,16 @@
-// Package gateway provides the API gateway for CYP-Registry.
+// Package gateway provides the API gateway for CYP-Docker-Registry.
 package gateway
 
 import (
-	"cyp-registry/internal/accelerator"
-	"cyp-registry/internal/common"
-	"cyp-registry/internal/detector"
-	"cyp-registry/internal/handler"
-	"cyp-registry/internal/middleware"
-	"cyp-registry/internal/registry"
-	"cyp-registry/internal/service"
-	"cyp-registry/internal/updater"
-	"cyp-registry/internal/version"
+	"cyp-docker-registry/internal/accelerator"
+	"cyp-docker-registry/internal/common"
+	"cyp-docker-registry/internal/detector"
+	"cyp-docker-registry/internal/handler"
+	"cyp-docker-registry/internal/middleware"
+	"cyp-docker-registry/internal/registry"
+	"cyp-docker-registry/internal/service"
+	"cyp-docker-registry/internal/updater"
+	"cyp-docker-registry/internal/version"
 
 	"github.com/gin-gonic/gin"
 )
