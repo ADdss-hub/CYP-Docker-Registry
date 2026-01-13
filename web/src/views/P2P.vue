@@ -380,7 +380,7 @@ const shareModeText = (mode: string) => {
   return modes[mode] || mode
 }
 
-const natStatusType = (type: string) => {
+const natStatusType = (type?: string) => {
   const types: Record<string, string> = {
     none: 'success',
     full_cone: 'success',
@@ -389,10 +389,10 @@ const natStatusType = (type: string) => {
     symmetric: 'danger',
     unknown: 'info'
   }
-  return types[type] || 'info'
+  return types[type || ''] || 'info'
 }
 
-const natStatusText = (type: string) => {
+const natStatusText = (type?: string) => {
   const texts: Record<string, string> = {
     none: '公网IP',
     full_cone: '完全锥形NAT',
@@ -401,7 +401,7 @@ const natStatusText = (type: string) => {
     symmetric: '对称NAT',
     unknown: '未知'
   }
-  return texts[type] || type || '未知'
+  return texts[type || ''] || type || '未知'
 }
 
 const copyToClipboard = (text?: string) => {
