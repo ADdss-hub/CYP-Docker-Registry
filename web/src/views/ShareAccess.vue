@@ -8,7 +8,7 @@
           </svg>
         </div>
         <h1>镜像分享</h1>
-        <p class="subtitle">CYP-Registry 镜像分享链接</p>
+        <p class="subtitle">CYP-Docker Registry 镜像分享链接</p>
       </div>
 
       <div v-if="loading" class="loading-state">
@@ -75,7 +75,7 @@
       </div>
 
       <div class="share-footer">
-        <p>CYP-Registry | Copyright © 2026 CYP</p>
+        <p>CYP-Docker Registry | Copyright © 2026 CYP</p>
       </div>
     </div>
   </div>

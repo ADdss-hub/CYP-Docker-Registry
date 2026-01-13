@@ -163,7 +163,7 @@ import request from '@/utils/request'
 const activeTab = ref('general')
 
 const generalConfig = reactive({
-  app_name: 'CYP-Registry',
+  app_name: 'CYP-Docker Registry',
   port: 8080,
   log_level: 'info'
 })

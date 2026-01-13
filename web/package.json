@@ -1,5 +1,5 @@
 {
-  "name": "cyp-registry-web",
+  "name": "cyp-docker-registry-web",
   "version": "1.0.0",
   "private": true,
   "type": "module",

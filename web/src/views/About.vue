@@ -33,7 +33,7 @@ onMounted(async () => {
       <div class="logo-container">
         <div class="logo">CR</div>
         <h1>容器镜像个人仓库</h1>
-        <p class="subtitle">CYP-Registry</p>
+        <p class="subtitle">CYP-Docker Registry</p>
       </div>
       <div class="version-info" v-if="versionInfo">
         <span class="version">v{{ versionInfo.version }}</span>

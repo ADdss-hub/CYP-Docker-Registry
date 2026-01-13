@@ -7,7 +7,7 @@
             <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
           </svg>
         </div>
-        <h1>CYP-Registry</h1>
+        <h1>CYP-Docker Registry</h1>
         <p class="subtitle">容器镜像私有仓库管理系统</p>
       </div>
 
@@ -73,7 +73,7 @@
       </el-form>
 
       <div class="login-footer">
-        <p>CYP-Registry v{{ version }}</p>
+        <p>CYP-Docker Registry v{{ version }}</p>
         <p>Copyright © 2026 CYP. All rights reserved.</p>
       </div>
     </div>

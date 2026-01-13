@@ -68,7 +68,7 @@
       </div>
 
       <div class="copyright">
-        CYP-Registry v{{ version }} | Copyright © 2026 CYP
+        CYP-Docker Registry v{{ version }} | Copyright © 2026 CYP
       </div>
     </div>
   </div>
