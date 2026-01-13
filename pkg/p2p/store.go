@@ -56,7 +56,7 @@ func (s *FileBlobStore) Get(digest string) (io.ReadCloser, int64, error) {
 	info, err := os.Stat(path)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return nil, 0, fmt.Errorf("blob不存�? %s", digest)
+			return nil, 0, fmt.Errorf("blob不存在: %s", digest)
 		}
 		return nil, 0, err
 	}
@@ -98,13 +98,13 @@ func (s *FileBlobStore) Put(digest string, reader io.Reader, size int64) error {
 
 	if size > 0 && written != size {
 		os.Remove(tmpPath)
-		return fmt.Errorf("数据大小不匹�? 期望 %d, 实际 %d", size, written)
+		return fmt.Errorf("数据大小不匹配: 期望 %d, 实际 %d", size, written)
 	}
 
-	// 重命名为最终文�?
+	// 重命名为最终文件
 	if err := os.Rename(tmpPath, path); err != nil {
 		os.Remove(tmpPath)
-		return fmt.Errorf("重命名文件失�? %w", err)
+		return fmt.Errorf("重命名文件失败: %w", err)
 	}
 
 	s.logger.Debug("存储Blob成功", zap.String("digest", digest), zap.Int64("size", written))
@@ -189,7 +189,7 @@ func (s *FileBlobStore) Count() (int, error) {
 
 // blobPath 获取Blob文件路径
 func (s *FileBlobStore) blobPath(digest string) string {
-	// 使用digest的前两个字符作为子目录，避免单目录文件过�?
+	// 使用digest的前两个字符作为子目录，避免单目录文件过多
 	if len(digest) > 2 {
 		return filepath.Join(s.basePath, digest[:2], digest)
 	}
@@ -225,7 +225,7 @@ func (s *MemoryBlobStore) Get(digest string) (io.ReadCloser, int64, error) {
 
 	data, exists := s.blobs[digest]
 	if !exists {
-		return nil, 0, fmt.Errorf("blob不存�? %s", digest)
+		return nil, 0, fmt.Errorf("blob不存在: %s", digest)
 	}
 
 	return io.NopCloser(NewBytesReader(data)), int64(len(data)), nil
@@ -266,13 +266,13 @@ func (s *MemoryBlobStore) List() ([]string, error) {
 	return digests, nil
 }
 
-// BytesReader 字节读取�?
+// BytesReader 字节读取器
 type BytesReader struct {
 	data   []byte
 	offset int
 }
 
-// NewBytesReader 创建字节读取�?
+// NewBytesReader 创建字节读取器
 func NewBytesReader(data []byte) *BytesReader {
 	return &BytesReader{data: data}
 }
@@ -310,7 +310,7 @@ func NewCachedBlobStore(primary BlobStore, maxCache int64, logger *zap.Logger) *
 
 // Has 检查是否存在Blob
 func (s *CachedBlobStore) Has(digest string) (bool, error) {
-	// 先检查缓�?
+	// 先检查缓存
 	if has, _ := s.cache.Has(digest); has {
 		return true, nil
 	}
@@ -339,12 +339,12 @@ func (s *CachedBlobStore) Get(digest string) (io.ReadCloser, int64, error) {
 	return reader, size, nil
 }
 
-// addToCache 添加到缓�?
+// addToCache 添加到缓存
 func (s *CachedBlobStore) addToCache(digest string, reader io.ReadCloser, size int64) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	// 检查缓存空�?
+	// 检查缓存空间
 	if s.cacheSize+size > s.maxCache {
 		return // 缓存已满
 	}
