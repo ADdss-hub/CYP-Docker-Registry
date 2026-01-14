@@ -40,7 +40,7 @@ func (h *SignatureHandler) ListSignatures(c *gin.Context) {
 
 	signatures, total, err := h.signatureService.ListSignatures(page, pageSize)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "获取签名列表失败"})
 		return
 	}
 
@@ -56,19 +56,19 @@ func (h *SignatureHandler) ListSignatures(c *gin.Context) {
 func (h *SignatureHandler) SignImage(c *gin.Context) {
 	var req service.SignRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "请求参数无效"})
 		return
 	}
 
 	user := getCurrentUser(c)
 	if user == nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未登录"})
 		return
 	}
 
 	signature, err := h.signatureService.SignImage(&req, user.ID, user.Username)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "签名失败"})
 		return
 	}
 
@@ -90,7 +90,7 @@ func (h *SignatureHandler) SignImage(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{
 		"signature": signature,
-		"message":   "Image signed successfully",
+		"message":   "镜像签名成功",
 	})
 }
 
@@ -100,7 +100,7 @@ func (h *SignatureHandler) GetSignature(c *gin.Context) {
 
 	signature, err := h.signatureService.GetSignature(imageRef)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"error": "签名不存在"})
 		return
 	}
 
@@ -111,13 +111,13 @@ func (h *SignatureHandler) GetSignature(c *gin.Context) {
 func (h *SignatureHandler) VerifyImage(c *gin.Context) {
 	var req service.VerifyRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "请求参数无效"})
 		return
 	}
 
 	result, err := h.signatureService.VerifyImage(&req)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "验证失败"})
 		return
 	}
 
@@ -130,14 +130,14 @@ func (h *SignatureHandler) DeleteSignature(c *gin.Context) {
 
 	user := getCurrentUser(c)
 	if user == nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未登录"})
 		return
 	}
 
 	if err := h.signatureService.DeleteSignature(imageRef); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "删除签名失败"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Signature deleted successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "签名已删除"})
 }

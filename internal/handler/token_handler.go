@@ -35,13 +35,13 @@ func (h *TokenHandler) RegisterRoutes(r *gin.RouterGroup) {
 func (h *TokenHandler) ListTokens(c *gin.Context) {
 	user := getCurrentUser(c)
 	if user == nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未登录"})
 		return
 	}
 
 	tokens, err := h.tokenService.ListTokens(user.ID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "获取令牌列表失败"})
 		return
 	}
 
@@ -52,19 +52,19 @@ func (h *TokenHandler) ListTokens(c *gin.Context) {
 func (h *TokenHandler) CreateToken(c *gin.Context) {
 	var req service.CreateTokenRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "请求参数无效"})
 		return
 	}
 
 	user := getCurrentUser(c)
 	if user == nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未登录"})
 		return
 	}
 
 	resp, err := h.tokenService.CreateToken(&req, user.ID)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "创建令牌失败"})
 		return
 	}
 
@@ -88,7 +88,7 @@ func (h *TokenHandler) CreateToken(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{
 		"token":       resp.Token,
 		"plain_token": resp.PlainToken,
-		"message":     "Token created successfully. Please save the token now, it won't be shown again.",
+		"message":     "令牌创建成功，请立即保存，此令牌不会再次显示。",
 	})
 }
 
@@ -96,18 +96,18 @@ func (h *TokenHandler) CreateToken(c *gin.Context) {
 func (h *TokenHandler) DeleteToken(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid token ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "令牌ID无效"})
 		return
 	}
 
 	user := getCurrentUser(c)
 	if user == nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未登录"})
 		return
 	}
 
 	if err := h.tokenService.DeleteToken(id, user.ID); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "删除令牌失败"})
 		return
 	}
 
@@ -127,5 +127,5 @@ func (h *TokenHandler) DeleteToken(c *gin.Context) {
 		})
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Token deleted successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "令牌已删除"})
 }

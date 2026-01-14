@@ -5,6 +5,33 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.2] - 2026-01-14
+
+### 修复
+- 🔧 修复生产环境访问根路径返回404的问题
+  - 问题原因：后端路由未配置静态文件服务，导致前端页面无法访问
+  - 解决方案：在 gateway/router.go 中添加 setupStaticFiles() 函数
+  - 支持多路径查找静态文件目录（开发环境和Docker容器环境）
+
+### 新增
+- 🌐 前端静态文件服务支持
+  - 自动检测静态文件目录（./web/dist 或 /app/web/dist）
+  - 支持 /assets 静态资源路由
+  - 支持 favicon.ico、vite.svg 等根目录静态文件
+  - 默认 robots.txt 响应
+
+- 🔄 SPA 路由支持
+  - 未匹配的非API路由自动返回 index.html
+  - 保持 /api、/v2、/health 等后端路由正常工作
+
+- 🐳 Watchtower 自动更新配置
+  - docker-compose.yaml 添加 Watchtower 服务
+  - 每小时自动检测 Docker Hub 镜像更新
+  - 自动清理旧镜像
+
+### 变更
+- 📦 Docker 镜像源更新为 cyp97/cyp-docker-registry
+
 ## [1.0.1] - 2026-01-14
 
 ### 修复

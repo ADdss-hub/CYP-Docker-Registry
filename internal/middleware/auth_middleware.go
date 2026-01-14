@@ -121,7 +121,7 @@ func (m *AuthMiddleware) ForceAuth() gin.HandlerFunc {
 		// Check if system is locked
 		if m.lockService != nil && m.lockService.IsSystemLocked() {
 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
-				"error":       "System is locked",
+				"error":       "系统已锁定",
 				"details":     "system_locked",
 				"lock_reason": m.lockService.GetLockReason(),
 			})
@@ -146,7 +146,7 @@ func (m *AuthMiddleware) ForceAuth() gin.HandlerFunc {
 		// Check authorization header
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
-			m.handleUnauthorized(c, "Missing Authorization header", "no_auth_header")
+			m.handleUnauthorized(c, "缺少认证信息", "no_auth_header")
 			return
 		}
 
@@ -160,7 +160,7 @@ func (m *AuthMiddleware) ForceAuth() gin.HandlerFunc {
 			user, err = m.authService.ValidateJWT(tokenStr)
 			if err != nil {
 				m.logUnauthorizedAttempt(c, "Invalid JWT: "+err.Error())
-				m.handleUnauthorized(c, "Invalid JWT token", "invalid_jwt")
+				m.handleUnauthorized(c, "JWT令牌无效", "invalid_jwt")
 				return
 			}
 		} else if strings.HasPrefix(authHeader, "Token ") {
@@ -169,19 +169,19 @@ func (m *AuthMiddleware) ForceAuth() gin.HandlerFunc {
 			user, token, err = m.authService.ValidateToken(tokenStr)
 			if err != nil {
 				m.logUnauthorizedAttempt(c, "Invalid token: "+err.Error())
-				m.handleUnauthorized(c, "Invalid token", "invalid_token")
+				m.handleUnauthorized(c, "令牌无效", "invalid_token")
 				return
 			}
 		} else {
 			m.logUnauthorizedAttempt(c, "Invalid Authorization format")
-			m.handleUnauthorized(c, "Invalid Authorization format", "invalid_format")
+			m.handleUnauthorized(c, "认证格式无效", "invalid_format")
 			return
 		}
 
 		// Validate user status
 		if !user.IsActive {
 			m.logUnauthorizedAttempt(c, "User is inactive")
-			m.handleUnauthorized(c, "User is inactive", "inactive_user")
+			m.handleUnauthorized(c, "用户已被禁用", "inactive_user")
 			return
 		}
 
@@ -189,7 +189,7 @@ func (m *AuthMiddleware) ForceAuth() gin.HandlerFunc {
 		if m.config.EnforceIPBinding {
 			if session := m.authService.GetSession(user.ID); session != nil && session.IP != c.ClientIP() {
 				m.logUnauthorizedAttempt(c, "IP mismatch")
-				m.handleUnauthorized(c, "IP address changed during session", "ip_mismatch")
+				m.handleUnauthorized(c, "会话IP地址已变更", "ip_mismatch")
 				m.authService.TerminateSession(user.ID)
 				return
 			}

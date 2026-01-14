@@ -1,6 +1,6 @@
 #!/bin/bash
 # CYP-Docker-Registry 智能安装脚本
-# Version: v1.0.2
+# Version: v1.0.3
 # 自动检测环境并配置最优参数
 
 set -e
@@ -13,7 +13,7 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 # 版本信息
-VERSION="1.0.2"
+VERSION="1.0.3"
 AUTHOR="CYP"
 EMAIL="nasDSSCYP@outlook.com"
 
@@ -25,7 +25,7 @@ PORT=8080
 
 echo -e "${BLUE}"
 echo "╔════════════════════════════════════════════════╗"
-echo "║   CYP-Docker-Registry 智能安装脚本 v1.0.2    ║"
+echo "║   CYP-Docker-Registry 智能安装脚本 v1.0.3    ║"
 echo "║        版本: v${VERSION}                           ║"
 echo "╚════════════════════════════════════════════════╝"
 echo -e "${NC}"

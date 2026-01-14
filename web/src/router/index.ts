@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteLocationNormalized } from 'vue-router'
 
 // Whitelist routes that don't require authentication
-const WHITELIST = ['login', 'locked', 'share-access']
+const WHITELIST = ['login', 'locked', 'share-access', 'register']
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,6 +11,12 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: () => import('@/views/Login.vue'),
+      meta: { requiresAuth: false }
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('@/views/Register.vue'),
       meta: { requiresAuth: false }
     },
     {

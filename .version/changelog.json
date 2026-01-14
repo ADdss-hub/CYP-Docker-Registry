@@ -2,10 +2,26 @@
   "schema": "2.1.0",
   "history": [
     {
+      "version": "1.0.3",
+      "timestamp": "2026-01-14T05:38:23.270Z",
+      "author": "CYP",
+      "changes": [],
+      "type": "patch",
+      "previousVersion": "1.0.2",
+      "metadata": {}
+    },
+    {
       "version": "1.0.2",
       "timestamp": "2026-01-14T04:40:29.299Z",
       "author": "CYP",
-      "changes": [],
+      "changes": [
+        "fix: 修复生产环境访问根路径返回404的问题",
+        "feat: 添加前端静态文件服务支持",
+        "feat: 添加SPA路由支持，未匹配路由返回index.html",
+        "feat: 添加robots.txt默认响应",
+        "feat: 添加Watchtower自动更新配置到docker-compose.yaml",
+        "chore: 更新Docker镜像源为cyp97/cyp-docker-registry"
+      ],
       "type": "patch",
       "previousVersion": "1.0.1",
       "metadata": {}
@@ -21,7 +37,7 @@
     }
   ],
   "metadata": {
-    "updated": "2026-01-14T04:40:29.299Z",
+    "updated": "2026-01-14T05:38:23.270Z",
     "project": "CYP-memo"
   }
 }

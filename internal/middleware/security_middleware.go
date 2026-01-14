@@ -74,7 +74,7 @@ func (m *SecurityMiddleware) CSRF() gin.HandlerFunc {
 
 		if token == "" {
 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
-				"error": "CSRF token missing",
+				"error": "缺少CSRF令牌",
 				"code":  "csrf_missing",
 			})
 			return
@@ -82,7 +82,7 @@ func (m *SecurityMiddleware) CSRF() gin.HandlerFunc {
 
 		if !m.validateCSRFToken(token) {
 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
-				"error": "Invalid CSRF token",
+				"error": "CSRF令牌无效",
 				"code":  "csrf_invalid",
 			})
 			return
@@ -157,7 +157,7 @@ func (r *RateLimiter) RateLimit() gin.HandlerFunc {
 		// Check rate limit
 		if len(r.requests[ip]) >= r.limit {
 			c.AbortWithStatusJSON(http.StatusTooManyRequests, gin.H{
-				"error":       "Too many requests",
+				"error":       "请求过于频繁",
 				"code":        "rate_limit_exceeded",
 				"retry_after": r.window.Seconds(),
 			})

@@ -169,13 +169,13 @@ const handleAccept = () => {
 }
 
 .welcome-text {
-  color: var(--muted-text);
+  color: #e6edf3;
   font-size: 14px;
   line-height: 1.8;
 }
 
 .terms-section p {
-  color: var(--muted-text);
+  color: #e6edf3;
   font-size: 14px;
   line-height: 1.8;
   margin-bottom: 8px;
@@ -205,7 +205,7 @@ const handleAccept = () => {
 
 .terms-section li {
   margin-bottom: 16px;
-  color: var(--muted-text);
+  color: #e6edf3;
 }
 
 .terms-section li:last-child {
@@ -213,7 +213,7 @@ const handleAccept = () => {
 }
 
 .terms-section li strong {
-  color: var(--text-color);
+  color: #ffffff;
   display: block;
   margin-bottom: 4px;
 }
@@ -248,15 +248,15 @@ const handleAccept = () => {
 }
 
 .agree-checkbox {
-  --el-checkbox-text-color: var(--muted-text);
+  --el-checkbox-text-color: #c9d1d9;
 }
 
 .agree-checkbox :deep(.el-checkbox__label) {
-  color: var(--muted-text);
+  color: #c9d1d9;
   font-size: 14px;
 }
 
 .agree-checkbox :deep(.el-checkbox__input.is-checked + .el-checkbox__label) {
-  color: var(--text-color);
+  color: #ffffff;
 }
 </style>

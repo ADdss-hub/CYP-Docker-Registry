@@ -1,16 +1,32 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { getVersion } from '@/api/version'
+import request from '@/utils/request'
 
 const version = ref('加载中...')
 const currentYear = new Date().getFullYear()
 
 onMounted(async () => {
   try {
-    const versionInfo = await getVersion()
-    version.value = versionInfo.version || '未知'
+    // 尝试多个版本接口
+    const endpoints = ['/api/v1/version', '/version', '/api/v1/system/info']
+    
+    for (const endpoint of endpoints) {
+      try {
+        const response = await request.get(endpoint)
+        const data = response.data
+        if (data?.version) {
+          version.value = data.version
+          return
+        }
+      } catch {
+        // 继续尝试下一个接口
+      }
+    }
+    
+    // 如果所有接口都失败，使用默认版本
+    version.value = '1.0.2'
   } catch {
-    version.value = '未知'
+    version.value = '1.0.2'
   }
 })
 </script>

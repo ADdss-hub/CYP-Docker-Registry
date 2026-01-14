@@ -48,7 +48,7 @@ func (m *LockMiddleware) CheckLock() gin.HandlerFunc {
 		// Check if system is locked
 		if m.lockService.IsSystemLocked() {
 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
-				"error":       "System is locked",
+				"error":       "系统已锁定",
 				"details":     "system_locked",
 				"lock_reason": m.lockService.GetLockReason(),
 			})
@@ -75,7 +75,7 @@ func ReadOnlyMode(enabled bool) gin.HandlerFunc {
 
 		// Block write operations
 		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
-			"error":   "System is in read-only mode",
+			"error":   "系统处于只读模式",
 			"details": "readonly_mode",
 		})
 	}

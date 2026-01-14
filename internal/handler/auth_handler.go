@@ -54,7 +54,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	var req LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid request",
+			"error": "请求参数无效",
 			"code":  "invalid_request",
 		})
 		return
@@ -65,7 +65,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	// Check if system is locked
 	if h.lockService != nil && h.lockService.IsSystemLocked() {
 		c.JSON(http.StatusForbidden, gin.H{
-			"error":       "System is locked",
+			"error":       "系统已锁定",
 			"details":     "system_locked",
 			"lock_reason": h.lockService.GetLockReason(),
 		})
@@ -105,7 +105,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		}
 
 		c.JSON(http.StatusUnauthorized, gin.H{
-			"error":              "Invalid credentials",
+			"error":              "用户名或密码错误",
 			"code":               "login_failure",
 			"remaining_attempts": remaining,
 		})
@@ -155,7 +155,7 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Logged out successfully",
+		"message": "已成功退出登录",
 	})
 }
 
@@ -167,7 +167,7 @@ func (h *AuthHandler) VerifyToken(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid request",
+			"error": "请求参数无效",
 			"code":  "invalid_request",
 		})
 		return
@@ -180,7 +180,7 @@ func (h *AuthHandler) VerifyToken(c *gin.Context) {
 		}
 
 		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "Invalid token",
+			"error": "令牌无效",
 			"code":  "invalid_token",
 		})
 		return
@@ -205,7 +205,7 @@ func (h *AuthHandler) GetCurrentUser(c *gin.Context) {
 	user, exists := c.Get("currentUser")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "Not authenticated",
+			"error": "未登录",
 			"code":  "not_authenticated",
 		})
 		return

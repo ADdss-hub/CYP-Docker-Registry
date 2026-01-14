@@ -86,8 +86,8 @@ func (s *SystemService) GetSystemInfo() *SystemInfo {
 	hostname, _ := os.Hostname()
 
 	return &SystemInfo{
-		Version:     "1.0.2",
-		BuildTime:   "2026-01-13",
+		Version:     "1.0.3",
+		BuildTime:   "2026-01-14",
 		GoVersion:   runtime.Version(),
 		OS:          runtime.GOOS,
 		Arch:        runtime.GOARCH,
@@ -286,5 +286,5 @@ func (s *SystemService) TriggerGC() {
 
 // GetVersion returns the system version.
 func (s *SystemService) GetVersion() string {
-	return "1.0.0"
+	return "1.0.3"
 }
