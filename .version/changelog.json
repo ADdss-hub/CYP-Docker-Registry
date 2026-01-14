@@ -3,20 +3,11 @@
   "history": [
     {
       "version": "1.0.5",
-      "timestamp": "2026-01-14T12:03:18.458Z",
+      "timestamp": "2026-01-14T13:37:07.416Z",
       "author": "CYP",
-      "changes": [
-        "fix: 优化注册界面，移除邮箱字段，仅需账号和密码即可注册",
-        "feat: 注册成功后自动生成个人访问令牌并显示给用户",
-        "feat: 添加 RegisterWithToken 方法支持注册时自动生成令牌",
-        "fix: 优化系统锁定界面为完整独立的错误界面",
-        "feat: 新增 DNS 解析服务，支持域名输入查询",
-        "feat: 添加 DNS 服务后端接口 /api/v1/dns/resolve",
-        "feat: 添加 DNS 解析前端界面，支持 A/AAAA/CNAME/MX/TXT/NS 记录查询",
-        "fix: 更新前端版本号显示"
-      ],
-      "type": "patch",
-      "previousVersion": "1.0.4",
+      "changes": [],
+      "type": "chore",
+      "previousVersion": "1.0.5",
       "metadata": {}
     },
     {
@@ -84,7 +75,7 @@
     }
   ],
   "metadata": {
-    "updated": "2026-01-14T12:03:18.459Z",
+    "updated": "2026-01-14T13:37:07.416Z",
     "project": "CYP-memo"
   }
 }

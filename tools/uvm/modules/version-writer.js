@@ -393,6 +393,51 @@ export const VERSION = {
   }
 
   /**
+   * 写入 Vue 前端组件版本号 (CYP-Docker-Registry)
+   * @param {string} version - 版本号（不含 v 前缀）
+   */
+  writeVueComponentsVersion(version) {
+    const cleanVersion = version.replace(/^v/, '');
+    
+    const vueFiles = [
+      {
+        file: 'web/src/views/Login.vue',
+        patterns: [
+          { search: /(ref\(appStore\.version \|\| ')[\d.]+('\))/g, replace: `$1${cleanVersion}$2` }
+        ]
+      },
+      {
+        file: 'web/src/views/Register.vue',
+        patterns: [
+          { search: /(ref\(appStore\.version \|\| ')[\d.]+('\))/g, replace: `$1${cleanVersion}$2` }
+        ]
+      },
+      {
+        file: 'web/src/views/Locked.vue',
+        patterns: [
+          { search: /(ref\(appStore\.version \|\| ')[\d.]+('\))/g, replace: `$1${cleanVersion}$2` }
+        ]
+      },
+      {
+        file: 'web/src/components/Footer.vue',
+        patterns: [
+          { search: /(version\.value = ')[\d.]+(')/g, replace: `$1${cleanVersion}$2` }
+        ]
+      },
+      {
+        file: 'web/src/stores/app.ts',
+        patterns: [
+          { search: /(const DEFAULT_VERSION = ')[\d.]+(')/g, replace: `$1${cleanVersion}$2` }
+        ]
+      }
+    ];
+
+    vueFiles.forEach(vue => {
+      this.replaceInFile(vue.file, vue.patterns, vue.file);
+    });
+  }
+
+  /**
    * 写入所有文件
    * @param {string} version - 版本号
    */
@@ -414,6 +459,7 @@ export const VERSION = {
     this.writeDockerfileVersion(version);
     this.writeShellScriptsVersion(version);
     this.writeProjectDocsVersion(version);
+    this.writeVueComponentsVersion(version);
 
     if (!this.silent) {
       console.log('');
