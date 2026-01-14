@@ -6,7 +6,7 @@
  * 
  * @module version-writer
  * @author CYP
- * @version v1.15.7
+ * @version v1.15.8
  */
 
 const fs = require('fs');
@@ -16,6 +16,56 @@ class VersionWriter {
   constructor(options = {}) {
     this.projectRoot = options.projectRoot || process.cwd();
     this.silent = options.silent || false;
+  }
+
+  /**
+   * 使用正则替换文件中的版本号
+   * @param {string} filePath - 文件路径
+   * @param {Array} patterns - 替换模式数组 [{search: RegExp, replace: string}]
+   * @param {string} displayName - 显示名称
+   * @returns {boolean} 是否成功替换
+   */
+  replaceInFile(filePath, patterns, displayName) {
+    const fullPath = path.join(this.projectRoot, filePath);
+    
+    if (!fs.existsSync(fullPath)) {
+      if (!this.silent) {
+        console.log(`  ⚠ ${displayName}: 文件不存在`);
+      }
+      return false;
+    }
+
+    try {
+      let content = fs.readFileSync(fullPath, 'utf8');
+      let changed = false;
+
+      patterns.forEach(pattern => {
+        if (pattern.search.test(content)) {
+          content = content.replace(pattern.search, pattern.replace);
+          changed = true;
+        }
+        // 重置正则的 lastIndex
+        pattern.search.lastIndex = 0;
+      });
+
+      if (changed) {
+        fs.writeFileSync(fullPath, content);
+        if (!this.silent) {
+          console.log(`  ✓ ${displayName}`);
+        }
+        return true;
+      } else {
+        if (!this.silent) {
+          console.log(`  ⏭ ${displayName}: 已是最新或未找到匹配`);
+        }
+        return false;
+      }
+    } catch (error) {
+      if (!this.silent) {
+        console.warn(`  ⚠ ${displayName}: ${error.message}`);
+      }
+      return false;
+    }
   }
 
   /**
@@ -41,10 +91,8 @@ class VersionWriter {
     const cleanVersion = version.replace(/^v/, '');
     const packageFiles = [
       'package.json',
-      // 兼容旧项目结构
       'frontend/package.json',
       'backend/package.json',
-      // 适配 monorepo 结构 (packages/)
       'packages/app/package.json',
       'packages/admin/package.json',
       'packages/shared/package.json',
@@ -95,8 +143,6 @@ class VersionWriter {
       hour12: false 
     }).replace(/\//g, '-').replace(/,/g, '');
     
-    // ⚠️⚠️⚠️ 严重警告：请勿在此处硬编码版本号！⚠️⚠️⚠️
-    // ⚠️ 必须使用变量 ${cleanVersion}，不要写死版本号
     const content = `/**
  * 应用版本信息
  * 自动生成，请勿手动修改
@@ -107,7 +153,6 @@ export const APP_VERSION = "${cleanVersion}";
 export const VERSION_NUMBER = "${cleanVersion}";
 export const BUILD_TIME = '${buildTime.toISOString()}';
 
-// 版本信息对象
 export const VERSION_INFO = {
   version: "${cleanVersion}",
   versionPlain: '${cleanVersion}',
@@ -117,7 +162,6 @@ export const VERSION_INFO = {
   fullversion: "${cleanVersion}",
 } as const;
 
-// 默认导出
 export default VERSION_INFO;
 `;
 
@@ -141,11 +185,7 @@ export default VERSION_INFO;
     
     const versionFile = path.join(this.projectRoot, 'packages/shared/src/config/version.ts');
     
-    // 检查文件是否存在
     if (!fs.existsSync(versionFile)) {
-      if (!this.silent) {
-        console.log(`  ⚠ shared 版本文件不存在: ${versionFile}`);
-      }
       return;
     }
 
@@ -163,7 +203,6 @@ export const VERSION = {
   },
   author: 'CYP',
   email: 'nasDSSCYP@outlook.com',
-  /** 分行展示版权信息（优化版） */
   get copyrightLines() {
     return {
       line1: \`CYP-memo v\${this.full}\`,
@@ -188,37 +227,151 @@ export const VERSION = {
    */
   writeReadmeVersion(version) {
     const cleanVersion = version.replace(/^v/, '');
-    const readmeFile = path.join(this.projectRoot, 'README.md');
     
-    if (!fs.existsSync(readmeFile)) {
-      if (!this.silent) {
-        console.log(`  ⚠ README.md 不存在`);
-      }
-      return;
-    }
+    this.replaceInFile('README.md', [
+      { search: /(\*\*版本\*\*:\s*v?)[\d.]+/g, replace: `$1${cleanVersion}` },
+      { search: /(version-)[\d.]+(-blue)/g, replace: `$1${cleanVersion}$2` }
+    ], 'README.md');
+  }
 
-    try {
-      let content = fs.readFileSync(readmeFile, 'utf8');
-      
-      // 匹配 **版本**: x.x.x 格式
-      const versionPattern = /(\*\*版本\*\*:\s*)[\d.]+/;
-      if (versionPattern.test(content)) {
-        content = content.replace(versionPattern, `$1${cleanVersion}`);
-        fs.writeFileSync(readmeFile, content);
+  /**
+   * 写入 web 前端 package.json (CYP-Docker-Registry)
+   * @param {string} version - 版本号（不含 v 前缀）
+   */
+  writeWebPackageJson(version) {
+    const cleanVersion = version.replace(/^v/, '');
+    const webPackageFile = path.join(this.projectRoot, 'web/package.json');
+    
+    if (fs.existsSync(webPackageFile)) {
+      try {
+        const packageData = JSON.parse(fs.readFileSync(webPackageFile, 'utf8'));
+        packageData.version = cleanVersion;
+        fs.writeFileSync(webPackageFile, JSON.stringify(packageData, null, 2) + '\n');
         
         if (!this.silent) {
-          console.log(`  ✓ README.md: ${cleanVersion}`);
+          console.log(`  ✓ web/package.json: ${cleanVersion}`);
         }
-      } else {
+      } catch (error) {
         if (!this.silent) {
-          console.log(`  ⚠ README.md: 未找到版本号标记`);
+          console.warn(`  ⚠ web/package.json: ${error.message}`);
         }
-      }
-    } catch (error) {
-      if (!this.silent) {
-        console.warn(`  ⚠ README.md: ${error.message}`);
       }
     }
+  }
+
+  /**
+   * 写入 Go 服务版本号 (CYP-Docker-Registry)
+   * @param {string} version - 版本号（不含 v 前缀）
+   */
+  writeGoServiceVersion(version) {
+    const cleanVersion = version.replace(/^v/, '');
+    
+    this.replaceInFile('internal/service/system_service.go', [
+      { search: /(Version:\s*")[\d.]+(")/g, replace: `$1${cleanVersion}$2` }
+    ], 'internal/service/system_service.go');
+  }
+
+  /**
+   * 写入 Dockerfile 版本号 (CYP-Docker-Registry)
+   * @param {string} version - 版本号（不含 v 前缀）
+   */
+  writeDockerfileVersion(version) {
+    const cleanVersion = version.replace(/^v/, '');
+    
+    this.replaceInFile('Dockerfile', [
+      { search: /(# Version: v)[\d.]+/g, replace: `$1${cleanVersion}` },
+      { search: /(LABEL version=")[\d.]+(")/g, replace: `$1${cleanVersion}$2` }
+    ], 'Dockerfile');
+  }
+
+  /**
+   * 写入 Shell 脚本版本号 (CYP-Docker-Registry)
+   * @param {string} version - 版本号（不含 v 前缀）
+   */
+  writeShellScriptsVersion(version) {
+    const cleanVersion = version.replace(/^v/, '');
+    
+    const shellScripts = [
+      {
+        file: 'scripts/entrypoint.sh',
+        patterns: [
+          { search: /(# Version: v)[\d.]+/g, replace: `$1${cleanVersion}` },
+          { search: /(CYP-Docker-Registry v)[\d.]+/g, replace: `$1${cleanVersion}` }
+        ]
+      },
+      {
+        file: 'scripts/install.sh',
+        patterns: [
+          { search: /(# Version: v)[\d.]+/g, replace: `$1${cleanVersion}` },
+          { search: /(VERSION=")[\d.]+(")/g, replace: `$1${cleanVersion}$2` },
+          { search: /(智能安装脚本 v)[\d.]+/g, replace: `$1${cleanVersion}` }
+        ]
+      },
+      {
+        file: 'scripts/quick-start.sh',
+        patterns: [
+          { search: /(# Version: v)[\d.]+/g, replace: `$1${cleanVersion}` },
+          { search: /(快速启动脚本 v)[\d.]+/g, replace: `$1${cleanVersion}` }
+        ]
+      },
+      {
+        file: 'scripts/unlock.sh',
+        patterns: [
+          { search: /(# Version: v)[\d.]+/g, replace: `$1${cleanVersion}` }
+        ]
+      }
+    ];
+
+    shellScripts.forEach(script => {
+      this.replaceInFile(script.file, script.patterns, script.file);
+    });
+  }
+
+  /**
+   * 写入项目文档版本号 (CYP-Docker-Registry)
+   * @param {string} version - 版本号（不含 v 前缀）
+   */
+  writeProjectDocsVersion(version) {
+    const cleanVersion = version.replace(/^v/, '');
+    
+    const docFiles = [
+      {
+        file: 'PROJECT_STATUS.md',
+        patterns: [
+          { search: /(\*\*设计文档版本\*\*: v)[\d.]+/g, replace: `$1${cleanVersion}` }
+        ]
+      },
+      {
+        file: '宣传文件.md',
+        patterns: [
+          { search: /(CYP-Docker Registry v)[\d.]+/g, replace: `$1${cleanVersion}` }
+        ]
+      },
+      {
+        file: '设计文档.md',
+        patterns: [
+          { search: /(\*\*版本\*\*: v)[\d.]+/g, replace: `$1${cleanVersion}` },
+          { search: /(version: "v)[\d.]+(")/g, replace: `$1${cleanVersion}$2` },
+          { search: /(\*\*文档版本\*\*: v)[\d.]+/g, replace: `$1${cleanVersion}` }
+        ]
+      },
+      {
+        file: 'docs/SECURITY.md',
+        patterns: [
+          { search: /(\*\*版本\*\*: v)[\d.]+/g, replace: `$1${cleanVersion}` }
+        ]
+      },
+      {
+        file: 'docs/DEPLOY.md',
+        patterns: [
+          { search: /(\*\*版本\*\*: v)[\d.]+/g, replace: `$1${cleanVersion}` }
+        ]
+      }
+    ];
+
+    docFiles.forEach(doc => {
+      this.replaceInFile(doc.file, doc.patterns, doc.file);
+    });
   }
 
   /**
@@ -230,11 +383,19 @@ export const VERSION = {
       console.log('📝 写入版本号到文件...\n');
     }
 
+    // 核心版本文件
     this.writeVersionFile(version);
     this.writePackageJson(version);
     this.writeFrontendVersion(version);
     this.writeSharedVersion(version);
     this.writeReadmeVersion(version);
+
+    // CYP-Docker-Registry 项目特有文件
+    this.writeWebPackageJson(version);
+    this.writeGoServiceVersion(version);
+    this.writeDockerfileVersion(version);
+    this.writeShellScriptsVersion(version);
+    this.writeProjectDocsVersion(version);
 
     if (!this.silent) {
       console.log('');
