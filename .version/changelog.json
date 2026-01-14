@@ -2,10 +2,32 @@
   "schema": "2.1.0",
   "history": [
     {
+      "version": "1.0.9",
+      "timestamp": "2026-01-14T15:30:00.000Z",
+      "author": "CYP",
+      "changes": [
+        "fix: 修复全局对话框标题颜色不够明亮的问题",
+        "fix: 将对话框标题颜色从CSS变量改为明确的白色(#ffffff)",
+        "fix: 修复使用条款对话框标题颜色",
+        "fix: 添加全局对话框标题白色样式覆盖"
+      ],
+      "type": "patch",
+      "previousVersion": "1.0.8",
+      "metadata": {}
+    },
+    {
       "version": "1.0.8",
       "timestamp": "2026-01-14T14:42:27.449Z",
       "author": "CYP",
-      "changes": [],
+      "changes": [
+        "fix: 全面优化所有对话框标题样式，增强深色主题下的可读性",
+        "fix: el-dialog全局样式增强，包括标题、头部、主体、底部样式",
+        "fix: Images.vue详情对话框样式优化",
+        "fix: 对话框标题字体加粗(font-weight: 600)",
+        "fix: 对话框头部添加底部边框分隔线",
+        "fix: 对话框底部添加顶部边框分隔线",
+        "fix: 对话框关闭按钮颜色优化"
+      ],
       "type": "patch",
       "previousVersion": "1.0.7",
       "metadata": {}
@@ -14,7 +36,17 @@
       "version": "1.0.7",
       "timestamp": "2026-01-14T14:35:35.710Z",
       "author": "CYP",
-      "changes": [],
+      "changes": [
+        "fix: 修复全局字体颜色对比度不足问题，调整--muted-text从#8b949e改为#c9d1d9",
+        "fix: 修复NaN undefined显示问题，增强formatBytes函数对null/undefined/NaN值的处理",
+        "fix: 修复系统信息formatDuration函数错误，将string(rune())改为fmt.Sprintf()",
+        "fix: 修复版本号显示为空问题，添加默认值处理",
+        "fix: 修复DNS解析表格样式问题，增强表格行背景色和边框样式",
+        "fix: 修复添加上游源对话框标题样式",
+        "fix: 修复兼容性检查信息显示问题，支持对象和字符串两种格式",
+        "fix: P2P页面el-descriptions组件深色主题适配",
+        "fix: Element Plus组件深色主题适配(el-dialog、el-descriptions、el-form-item、el-switch)"
+      ],
       "type": "patch",
       "previousVersion": "1.0.6",
       "metadata": {}
@@ -23,7 +55,13 @@
       "version": "1.0.6",
       "timestamp": "2026-01-14T13:38:34.314Z",
       "author": "CYP",
-      "changes": [],
+      "changes": [
+        "fix: 修复Dashboard.vue中formatBytes函数处理空值问题",
+        "fix: 修复System.vue中formatBytes函数处理空值问题",
+        "fix: 修复Accelerator.vue中formatBytes函数处理空值问题",
+        "fix: 修复磁盘使用百分比计算NaN问题",
+        "fix: 修复内存显示格式化问题"
+      ],
       "type": "patch",
       "previousVersion": "1.0.5",
       "metadata": {}
@@ -32,9 +70,12 @@
       "version": "1.0.5",
       "timestamp": "2026-01-14T13:37:07.416Z",
       "author": "CYP",
-      "changes": [],
+      "changes": [
+        "chore: 版本号同步更新",
+        "chore: 项目文档更新"
+      ],
       "type": "chore",
-      "previousVersion": "1.0.5",
+      "previousVersion": "1.0.4",
       "metadata": {}
     },
     {
@@ -95,14 +136,20 @@
       "version": "1.0.1",
       "timestamp": "2026-01-14T02:57:46.000Z",
       "author": "CYP",
-      "changes": [],
+      "changes": [
+        "feat: 项目初始发布",
+        "feat: 容器镜像私有仓库基础功能",
+        "feat: 镜像加速器功能",
+        "feat: 用户认证和授权系统",
+        "feat: Web管理界面"
+      ],
       "type": "patch",
       "previousVersion": "1.0.0",
       "metadata": {}
     }
   ],
   "metadata": {
-    "updated": "2026-01-14T14:42:27.449Z",
-    "project": "CYP-memo"
+    "updated": "2026-01-14T14:50:00.000Z",
+    "project": "CYP-Docker-Registry"
   }
 }
