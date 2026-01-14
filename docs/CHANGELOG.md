@@ -13,11 +13,24 @@
   - 解决方案：将 go-sqlite3 替换为纯 Go 实现的 modernc.org/sqlite 驱动
   - 影响范围：所有 Docker 部署环境，包括飞牛 NAS、群晖、QNAP 等
 
+### 新增
+- 🔄 完善自动更新检测功能
+  - 支持从 GitHub Releases 检测新版本
+  - Docker 环境自动检测，提供 Watchtower 自动更新配置
+  - 非 Docker 环境支持自动下载和应用更新
+  - 新增 API: `/api/update/docker-command`、`/api/update/watchtower-config`
+  - 后台定时检查更新（默认每小时）
+
 ### 优化
 - 📦 数据库驱动升级
   - 从 github.com/mattn/go-sqlite3 v1.14.22 迁移到 modernc.org/sqlite v1.29.1
   - 无需 CGO 支持，生成静态链接的二进制文件
   - 提升跨平台兼容性，支持 Alpine 等精简镜像
+
+- 🛠 版本更新工具增强
+  - 自动更新 Docker 部署文件版本号
+  - 自动更新所有脚本文件版本号
+  - 自动更新项目文档版本号
 
 ### 变更
 - 🔄 数据库连接参数调整
