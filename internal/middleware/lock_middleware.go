@@ -27,31 +27,47 @@ func (m *LockMiddleware) CheckLock() gin.HandlerFunc {
 			return
 		}
 
+		path := c.Request.URL.Path
+
 		// Allow unlock endpoint
-		if c.Request.URL.Path == "/api/v1/system/lock/unlock" {
+		if path == "/api/v1/system/lock/unlock" {
 			c.Next()
 			return
 		}
 
 		// Allow health check
-		if c.Request.URL.Path == "/health" || c.Request.URL.Path == "/api/v1/system/health" {
+		if path == "/health" || path == "/api/v1/system/health" {
 			c.Next()
 			return
 		}
 
 		// Allow lock status check
-		if c.Request.URL.Path == "/api/v1/system/lock/status" {
+		if path == "/api/v1/system/lock/status" {
+			c.Next()
+			return
+		}
+
+		// Allow frontend static resources (for locked page to render)
+		if path == "/" || path == "/locked" || path == "/login" ||
+			len(path) > 7 && path[:7] == "/assets" ||
+			path == "/favicon.ico" || path == "/vite.svg" {
 			c.Next()
 			return
 		}
 
 		// Check if system is locked
 		if m.lockService.IsSystemLocked() {
-			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
-				"error":       "系统已锁定",
-				"details":     "system_locked",
-				"lock_reason": m.lockService.GetLockReason(),
-			})
+			// For API requests, return JSON
+			if len(path) > 4 && path[:4] == "/api" {
+				c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
+					"error":       "系统已锁定",
+					"details":     "system_locked",
+					"lock_reason": m.lockService.GetLockReason(),
+				})
+				return
+			}
+			// For page requests, let frontend handle the redirect
+			c.Next()
 			return
 		}
 
