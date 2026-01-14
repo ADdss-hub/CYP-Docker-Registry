@@ -37,6 +37,7 @@ func NewAuthHandler(
 func (h *AuthHandler) RegisterRoutes(r *gin.RouterGroup) {
 	r.POST("/login", h.Login)
 	r.POST("/logout", h.Logout)
+	r.POST("/register", h.Register)
 	r.POST("/verify-token", h.VerifyToken)
 	r.GET("/heartbeat", h.Heartbeat)
 	r.GET("/me", h.GetCurrentUser)
@@ -213,5 +214,90 @@ func (h *AuthHandler) GetCurrentUser(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"user": user,
+	})
+}
+
+// RegisterRequest represents a registration request.
+type RegisterRequest struct {
+	Username string `json:"username" binding:"required,min=3,max=20"`
+	Email    string `json:"email" binding:"required,email"`
+	Password string `json:"password" binding:"required,min=6,max=32"`
+}
+
+// Register handles user registration.
+func (h *AuthHandler) Register(c *gin.Context) {
+	var req RegisterRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "请求参数无效",
+			"code":  "invalid_request",
+		})
+		return
+	}
+
+	clientIP := c.ClientIP()
+
+	// Check if system is locked
+	if h.lockService != nil && h.lockService.IsSystemLocked() {
+		c.JSON(http.StatusForbidden, gin.H{
+			"error":       "系统已锁定",
+			"details":     "system_locked",
+			"lock_reason": h.lockService.GetLockReason(),
+		})
+		return
+	}
+
+	// Register user
+	registerReq := &service.RegisterRequest{
+		Username: req.Username,
+		Email:    req.Email,
+		Password: req.Password,
+		ClientIP: clientIP,
+	}
+
+	user, err := h.authService.Register(registerReq)
+	if err != nil {
+		// Log registration failure
+		if h.auditService != nil {
+			h.auditService.LogAuditEvent(&service.AuditLog{
+				Level:     "warn",
+				Event:     "register_failure",
+				Username:  req.Username,
+				IPAddress: clientIP,
+				Action:    "register",
+				Status:    "failure",
+				Details: map[string]interface{}{
+					"error": err.Error(),
+				},
+			})
+		}
+
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+			"code":  "register_failure",
+		})
+		return
+	}
+
+	// Log successful registration
+	if h.auditService != nil {
+		h.auditService.LogAuditEvent(&service.AuditLog{
+			Level:     "info",
+			Event:     "register_success",
+			UserID:    user.ID,
+			Username:  user.Username,
+			IPAddress: clientIP,
+			Action:    "register",
+			Status:    "success",
+		})
+	}
+
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "注册成功",
+		"user": gin.H{
+			"id":       user.ID,
+			"username": user.Username,
+			"email":    user.Email,
+		},
 	})
 }

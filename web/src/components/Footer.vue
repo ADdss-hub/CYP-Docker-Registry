@@ -35,7 +35,7 @@ onMounted(async () => {
   <el-footer class="footer">
     <div class="footer-content">
       <div class="copyright">
-        版权所有 © {{ currentYear }} CYP. All rights reserved.
+        版权所有 © {{ currentYear }} CYP
       </div>
       <div class="divider">|</div>
       <div class="version">

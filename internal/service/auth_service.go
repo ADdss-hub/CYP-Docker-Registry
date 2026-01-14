@@ -81,6 +81,14 @@ type LoginResponse struct {
 	LockWarning        bool     `json:"lock_warning"`
 }
 
+// RegisterRequest represents a registration request.
+type RegisterRequest struct {
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	ClientIP string `json:"client_ip"`
+}
+
 // NewAuthService creates a new AuthService instance.
 func NewAuthService(jwtSecret string) *AuthService {
 	return &AuthService{
@@ -253,4 +261,47 @@ func generateSessionID() string {
 func HashToken(token string) string {
 	hash := sha256.Sum256([]byte(token))
 	return hex.EncodeToString(hash[:])
+}
+
+// Register registers a new user.
+func (s *AuthService) Register(req *RegisterRequest) (*User, error) {
+	// Check if username already exists
+	existingUser, _ := dao.GetUserByUsername(req.Username)
+	if existingUser != nil {
+		return nil, errors.New("用户名已存在")
+	}
+
+	// Check if email already exists
+	existingEmail, _ := dao.GetUserByEmail(req.Email)
+	if existingEmail != nil {
+		return nil, errors.New("邮箱已被注册")
+	}
+
+	// Hash password
+	passwordHash, err := HashPassword(req.Password)
+	if err != nil {
+		return nil, errors.New("密码加密失败")
+	}
+
+	// Create user in database
+	daoUser := &dao.User{
+		Username:     req.Username,
+		PasswordHash: passwordHash,
+		Role:         "user", // Default role
+		IsActive:     true,
+	}
+	daoUser.Email.String = req.Email
+	daoUser.Email.Valid = true
+
+	if err := dao.CreateUser(daoUser); err != nil {
+		return nil, errors.New("创建用户失败")
+	}
+
+	return &User{
+		ID:       daoUser.ID,
+		Username: daoUser.Username,
+		Email:    req.Email,
+		Role:     daoUser.Role,
+		IsActive: daoUser.IsActive,
+	}, nil
 }

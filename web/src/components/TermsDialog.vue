@@ -128,7 +128,7 @@ const handleAccept = () => {
 .terms-dialog :deep(.el-dialog__title) {
   font-size: 18px;
   font-weight: 600;
-  color: var(--text-color);
+  color: #ffffff;
 }
 
 .terms-dialog :deep(.el-dialog__body) {
@@ -155,14 +155,14 @@ const handleAccept = () => {
 .terms-section h3 {
   font-size: 20px;
   font-weight: 600;
-  color: var(--text-color);
+  color: #ffffff;
   margin-bottom: 12px;
 }
 
 .terms-section h4 {
   font-size: 16px;
   font-weight: 500;
-  color: var(--text-color);
+  color: #ffffff;
   margin-bottom: 12px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--border-color);
