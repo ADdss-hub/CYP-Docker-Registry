@@ -11,9 +11,14 @@ import (
 	"cyp-docker-registry/internal/service"
 	"cyp-docker-registry/internal/updater"
 	"cyp-docker-registry/internal/version"
+	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 // Router represents the API gateway router.
@@ -370,6 +375,9 @@ func (r *Router) setupRoutes() {
 			update.Any("/*path", r.apiPlaceholderHandler)
 		}
 	}
+
+	// Setup static file serving for frontend (must be last)
+	r.setupStaticFiles()
 }
 
 // Engine returns the underlying gin engine.
@@ -410,4 +418,69 @@ func (r *Router) apiPlaceholderHandler(c *gin.Context) {
 	common.ErrorResponse(c, common.ErrNotFound, gin.H{
 		"path": c.FullPath(),
 	})
+}
+
+// setupStaticFiles configures static file serving for the frontend.
+func (r *Router) setupStaticFiles() {
+	// Try multiple possible paths for static files
+	staticPaths := []string{
+		"./web/dist",    // Development path
+		"/app/web/dist", // Docker container path
+		"web/dist",      // Relative path
+	}
+
+	var staticPath string
+	for _, p := range staticPaths {
+		if _, err := os.Stat(p); err == nil {
+			staticPath = p
+			break
+		}
+	}
+
+	if staticPath == "" {
+		logger.Warn("Static files directory not found, frontend will not be served")
+		return
+	}
+
+	// Serve static assets (js, css, images, etc.)
+	r.engine.Static("/assets", filepath.Join(staticPath, "assets"))
+
+	// Serve favicon and other root static files
+	r.engine.StaticFile("/favicon.ico", filepath.Join(staticPath, "favicon.ico"))
+	r.engine.StaticFile("/vite.svg", filepath.Join(staticPath, "vite.svg"))
+
+	// Serve robots.txt if exists
+	robotsPath := filepath.Join(staticPath, "robots.txt")
+	if _, err := os.Stat(robotsPath); err == nil {
+		r.engine.StaticFile("/robots.txt", robotsPath)
+	} else {
+		// Provide default robots.txt
+		r.engine.GET("/robots.txt", func(c *gin.Context) {
+			c.String(http.StatusOK, "User-agent: *\nAllow: /")
+		})
+	}
+
+	// Serve index.html for SPA routing
+	indexPath := filepath.Join(staticPath, "index.html")
+	r.engine.GET("/", func(c *gin.Context) {
+		c.File(indexPath)
+	})
+
+	// Handle SPA routes - serve index.html for any unmatched routes
+	r.engine.NoRoute(func(c *gin.Context) {
+		path := c.Request.URL.Path
+
+		// Skip API and V2 routes
+		if strings.HasPrefix(path, "/api") || strings.HasPrefix(path, "/v2") || strings.HasPrefix(path, "/health") {
+			common.ErrorResponse(c, common.ErrNotFound, gin.H{
+				"path": path,
+			})
+			return
+		}
+
+		// Serve index.html for SPA routes
+		c.File(indexPath)
+	})
+
+	logger.Info("Static files configured", zap.String("path", staticPath))
 }

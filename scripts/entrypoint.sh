@@ -1,6 +1,6 @@
 #!/bin/sh
 # CYP-Docker-Registry 容器入口脚本
-# Version: v1.0.1
+# Version: v1.0.2
 # Author: CYP | Contact: nasDSSCYP@outlook.com
 
 set -e
@@ -22,7 +22,7 @@ log_error() {
 print_banner() {
     echo ""
     echo "╔════════════════════════════════════════════════╗"
-    echo "║        CYP-Docker-Registry v1.0.1              ║"
+    echo "║        CYP-Docker-Registry v1.0.2              ║"
     echo "║     零信任容器镜像私有仓库管理系统             ║"
     echo "╚════════════════════════════════════════════════╝"
     echo ""
