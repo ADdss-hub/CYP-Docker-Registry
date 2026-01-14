@@ -170,20 +170,44 @@ h6 { font-size: 14px; }
   --el-dialog-bg-color: var(--secondary-bg);
   --el-dialog-border-radius: var(--radius-lg);
   --el-dialog-title-font-size: 18px;
+  border: 1px solid var(--border-color);
 }
 
 .el-dialog__title {
   color: var(--text-color) !important;
-  font-weight: 500;
+  font-weight: 600 !important;
+  font-size: 18px !important;
 }
 
 .el-dialog__header {
+  background-color: var(--secondary-bg);
   border-bottom: 1px solid var(--border-color);
-  padding-bottom: 16px;
+  padding: 16px 20px !important;
+}
+
+.el-dialog__headerbtn {
+  top: 16px !important;
+  right: 16px !important;
+}
+
+.el-dialog__headerbtn .el-dialog__close {
+  color: var(--muted-text) !important;
+}
+
+.el-dialog__headerbtn:hover .el-dialog__close {
+  color: var(--text-color) !important;
 }
 
 .el-dialog__body {
   color: var(--text-color);
+  background-color: var(--secondary-bg);
+  padding: 20px !important;
+}
+
+.el-dialog__footer {
+  background-color: var(--secondary-bg);
+  border-top: 1px solid var(--border-color);
+  padding: 12px 20px !important;
 }
 
 .el-message-box {

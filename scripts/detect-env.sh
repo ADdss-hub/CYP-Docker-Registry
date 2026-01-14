@@ -1,6 +1,6 @@
 #!/bin/bash
 # CYP-Docker-Registry 环境检测脚本
-# Version: v1.0.7
+# Version: v1.0.8
 # Author: CYP | Contact: nasDSSCYP@outlook.com
 
 set -e
@@ -13,7 +13,7 @@ NC='\033[0m'
 
 echo -e "${BLUE}"
 echo "╔════════════════════════════════════════════════╗"
-echo "║     CYP-Docker-Registry 环境检测工具 v1.0.7  ║"
+echo "║     CYP-Docker-Registry 环境检测工具 v1.0.8  ║"
 echo "╚════════════════════════════════════════════════╝"
 echo -e "${NC}"
 

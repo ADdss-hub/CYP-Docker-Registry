@@ -24,9 +24,9 @@ onMounted(async () => {
     }
     
     // 如果所有接口都失败，使用默认版本
-    version.value = '1.0.7'
+    version.value = '1.0.8'
   } catch {
-    version.value = '1.0.7'
+    version.value = '1.0.8'
   }
 })
 </script>

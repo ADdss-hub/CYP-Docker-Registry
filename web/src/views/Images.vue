@@ -489,4 +489,20 @@ onMounted(() => {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* 详情对话框样式 */
+.detail-dialog :deep(.el-dialog__title) {
+  color: var(--text-color, #e6edf3) !important;
+  font-weight: 600;
+}
+
+.detail-dialog :deep(.el-dialog__header) {
+  border-bottom: 1px solid var(--border-color, #30363d);
+  padding: 16px 20px;
+}
+
+.detail-dialog :deep(.el-dialog__body) {
+  color: var(--text-color, #e6edf3);
+  padding: 20px;
+}
 </style>
