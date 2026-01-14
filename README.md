@@ -2,7 +2,7 @@
 
 零信任容器镜像仓库，让安全与高效兼得
 
-[![Version](https://img.shields.io/badge/version-1.0.4-blue.svg)](VERSION)
+[![Version](https://img.shields.io/badge/version-1.0.3-blue.svg)](VERSION)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](docs/LICENSE.md)
 [![Go](https://img.shields.io/badge/Go-1.21+-00ADD8.svg)](https://golang.org)
 [![Vue](https://img.shields.io/badge/Vue-3.5-4FC08D.svg)](https://vuejs.org)
@@ -117,5 +117,5 @@ MIT License - 详见 [LICENSE](docs/LICENSE.md)
 
 ---
 
-**版本**: v1.0.4 | **最后更新**: 2026-01-14
+**版本**: v1.0.3 | **最后更新**: 2026-01-14
 
