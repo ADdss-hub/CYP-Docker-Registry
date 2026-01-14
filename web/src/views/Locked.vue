@@ -87,7 +87,7 @@
 
       <div class="locked-footer">
         <p>CYP-Docker Registry v{{ version }}</p>
-        <p>Copyright © 2026 CYP. All rights reserved.</p>
+        <p>版权所有 © 2026 CYP</p>
       </div>
     </div>
   </div>
@@ -106,7 +106,7 @@ const appStore = useAppStore()
 
 const password = ref('')
 const loading = ref(false)
-const version = ref(appStore.version || '1.0.0')
+const version = ref(appStore.version || '1.0.4')
 
 const lockReason = computed(() => lockStore.lockStatus?.lock_reason || '')
 const requireManual = computed(() => lockStore.lockStatus?.require_manual ?? true)

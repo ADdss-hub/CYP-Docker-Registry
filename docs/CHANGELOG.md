@@ -12,11 +12,14 @@
   - 将 `.el-dialog__title`、`h3`、`h4` 的颜色从 CSS 变量改为明确的 `#ffffff`
 - 🔧 修复登录界面和底部视图中的英文版权信息
   - 将 "Copyright © 2026 CYP. All rights reserved." 改为 "版权所有 © 2026 CYP"
-  - 修复 Login.vue、Register.vue、Footer.vue 中的版权信息
+  - 修复 Login.vue、Register.vue、Locked.vue、Footer.vue、About.vue、TermsDialog.vue 中的版权信息
 - 🔧 修复注册界面报错问题
   - 添加后端注册接口 `/api/v1/auth/register`
   - 添加 `GetUserByEmail` 数据库查询函数用于邮箱重复检测
   - 添加 `RegisterRequest` 结构体和 `Register` 方法
+- 🔧 修复前端版本号显示错误
+  - 修复 Login.vue、Register.vue、Locked.vue、Footer.vue 中的默认版本号
+  - 修复 app store 默认版本号为 1.0.4
 
 ### 新增
 - 📝 用户注册 API 接口

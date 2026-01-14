@@ -52,7 +52,7 @@ const handleAccept = () => {
 
         <div class="terms-section">
           <h4>版权声明</h4>
-          <p>Copyright © {{ currentYear }} CYP. All rights reserved.</p>
+          <p>版权所有 © {{ currentYear }} CYP</p>
           <p>本软件及其相关文档的版权归作者所有。未经作者书面许可，不得以任何形式复制、修改、分发或使用本软件的任何部分。</p>
         </div>
 

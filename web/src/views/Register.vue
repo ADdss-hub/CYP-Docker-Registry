@@ -110,7 +110,7 @@ const appStore = useAppStore()
 const formRef = ref()
 const loading = ref(false)
 const errorMessage = ref('')
-const version = ref(appStore.version || '1.0.2')
+const version = ref(appStore.version || '1.0.4')
 
 const form = reactive({
   username: '',

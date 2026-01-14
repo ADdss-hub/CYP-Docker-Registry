@@ -5,7 +5,14 @@
       "version": "1.0.4",
       "timestamp": "2026-01-14T09:59:30.025Z",
       "author": "CYP",
-      "changes": [],
+      "changes": [
+        "fix: 修复使用条款界面顶部标题字体不够明亮的问题",
+        "fix: 修复登录界面和底部视图中的英文版权信息改为中文",
+        "fix: 修复注册界面报错问题，添加后端注册接口",
+        "fix: 修复前端版本号显示错误",
+        "feat: 添加 GetUserByEmail 数据库查询函数",
+        "feat: 添加用户注册 API 接口 /api/v1/auth/register"
+      ],
       "type": "patch",
       "previousVersion": "1.0.3",
       "metadata": {}
