@@ -278,10 +278,21 @@ export const VERSION = {
   writeDockerfileVersion(version) {
     const cleanVersion = version.replace(/^v/, '');
     
+    // Dockerfile
     this.replaceInFile('Dockerfile', [
       { search: /(# Version: v)[\d.]+/g, replace: `$1${cleanVersion}` },
       { search: /(LABEL version=")[\d.]+(")/g, replace: `$1${cleanVersion}$2` }
     ], 'Dockerfile');
+
+    // docker-compose.yaml
+    this.replaceInFile('docker-compose.yaml', [
+      { search: /(# Version: v)[\d.]+/g, replace: `$1${cleanVersion}` }
+    ], 'docker-compose.yaml');
+
+    // k8s-deployment.yaml
+    this.replaceInFile('k8s-deployment.yaml', [
+      { search: /(# Version: v)[\d.]+/g, replace: `$1${cleanVersion}` }
+    ], 'k8s-deployment.yaml');
   }
 
   /**

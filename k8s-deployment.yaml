@@ -1,5 +1,5 @@
 # CYP-Docker-Registry Kubernetes Deployment
-# Version: v1.0.0
+# Version: v1.0.1
 # 零信任容器镜像私有仓库 K8s 部署配置
 ---
 apiVersion: v1
