@@ -11,6 +11,7 @@ import (
 	"cyp-docker-registry/internal/service"
 	"cyp-docker-registry/internal/updater"
 	"cyp-docker-registry/internal/version"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -193,13 +194,28 @@ func (r *Router) initDetector() {
 
 // initUpdater initializes the updater service.
 func (r *Router) initUpdater() {
-	updateURL := ""
+	config := updater.DefaultConfig()
+
+	// 从配置文件读取更新设置
 	if r.config.Update.UpdateURL != "" {
-		updateURL = r.config.Update.UpdateURL
+		config.GitHubRepo = r.config.Update.UpdateURL
+	}
+	if r.config.Update.AutoUpdate {
+		config.AutoUpdate = r.config.Update.AutoUpdate
+	}
+	if r.config.Update.CheckInterval != "" {
+		// 解析检查间隔，如 "1h", "30m"
+		if interval, err := time.ParseDuration(r.config.Update.CheckInterval); err == nil {
+			config.CheckInterval = interval
+		}
 	}
 
 	downloadPath := "./data/updates"
-	service := updater.NewUpdaterService(updateURL, downloadPath)
+	service := updater.NewUpdaterService(config, downloadPath)
+
+	// 启动后台更新检查
+	service.Start()
+
 	r.updaterHandler = updater.NewHandler(service)
 }
 
