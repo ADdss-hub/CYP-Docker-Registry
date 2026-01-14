@@ -282,30 +282,41 @@ function copyValue(value: string) {
 }
 
 :deep(.el-table) {
-  --el-table-bg-color: transparent;
-  --el-table-tr-bg-color: transparent;
-  --el-table-header-bg-color: rgba(255, 255, 255, 0.05);
-  --el-table-row-hover-bg-color: rgba(255, 255, 255, 0.05);
-  --el-table-border-color: rgba(255, 255, 255, 0.1);
-  --el-table-text-color: var(--text-primary, #ffffff);
-  --el-table-header-text-color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+  --el-table-bg-color: var(--secondary-bg, #161b22) !important;
+  --el-table-tr-bg-color: var(--secondary-bg, #161b22) !important;
+  --el-table-header-bg-color: var(--bg-color, #0d1117) !important;
+  --el-table-row-hover-bg-color: rgba(88, 166, 255, 0.1) !important;
+  --el-table-border-color: var(--border-color, #30363d) !important;
+  --el-table-text-color: var(--text-color, #e6edf3) !important;
+  --el-table-header-text-color: var(--muted-text, #8b949e) !important;
+  background-color: var(--secondary-bg, #161b22) !important;
+}
+
+:deep(.el-table__inner-wrapper) {
+  background-color: var(--secondary-bg, #161b22) !important;
+}
+
+:deep(.el-table__body-wrapper) {
+  background-color: var(--secondary-bg, #161b22) !important;
 }
 
 :deep(.el-table__row) {
   background-color: var(--secondary-bg, #161b22) !important;
 }
 
-:deep(.el-table__row--striped) {
+:deep(.el-table__row td.el-table__cell) {
+  background-color: var(--secondary-bg, #161b22) !important;
+  border-bottom-color: var(--border-color, #30363d) !important;
+}
+
+:deep(.el-table__row--striped td.el-table__cell) {
   background-color: var(--bg-color, #0d1117) !important;
 }
 
-:deep(.el-table__row td) {
-  border-bottom-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-:deep(.el-table__header th) {
+:deep(.el-table__header th.el-table__cell) {
   background-color: var(--bg-color, #0d1117) !important;
-  color: var(--label-text, #c9d1d9) !important;
+  color: var(--muted-text, #8b949e) !important;
   font-weight: 500;
+  border-bottom-color: var(--border-color, #30363d) !important;
 }
 </style>

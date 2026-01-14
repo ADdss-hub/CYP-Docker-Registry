@@ -492,13 +492,15 @@ onMounted(() => {
 
 /* 详情对话框样式 */
 .detail-dialog :deep(.el-dialog__title) {
-  color: var(--text-color, #e6edf3) !important;
+  color: #ffffff !important;
   font-weight: 600;
+  font-size: 18px !important;
 }
 
 .detail-dialog :deep(.el-dialog__header) {
   border-bottom: 1px solid var(--border-color, #30363d);
   padding: 16px 20px;
+  background-color: var(--secondary-bg, #161b22);
 }
 
 .detail-dialog :deep(.el-dialog__body) {

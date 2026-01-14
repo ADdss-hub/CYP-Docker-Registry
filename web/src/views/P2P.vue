@@ -480,7 +480,7 @@ onUnmounted(() => {
 
 /* 修复 el-descriptions 标签颜色 */
 :deep(.el-descriptions__label) {
-  color: var(--label-text, #c9d1d9) !important;
+  color: var(--muted-text, #8b949e) !important;
   background-color: var(--bg-color, #0d1117) !important;
   font-weight: 500;
 }
@@ -494,11 +494,29 @@ onUnmounted(() => {
   border-color: var(--border-color, #30363d) !important;
 }
 
+:deep(.el-descriptions) {
+  --el-descriptions-item-bordered-label-background: var(--bg-color, #0d1117);
+}
+
+:deep(.el-descriptions__body) {
+  background-color: var(--secondary-bg, #161b22) !important;
+}
+
+:deep(.el-descriptions__table) {
+  background-color: var(--secondary-bg, #161b22) !important;
+}
+
 /* 修复卡片标题颜色 */
 :deep(.el-card__header) {
   background-color: var(--secondary-bg, #161b22);
   border-bottom-color: var(--border-color, #30363d);
-  color: var(--text-color, #e6edf3);
+  color: #ffffff !important;
+}
+
+:deep(.el-card__header span) {
+  color: #ffffff !important;
+  font-weight: 600;
+  font-size: 16px;
 }
 
 /* 修复表格样式 */

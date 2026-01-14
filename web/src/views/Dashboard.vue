@@ -57,6 +57,12 @@ const memoryFormatted = computed(() => {
   return formatBytes(systemInfo.value.memory_total)
 })
 
+const diskUsedFormatted = computed(() => {
+  if (!systemInfo.value || !systemInfo.value.disk_total) return '0 B'
+  const used = (systemInfo.value.disk_total || 0) - (systemInfo.value.disk_free || 0)
+  return formatBytes(used)
+})
+
 const fetchData = async () => {
   loading.value = true
   try {
@@ -179,7 +185,7 @@ onMounted(() => {
                 :color="diskUsagePercent > 80 ? '#f85149' : '#58a6ff'"
               />
               <span class="disk-text">
-                {{ formatBytes(systemInfo.disk_total - systemInfo.disk_free) }} / {{ formatBytes(systemInfo.disk_total) }}
+                {{ diskUsedFormatted }} / {{ formatBytes(systemInfo?.disk_total || 0) }}
               </span>
             </div>
           </div>

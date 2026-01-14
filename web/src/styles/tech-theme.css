@@ -152,18 +152,51 @@ h6 { font-size: 14px; }
 }
 
 .el-table {
-  --el-table-bg-color: var(--secondary-bg);
-  --el-table-tr-bg-color: var(--secondary-bg);
-  --el-table-header-bg-color: var(--bg-color);
-  --el-table-row-hover-bg-color: rgba(88, 166, 255, 0.1);
-  --el-table-border-color: var(--border-color);
-  --el-table-text-color: var(--text-color);
-  --el-table-header-text-color: var(--muted-text);
+  --el-table-bg-color: var(--secondary-bg) !important;
+  --el-table-tr-bg-color: var(--secondary-bg) !important;
+  --el-table-header-bg-color: var(--bg-color) !important;
+  --el-table-row-hover-bg-color: rgba(88, 166, 255, 0.1) !important;
+  --el-table-border-color: var(--border-color) !important;
+  --el-table-text-color: var(--text-color) !important;
+  --el-table-header-text-color: var(--muted-text) !important;
+  background-color: var(--secondary-bg) !important;
+}
+
+.el-table__inner-wrapper,
+.el-table__body-wrapper {
+  background-color: var(--secondary-bg) !important;
+}
+
+.el-table__row {
+  background-color: var(--secondary-bg) !important;
+}
+
+.el-table__row td.el-table__cell {
+  background-color: var(--secondary-bg) !important;
+}
+
+.el-table__row--striped td.el-table__cell {
+  background-color: var(--bg-color) !important;
+}
+
+.el-table__header th.el-table__cell {
+  background-color: var(--bg-color) !important;
 }
 
 .el-card {
   --el-card-bg-color: var(--secondary-bg);
   --el-card-border-color: var(--border-color);
+}
+
+.el-card__header {
+  background-color: var(--secondary-bg) !important;
+  border-bottom-color: var(--border-color) !important;
+  color: #ffffff !important;
+}
+
+.el-card__header span {
+  color: #ffffff !important;
+  font-weight: 600 !important;
 }
 
 .el-dialog {
@@ -177,12 +210,17 @@ h6 { font-size: 14px; }
   color: #ffffff !important;
   font-weight: 600 !important;
   font-size: 18px !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+  text-overflow: clip !important;
+  opacity: 1 !important;
 }
 
 .el-dialog__header {
   background-color: var(--secondary-bg);
   border-bottom: 1px solid var(--border-color);
   padding: 16px 20px !important;
+  padding-right: 50px !important;
 }
 
 .el-dialog__headerbtn {
@@ -204,10 +242,15 @@ h6 { font-size: 14px; }
   padding: 20px !important;
 }
 
-/* 确保所有对话框标题都是白色 */
+/* 确保所有对话框标题都是白色 - 高优先级 */
 .el-dialog .el-dialog__title,
-.el-dialog__header .el-dialog__title {
+.el-dialog__header .el-dialog__title,
+.el-dialog .el-dialog__header .el-dialog__title,
+.el-overlay .el-dialog .el-dialog__title {
   color: #ffffff !important;
+  font-weight: 600 !important;
+  font-size: 18px !important;
+  opacity: 1 !important;
 }
 
 .el-dialog__footer {
@@ -223,20 +266,38 @@ h6 { font-size: 14px; }
 
 /* Element Plus Descriptions 组件样式 */
 .el-descriptions {
-  --el-descriptions-item-bordered-label-background: var(--bg-color);
+  --el-descriptions-item-bordered-label-background: var(--bg-color) !important;
+}
+
+.el-descriptions__body {
+  background-color: var(--secondary-bg) !important;
+}
+
+.el-descriptions__table {
+  background-color: var(--secondary-bg) !important;
 }
 
 .el-descriptions__label {
-  color: var(--label-text) !important;
+  color: var(--muted-text) !important;
+  background-color: var(--bg-color) !important;
   font-weight: 500;
 }
 
 .el-descriptions__content {
   color: var(--text-color) !important;
+  background-color: var(--secondary-bg) !important;
 }
 
 .el-descriptions--bordered .el-descriptions__cell {
   border-color: var(--border-color) !important;
+}
+
+.el-descriptions--bordered .el-descriptions__label {
+  background-color: var(--bg-color) !important;
+}
+
+.el-descriptions--bordered .el-descriptions__content {
+  background-color: var(--secondary-bg) !important;
 }
 
 /* Element Plus Form 组件样式 */

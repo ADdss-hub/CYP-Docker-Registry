@@ -23,6 +23,42 @@ const syncFiles = [
     key: 'version'
   },
   {
+    file: 'web/src/stores/app.ts',
+    type: 'regex',
+    patterns: [
+      { search: /const DEFAULT_VERSION = '[\d.]+'/g, replace: `const DEFAULT_VERSION = '${version}'` }
+    ]
+  },
+  {
+    file: 'web/src/views/Login.vue',
+    type: 'regex',
+    patterns: [
+      { search: /CYP-Docker Registry v[\d.]+/g, replace: `CYP-Docker Registry v${version}` }
+    ]
+  },
+  {
+    file: 'Dockerfile',
+    type: 'regex',
+    patterns: [
+      { search: /# Version: v[\d.]+/g, replace: `# Version: v${version}` },
+      { search: /LABEL version="[\d.]+"/g, replace: `LABEL version="${version}"` }
+    ]
+  },
+  {
+    file: 'docker-compose.yaml',
+    type: 'regex',
+    patterns: [
+      { search: /cyp-docker-registry:[\d.]+/g, replace: `cyp-docker-registry:${version}` }
+    ]
+  },
+  {
+    file: 'k8s-deployment.yaml',
+    type: 'regex',
+    patterns: [
+      { search: /cyp-docker-registry:[\d.]+/g, replace: `cyp-docker-registry:${version}` }
+    ]
+  },
+  {
     file: '设计文档.md',
     type: 'regex',
     patterns: [
@@ -42,13 +78,40 @@ const syncFiles = [
     file: 'docs/DEPLOY.md',
     type: 'regex',
     patterns: [
-      { search: /\*\*版本\*\*: v[\d.]+/g, replace: `**版本**: v${version}` }
+      { search: /\*\*版本\*\*: v[\d.]+/g, replace: `**版本**: v${version}` },
+      { search: /cyp-docker-registry:[\d.]+/g, replace: `cyp-docker-registry:${version}` }
+    ]
+  },
+  {
+    file: 'docs/INSTALL.md',
+    type: 'regex',
+    patterns: [
+      { search: /\*\*版本\*\*: v[\d.]+/g, replace: `**版本**: v${version}` },
+      { search: /cyp-docker-registry:[\d.]+/g, replace: `cyp-docker-registry:${version}` }
+    ]
+  },
+  {
+    file: 'docs/API.md',
+    type: 'regex',
+    patterns: [
+      { search: /\*\*版本\*\*: v[\d.]+/g, replace: `**版本**: v${version}` },
+      { search: /\*\*API 版本\*\*: v[\d.]+/g, replace: `**API 版本**: v${version}` }
     ]
   },
   {
     file: 'README.md',
     type: 'regex',
     patterns: [
+      { search: /\*\*版本\*\*: v[\d.]+/g, replace: `**版本**: v${version}` },
+      { search: /cyp-docker-registry:[\d.]+/g, replace: `cyp-docker-registry:${version}` },
+      { search: /badge\/version-[\d.]+-blue/g, replace: `badge/version-${version}-blue` }
+    ]
+  },
+  {
+    file: 'PROJECT_STATUS.md',
+    type: 'regex',
+    patterns: [
+      { search: /\*\*当前版本\*\*: v[\d.]+/g, replace: `**当前版本**: v${version}` },
       { search: /\*\*版本\*\*: v[\d.]+/g, replace: `**版本**: v${version}` }
     ]
   }

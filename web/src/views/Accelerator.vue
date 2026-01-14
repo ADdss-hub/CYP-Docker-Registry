@@ -64,7 +64,7 @@ const hitRatePercent = computed(() => {
 const fetchCacheStats = async () => {
   try {
     const res = await request.get('/accel/cache/stats')
-    cacheStats.value = res.data
+    cacheStats.value = res.data?.data || res.data
   } catch (error) {
     console.error('获取缓存统计失败:', error)
   }
@@ -73,7 +73,8 @@ const fetchCacheStats = async () => {
 const fetchCacheEntries = async () => {
   try {
     const res = await request.get('/accel/cache/entries')
-    cacheEntries.value = res.data?.entries || []
+    const data = res.data?.data || res.data
+    cacheEntries.value = data?.entries || []
   } catch (error) {
     console.error('获取缓存条目失败:', error)
   }
@@ -82,7 +83,8 @@ const fetchCacheEntries = async () => {
 const fetchUpstreams = async () => {
   try {
     const res = await request.get('/accel/upstreams')
-    upstreams.value = res.data?.upstreams || []
+    const data = res.data?.data || res.data
+    upstreams.value = data?.upstreams || []
   } catch (error) {
     console.error('获取上游源失败:', error)
   }
@@ -476,13 +478,16 @@ onMounted(() => {
 
 /* 对话框样式 */
 .upstream-dialog :deep(.el-dialog__title) {
-  color: var(--text-color, #e6edf3) !important;
-  font-weight: 500;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  font-size: 18px !important;
+  opacity: 1 !important;
 }
 
 .upstream-dialog :deep(.el-dialog__header) {
   border-bottom: 1px solid var(--border-color, #30363d);
   padding-bottom: 16px;
+  background-color: var(--secondary-bg, #161b22);
 }
 
 .upstream-dialog :deep(.el-dialog__body) {

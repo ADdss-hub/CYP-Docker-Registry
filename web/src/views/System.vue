@@ -67,7 +67,8 @@ const diskUsedFormatted = computed(() => {
 const fetchSystemInfo = async () => {
   try {
     const res = await request.get('/system/info')
-    systemInfo.value = res.data
+    const data = res.data?.data || res.data
+    systemInfo.value = data
   } catch (error) {
     console.error('获取系统信息失败:', error)
   }
@@ -76,7 +77,8 @@ const fetchSystemInfo = async () => {
 const fetchCompatibility = async () => {
   try {
     const res = await request.get('/system/compatibility')
-    compatibility.value = res.data
+    const data = res.data?.data || res.data
+    compatibility.value = data
   } catch (error) {
     console.error('获取兼容性信息失败:', error)
   }
@@ -85,9 +87,10 @@ const fetchCompatibility = async () => {
 const fetchUpdateStatus = async () => {
   try {
     const res = await request.get('/update/status')
-    updateStatus.value = res.data?.status || ''
-    if (res.data?.version_info) {
-      versionInfo.value = res.data.version_info
+    const data = res.data?.data || res.data
+    updateStatus.value = data?.status || ''
+    if (data?.version_info) {
+      versionInfo.value = data.version_info
     }
   } catch (error) {
     console.error('获取更新状态失败:', error)
@@ -107,7 +110,8 @@ const refreshSystemInfo = async () => {
   loading.value = true
   try {
     const res = await request.get('/system/refresh')
-    systemInfo.value = res.data?.info
+    const data = res.data?.data || res.data
+    systemInfo.value = data?.info || data
     ElMessage.success('系统信息已刷新')
   } catch (error) {
     ElMessage.error('刷新系统信息失败')
@@ -120,9 +124,10 @@ const checkUpdate = async () => {
   checkingUpdate.value = true
   try {
     const res = await request.get('/update/check')
-    versionInfo.value = res.data
-    if (res.data?.has_update) {
-      ElMessage.success(`发现新版本: ${res.data.latest}`)
+    const data = res.data?.data || res.data
+    versionInfo.value = data
+    if (data?.has_update) {
+      ElMessage.success(`发现新版本: ${data.latest}`)
     } else {
       ElMessage.info('当前已是最新版本')
     }

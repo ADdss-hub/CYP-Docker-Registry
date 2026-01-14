@@ -182,25 +182,46 @@ func (d *DetectorService) getContainerdVersion() string {
 
 // getMemoryTotal retrieves total system memory in bytes.
 func (d *DetectorService) getMemoryTotal() int64 {
-	switch runtime.GOOS {
-	case "linux":
-		if data, err := os.ReadFile("/proc/meminfo"); err == nil {
-			lines := strings.Split(string(data), "\n")
-			for _, line := range lines {
-				if strings.HasPrefix(line, "MemTotal:") {
-					fields := strings.Fields(line)
-					if len(fields) >= 2 {
-						var kb int64
-						for _, c := range fields[1] {
-							if c >= '0' && c <= '9' {
-								kb = kb*10 + int64(c-'0')
-							}
+	// Linux (including Docker containers)
+	if data, err := os.ReadFile("/proc/meminfo"); err == nil {
+		lines := strings.Split(string(data), "\n")
+		for _, line := range lines {
+			if strings.HasPrefix(line, "MemTotal:") {
+				fields := strings.Fields(line)
+				if len(fields) >= 2 {
+					var kb int64
+					for _, c := range fields[1] {
+						if c >= '0' && c <= '9' {
+							kb = kb*10 + int64(c-'0')
 						}
-						return kb * 1024 // Convert KB to bytes
 					}
+					return kb * 1024 // Convert KB to bytes
 				}
 			}
 		}
+	}
+
+	// Try cgroup memory limit (for Docker containers)
+	if data, err := os.ReadFile("/sys/fs/cgroup/memory/memory.limit_in_bytes"); err == nil {
+		mem := parseNumber(strings.TrimSpace(string(data)))
+		// Check if it's not the max value (unlimited)
+		if mem > 0 && mem < 9223372036854771712 {
+			return mem
+		}
+	}
+
+	// Try cgroup v2
+	if data, err := os.ReadFile("/sys/fs/cgroup/memory.max"); err == nil {
+		s := strings.TrimSpace(string(data))
+		if s != "max" {
+			mem := parseNumber(s)
+			if mem > 0 {
+				return mem
+			}
+		}
+	}
+
+	switch runtime.GOOS {
 	case "darwin":
 		if out, err := exec.Command("sysctl", "-n", "hw.memsize").Output(); err == nil {
 			var mem int64
@@ -212,6 +233,15 @@ func (d *DetectorService) getMemoryTotal() int64 {
 			return mem
 		}
 	case "windows":
+		// Try PowerShell first (more reliable on modern Windows)
+		psCmd := "(Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory"
+		if out, err := exec.Command("powershell", "-Command", psCmd).Output(); err == nil {
+			mem := parseNumber(strings.TrimSpace(string(out)))
+			if mem > 0 {
+				return mem
+			}
+		}
+		// Fallback to wmic
 		if out, err := exec.Command("wmic", "computersystem", "get", "TotalPhysicalMemory").Output(); err == nil {
 			lines := strings.Split(string(out), "\n")
 			for _, line := range lines {
@@ -233,9 +263,54 @@ func (d *DetectorService) getMemoryTotal() int64 {
 
 // getDiskInfo retrieves disk total and free space in bytes.
 func (d *DetectorService) getDiskInfo() (total, free int64) {
+	// Try df command first (works in most Linux/Docker environments)
+	if out, err := exec.Command("df", "-B1", "/").Output(); err == nil {
+		lines := strings.Split(string(out), "\n")
+		if len(lines) >= 2 {
+			fields := strings.Fields(lines[1])
+			if len(fields) >= 4 {
+				total = parseNumber(fields[1])
+				free = parseNumber(fields[3])
+				if total > 0 {
+					return total, free
+				}
+			}
+		}
+	}
+
+	// Try current directory
+	if out, err := exec.Command("df", "-B1", ".").Output(); err == nil {
+		lines := strings.Split(string(out), "\n")
+		if len(lines) >= 2 {
+			fields := strings.Fields(lines[1])
+			if len(fields) >= 4 {
+				total = parseNumber(fields[1])
+				free = parseNumber(fields[3])
+				if total > 0 {
+					return total, free
+				}
+			}
+		}
+	}
+
+	// Try /data directory (common mount point)
+	if out, err := exec.Command("df", "-B1", "/data").Output(); err == nil {
+		lines := strings.Split(string(out), "\n")
+		if len(lines) >= 2 {
+			fields := strings.Fields(lines[1])
+			if len(fields) >= 4 {
+				total = parseNumber(fields[1])
+				free = parseNumber(fields[3])
+				if total > 0 {
+					return total, free
+				}
+			}
+		}
+	}
+
 	switch runtime.GOOS {
-	case "linux", "darwin":
-		if out, err := exec.Command("df", "-B1", ".").Output(); err == nil {
+	case "darwin":
+		if out, err := exec.Command("df", "-B1", "/").Output(); err == nil {
 			lines := strings.Split(string(out), "\n")
 			if len(lines) >= 2 {
 				fields := strings.Fields(lines[1])
@@ -249,6 +324,29 @@ func (d *DetectorService) getDiskInfo() (total, free int64) {
 		// Get current drive
 		if cwd, err := os.Getwd(); err == nil && len(cwd) >= 2 {
 			drive := cwd[:2]
+			// Try PowerShell first (more reliable on modern Windows)
+			psCmd := "Get-WmiObject Win32_LogicalDisk -Filter \"DeviceID='" + drive + "'\" | Select-Object Size,FreeSpace | Format-List"
+			if out, err := exec.Command("powershell", "-Command", psCmd).Output(); err == nil {
+				lines := strings.Split(string(out), "\n")
+				for _, line := range lines {
+					line = strings.TrimSpace(line)
+					if strings.HasPrefix(line, "Size") {
+						parts := strings.SplitN(line, ":", 2)
+						if len(parts) == 2 {
+							total = parseNumber(strings.TrimSpace(parts[1]))
+						}
+					} else if strings.HasPrefix(line, "FreeSpace") {
+						parts := strings.SplitN(line, ":", 2)
+						if len(parts) == 2 {
+							free = parseNumber(strings.TrimSpace(parts[1]))
+						}
+					}
+				}
+				if total > 0 {
+					return total, free
+				}
+			}
+			// Fallback to wmic
 			if out, err := exec.Command("wmic", "logicaldisk", "where", "DeviceID='"+drive+"'", "get", "Size,FreeSpace").Output(); err == nil {
 				lines := strings.Split(string(out), "\n")
 				for _, line := range lines {

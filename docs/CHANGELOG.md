@@ -5,6 +5,32 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.1.0] - 2026-01-15
+
+### 修复
+- 🔧 修复 Docker 容器中系统信息显示 NaN undefined 的问题
+  - 优化内存信息获取，支持 `/proc/meminfo` 和 cgroup 限制读取
+  - 优化磁盘信息获取，优先从根目录获取，支持 `/data` 挂载点
+- 🔧 修复 Dashboard 磁盘使用显示问题
+  - 添加 `diskUsedFormatted` 计算属性，避免模板中直接计算产生 NaN
+- 🔧 修复 Accelerator 缓存统计 API 数据解析问题
+  - 正确处理 `{ success: true, data: {...} }` 响应格式
+- 🔧 修复 System 页面 API 数据解析问题
+- 🔧 修复 P2P 页面卡片标题颜色不清晰问题
+- 🔧 修复 DNS 解析页面表格行白色背景问题
+- 🔧 修复所有对话框标题颜色为白色，增强可读性
+- 🔧 修复 el-descriptions 组件深色主题适配
+- 🔧 修复 el-table 全局深色主题样式
+- 🔧 修复登录页面版本号只显示 "v" 的问题
+
+### 新增
+- ✨ 版本同步脚本添加前端代码版本号同步支持
+  - 支持同步 `web/src/stores/app.ts` 中的 DEFAULT_VERSION
+  - 支持同步 `web/src/views/Login.vue` 中的版本显示
+
+### 变更
+- 🔧 Dockerfile 添加 `coreutils` 和 `procps` 包支持系统信息获取
+
 ## [1.0.9] - 2026-01-14
 
 ### 修复
