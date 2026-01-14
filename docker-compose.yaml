@@ -12,10 +12,7 @@ version: '3.8'
 
 services:
   registry:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: cyp-docker-registry:latest
+    image: cyp97/cyp-docker-registry:latest
     container_name: cyp-docker-registry
     restart: unless-stopped
     ports:
@@ -55,6 +52,27 @@ volumes:
   registry-cache:
     driver: local
     name: cyp-docker-registry-cache
+
+  # Watchtower - Auto update service
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - TZ=Asia/Shanghai
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=3600
+      - WATCHTOWER_INCLUDE_RESTARTING=true
+    command: cyp-docker-registry
+    networks:
+      - registry-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
 
 networks:
   registry-network:
