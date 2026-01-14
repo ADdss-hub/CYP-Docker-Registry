@@ -1,6 +1,11 @@
 # CYP-Docker-Registry - Multi-stage Dockerfile
-# Version: v1.0.0
+# Version: v1.0.1
 # Author: CYP | Contact: nasDSSCYP@outlook.com
+# 
+# 重要说明：
+# - 使用纯 Go 实现的 SQLite 驱动 (modernc.org/sqlite)，无需 CGO
+# - 支持 CGO_ENABLED=0 编译，适用于 Alpine 等精简镜像
+# - 解决了 go-sqlite3 在 Docker 容器中的兼容性问题
 
 # =============================================================================
 # Stage 1: Build Go Backend
@@ -23,6 +28,8 @@ COPY pkg/ ./pkg/
 COPY VERSION ./
 
 # Build the binary
+# 使用 CGO_ENABLED=0 编译，配合 modernc.org/sqlite 纯 Go 驱动
+# 无需 C 编译器，生成静态链接的二进制文件
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
     -ldflags="-w -s -X cyp-docker-registry/internal/version.BuildTime=$(date -u +%Y-%m-%dT%H:%M:%SZ) -X cyp-docker-registry/internal/version.GitCommit=$(git rev-parse --short HEAD 2>/dev/null || echo 'unknown')" \
     -o server ./cmd/server
@@ -54,7 +61,7 @@ FROM alpine:3.19
 # Labels
 LABEL maintainer="CYP <nasDSSCYP@outlook.com>"
 LABEL description="CYP-Docker-Registry - Private Docker Image Registry"
-LABEL version="1.0.0"
+LABEL version="1.0.1"
 
 # Install runtime dependencies
 RUN apk add --no-cache \

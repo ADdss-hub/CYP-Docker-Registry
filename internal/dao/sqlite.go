@@ -8,8 +8,10 @@ import (
 	"sync"
 	"time"
 
-	_ "github.com/mattn/go-sqlite3"
+	// 使用纯 Go 实现的 SQLite 驱动，无需 CGO 支持
+	// 解决 Docker 容器中 CGO_ENABLED=0 导致的 go-sqlite3 无法工作问题
 	"go.uber.org/zap"
+	_ "modernc.org/sqlite"
 )
 
 // DB is the global database instance.
@@ -25,7 +27,9 @@ func InitDB(dbPath string, log *zap.Logger) error {
 	dbOnce.Do(func() {
 		logger = log
 		var err error
-		db, err = sql.Open("sqlite3", dbPath+"?_journal_mode=WAL&_busy_timeout=5000")
+		// 使用 modernc.org/sqlite 驱动，驱动名为 "sqlite"
+		// 支持 WAL 模式和忙等待超时
+		db, err = sql.Open("sqlite", dbPath+"?_pragma=journal_mode(WAL)&_pragma=busy_timeout(5000)")
 		if err != nil {
 			initErr = err
 			return
@@ -207,7 +211,6 @@ func seedDefaultData() error {
 	return nil
 }
 
-
 // User operations
 
 // GetUserByUsername retrieves a user by username.
@@ -385,7 +388,6 @@ func CleanExpiredSessions() error {
 	return err
 }
 
-
 // Token operations
 
 // CreateToken creates a new personal access token.
@@ -550,7 +552,6 @@ func UpdateSystemStatus(status *LockStatus) error {
 	`, status.IsLocked, status.LockReason, status.LockType, status.LockedAt, status.LockedByIP, status.LockedByUser, status.UnlockAt, status.RequireManual)
 	return err
 }
-
 
 // Organization operations
 
