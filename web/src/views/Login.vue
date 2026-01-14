@@ -90,13 +90,11 @@ import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { useAuthStore } from '@/stores/auth'
 import { useLockStore } from '@/stores/lock'
-import { useAppStore } from '@/stores/app'
 
 const router = useRouter()
 const route = useRoute()
 const authStore = useAuthStore()
 const lockStore = useLockStore()
-const appStore = useAppStore()
 
 const formRef = ref()
 const loading = ref(false)
