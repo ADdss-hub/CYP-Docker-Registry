@@ -5,6 +5,25 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.1] - 2026-01-14
+
+### 修复
+- 🔧 修复 Docker 容器启动时数据库初始化失败的问题
+  - 问题原因：go-sqlite3 是 CGO 库，需要 C 编译器支持，但 Dockerfile 使用 CGO_ENABLED=0 编译
+  - 解决方案：将 go-sqlite3 替换为纯 Go 实现的 modernc.org/sqlite 驱动
+  - 影响范围：所有 Docker 部署环境，包括飞牛 NAS、群晖、QNAP 等
+
+### 优化
+- 📦 数据库驱动升级
+  - 从 github.com/mattn/go-sqlite3 v1.14.22 迁移到 modernc.org/sqlite v1.29.1
+  - 无需 CGO 支持，生成静态链接的二进制文件
+  - 提升跨平台兼容性，支持 Alpine 等精简镜像
+
+### 变更
+- 🔄 数据库连接参数调整
+  - SQLite 驱动名从 "sqlite3" 改为 "sqlite"
+  - WAL 模式和忙等待超时参数格式适配新驱动
+
 ## [1.0.0] - 2026-01-14
 
 ### 新增

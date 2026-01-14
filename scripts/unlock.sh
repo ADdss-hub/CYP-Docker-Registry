@@ -1,6 +1,6 @@
 #!/bin/bash
 # CYP-Docker-Registry 解锁脚本
-# Version: v1.0.0
+# Version: v1.0.1
 # 用于在系统被锁定时手动解锁
 
 set -e
