@@ -102,7 +102,7 @@ const formRef = ref()
 const loading = ref(false)
 const errorMessage = ref('')
 const remainingAttempts = ref<number | null>(null)
-const version = ref(appStore.version || '1.0.5')
+const version = ref(appStore.version || '1.0.6')
 
 const form = reactive({
   username: '',

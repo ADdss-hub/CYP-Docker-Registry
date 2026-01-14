@@ -106,7 +106,7 @@ const appStore = useAppStore()
 
 const password = ref('')
 const loading = ref(false)
-const version = ref(appStore.version || '1.0.5')
+const version = ref(appStore.version || '1.0.6')
 
 const lockReason = computed(() => lockStore.lockStatus?.lock_reason || '')
 const requireManual = computed(() => lockStore.lockStatus?.require_manual ?? true)
