@@ -128,7 +128,7 @@ const handleAccept = () => {
 .terms-dialog :deep(.el-dialog__title) {
   font-size: 18px;
   font-weight: 600;
-  color: #ffffff;
+  color: #ffffff !important;
 }
 
 .terms-dialog :deep(.el-dialog__body) {

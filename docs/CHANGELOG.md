@@ -5,6 +5,59 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.9] - 2026-01-14
+
+### 修复
+- 🔧 修复全局对话框标题颜色不够明亮的问题
+  - 将 `.el-dialog__title` 颜色从 CSS 变量改为明确的白色 `#ffffff`
+  - 修复使用条款对话框标题颜色
+  - 添加全局对话框标题白色样式覆盖，确保所有对话框标题都清晰可见
+
+## [1.0.8] - 2026-01-14
+
+### 修复
+- 🔧 全面优化所有对话框标题样式，增强深色主题下的可读性
+  - el-dialog 全局样式增强，包括标题、头部、主体、底部样式
+  - Images.vue 详情对话框样式优化
+  - 对话框标题字体加粗 (font-weight: 600)
+  - 对话框头部添加底部边框分隔线
+  - 对话框底部添加顶部边框分隔线
+  - 对话框关闭按钮颜色优化
+
+## [1.0.7] - 2026-01-14
+
+### 修复
+- 🔧 修复全局字体颜色对比度不足问题
+  - 调整 `--muted-text` 从 `#8b949e` 改为 `#c9d1d9`
+  - 新增 `--label-text` 和 `--card-title-color` CSS 变量
+- 🔧 修复 NaN undefined 显示问题
+  - 增强 `formatBytes` 函数对 null/undefined/NaN 值的处理
+  - 修复 Dashboard.vue、System.vue、Accelerator.vue 中的格式化函数
+- 🔧 修复系统信息 formatDuration 函数错误
+  - 将 `string(rune())` 改为 `fmt.Sprintf()`，修复数字转换为 Unicode 字符的问题
+- 🔧 修复版本号显示为空问题
+  - System.vue 版本信息添加默认值处理
+  - Footer.vue 版本获取逻辑优化
+- 🔧 修复 DNS 解析表格样式问题
+  - 增强表格行背景色和边框样式
+  - 修复深色主题下表格可读性
+- 🔧 修复添加上游源对话框标题样式
+- 🔧 修复兼容性检查信息显示问题
+  - 支持对象和字符串两种格式的警告/错误信息
+- 🔧 Element Plus 组件深色主题适配
+  - el-dialog、el-descriptions、el-form-item、el-switch 组件样式优化
+  - P2P 页面 el-descriptions 组件深色主题适配
+
+## [1.0.6] - 2026-01-14
+
+### 修复
+- 🔧 修复 formatBytes 函数处理空值问题
+  - Dashboard.vue 中 formatBytes 函数增加空值检查
+  - System.vue 中 formatBytes 函数增加空值检查
+  - Accelerator.vue 中 formatBytes 函数增加空值检查
+- 🔧 修复磁盘使用百分比计算 NaN 问题
+- 🔧 修复内存显示格式化问题
+
 ## [1.0.5] - 2026-01-14
 
 ### 修复
