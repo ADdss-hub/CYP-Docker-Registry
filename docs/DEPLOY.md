@@ -166,5 +166,5 @@ docker logs cyp-docker-registry
 
 ---
 
-**版本**: v1.0.6  
+**版本**: v1.0.7  
 **最后更新**: 2026-01-14

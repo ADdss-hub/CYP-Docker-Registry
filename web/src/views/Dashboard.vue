@@ -36,22 +36,24 @@ const cacheStats = ref<CacheStats | null>(null)
 const recentImages = ref<ImageInfo[]>([])
 const imageCount = ref(0)
 
-const formatBytes = (bytes: number): string => {
-  if (bytes === 0) return '0 B'
+const formatBytes = (bytes: number | null | undefined): string => {
+  if (bytes === null || bytes === undefined || isNaN(bytes) || bytes === 0) return '0 B'
   const k = 1024
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
+  if (i < 0 || i >= sizes.length) return '0 B'
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
 }
 
 const diskUsagePercent = computed(() => {
-  if (!systemInfo.value) return 0
-  const used = systemInfo.value.disk_total - systemInfo.value.disk_free
-  return Math.round((used / systemInfo.value.disk_total) * 100)
+  if (!systemInfo.value || !systemInfo.value.disk_total || systemInfo.value.disk_total === 0) return 0
+  const used = (systemInfo.value.disk_total || 0) - (systemInfo.value.disk_free || 0)
+  const percent = Math.round((used / systemInfo.value.disk_total) * 100)
+  return isNaN(percent) ? 0 : percent
 })
 
 const memoryFormatted = computed(() => {
-  if (!systemInfo.value) return '0 GB'
+  if (!systemInfo.value || !systemInfo.value.memory_total) return '0 B'
   return formatBytes(systemInfo.value.memory_total)
 })
 

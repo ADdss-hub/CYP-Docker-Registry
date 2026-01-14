@@ -2,6 +2,15 @@
   "schema": "2.1.0",
   "history": [
     {
+      "version": "1.0.7",
+      "timestamp": "2026-01-14T14:35:35.710Z",
+      "author": "CYP",
+      "changes": [],
+      "type": "patch",
+      "previousVersion": "1.0.6",
+      "metadata": {}
+    },
+    {
       "version": "1.0.6",
       "timestamp": "2026-01-14T13:38:34.314Z",
       "author": "CYP",
@@ -84,7 +93,7 @@
     }
   ],
   "metadata": {
-    "updated": "2026-01-14T13:38:34.314Z",
+    "updated": "2026-01-14T14:35:35.710Z",
     "project": "CYP-memo"
   }
 }

@@ -41,11 +41,12 @@ const upstreamForm = ref<UpstreamSource>({
 const isEditMode = ref(false)
 const editingName = ref('')
 
-const formatBytes = (bytes: number): string => {
-  if (bytes === 0) return '0 B'
+const formatBytes = (bytes: number | null | undefined): string => {
+  if (bytes === null || bytes === undefined || isNaN(bytes) || bytes === 0) return '0 B'
   const k = 1024
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
+  if (i < 0 || i >= sizes.length) return '0 B'
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
 }
 
@@ -295,7 +296,7 @@ onMounted(() => {
     </div>
 
     <!-- 上游源编辑对话框 -->
-    <el-dialog v-model="upstreamDialogVisible" :title="isEditMode ? '编辑上游源' : '添加上游源'" width="500px">
+    <el-dialog v-model="upstreamDialogVisible" :title="isEditMode ? '编辑上游源' : '添加上游源'" width="500px" class="upstream-dialog">
       <el-form :model="upstreamForm" label-width="80px">
         <el-form-item label="名称" required>
           <el-input v-model="upstreamForm.name" placeholder="例如：Docker Hub" :disabled="isEditMode" />
@@ -471,5 +472,24 @@ onMounted(() => {
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+/* 对话框样式 */
+.upstream-dialog :deep(.el-dialog__title) {
+  color: var(--text-color, #e6edf3) !important;
+  font-weight: 500;
+}
+
+.upstream-dialog :deep(.el-dialog__header) {
+  border-bottom: 1px solid var(--border-color, #30363d);
+  padding-bottom: 16px;
+}
+
+.upstream-dialog :deep(.el-dialog__body) {
+  color: var(--text-color, #e6edf3);
+}
+
+.upstream-dialog :deep(.el-form-item__label) {
+  color: var(--label-text, #c9d1d9) !important;
 }
 </style>

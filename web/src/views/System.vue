@@ -38,23 +38,25 @@ const versionInfo = ref<VersionInfo | null>(null)
 const updateStatus = ref('')
 const checkingUpdate = ref(false)
 
-const formatBytes = (bytes: number): string => {
-  if (bytes === 0) return '0 B'
+const formatBytes = (bytes: number | null | undefined): string => {
+  if (bytes === null || bytes === undefined || isNaN(bytes) || bytes === 0) return '0 B'
   const k = 1024
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
+  if (i < 0 || i >= sizes.length) return '0 B'
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
 }
 
 const diskUsagePercent = computed(() => {
-  if (!systemInfo.value) return 0
-  const used = systemInfo.value.disk_total - systemInfo.value.disk_free
-  return Math.round((used / systemInfo.value.disk_total) * 100)
+  if (!systemInfo.value || !systemInfo.value.disk_total || systemInfo.value.disk_total === 0) return 0
+  const used = (systemInfo.value.disk_total || 0) - (systemInfo.value.disk_free || 0)
+  const percent = Math.round((used / systemInfo.value.disk_total) * 100)
+  return isNaN(percent) ? 0 : percent
 })
 
 const diskUsedFormatted = computed(() => {
-  if (!systemInfo.value) return '0 B'
-  return formatBytes(systemInfo.value.disk_total - systemInfo.value.disk_free)
+  if (!systemInfo.value || !systemInfo.value.disk_total) return '0 B'
+  return formatBytes((systemInfo.value.disk_total || 0) - (systemInfo.value.disk_free || 0))
 })
 
 const fetchSystemInfo = async () => {
@@ -221,13 +223,13 @@ onMounted(() => {
         <div class="compat-warnings" v-if="compatibility.warnings?.length">
           <div class="compat-item warning" v-for="(warn, index) in compatibility.warnings" :key="'w' + index">
             <el-icon><Warning /></el-icon>
-            <span>{{ warn }}</span>
+            <span>{{ typeof warn === 'string' ? warn : warn.message || warn.component }}</span>
           </div>
         </div>
         <div class="compat-errors" v-if="compatibility.errors?.length">
           <div class="compat-item error" v-for="(err, index) in compatibility.errors" :key="'e' + index">
             <el-icon><Warning /></el-icon>
-            <span>{{ err }}</span>
+            <span>{{ typeof err === 'string' ? err : err.message || err.component }}</span>
           </div>
         </div>
       </div>
@@ -259,12 +261,12 @@ onMounted(() => {
         <div class="version-grid">
           <div class="version-card">
             <div class="version-label">当前版本</div>
-            <div class="version-value current">v{{ versionInfo.current }}</div>
+            <div class="version-value current">v{{ versionInfo.current || '1.0.7' }}</div>
           </div>
           <div class="version-card">
             <div class="version-label">最新版本</div>
             <div class="version-value" :class="{ latest: versionInfo.has_update }">
-              v{{ versionInfo.latest }}
+              v{{ versionInfo.latest || versionInfo.current || '1.0.7' }}
               <el-tag v-if="versionInfo.has_update" type="success" size="small">有更新</el-tag>
             </div>
           </div>

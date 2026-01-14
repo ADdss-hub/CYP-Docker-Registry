@@ -2,6 +2,7 @@
 package service
 
 import (
+	"fmt"
 	"os"
 	"runtime"
 	"sync"
@@ -86,7 +87,7 @@ func (s *SystemService) GetSystemInfo() *SystemInfo {
 	hostname, _ := os.Hostname()
 
 	return &SystemInfo{
-		Version:     "1.0.6",
+		Version:     "1.0.7",
 		BuildTime:   "2026-01-14",
 		GoVersion:   runtime.Version(),
 		OS:          runtime.GOOS,
@@ -260,15 +261,15 @@ func (s *SystemService) formatDuration(d time.Duration) string {
 }
 
 func formatDurationString(days, hours, minutes int) string {
-	return string(rune(days)) + "d " + string(rune(hours)) + "h " + string(rune(minutes)) + "m"
+	return fmt.Sprintf("%dd %dh %dm", days, hours, minutes)
 }
 
 func formatHoursMinutes(hours, minutes int) string {
-	return string(rune(hours)) + "h " + string(rune(minutes)) + "m"
+	return fmt.Sprintf("%dh %dm", hours, minutes)
 }
 
 func formatMinutes(minutes int) string {
-	return string(rune(minutes)) + "m"
+	return fmt.Sprintf("%dm", minutes)
 }
 
 // GetUptime returns the system uptime.
@@ -286,5 +287,5 @@ func (s *SystemService) TriggerGC() {
 
 // GetVersion returns the system version.
 func (s *SystemService) GetVersion() string {
-	return "1.0.3"
+	return "1.0.7"
 }

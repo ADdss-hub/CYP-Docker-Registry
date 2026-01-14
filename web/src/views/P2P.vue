@@ -438,22 +438,28 @@ onUnmounted(() => {
 .peers-card,
 .blobs-card {
   margin-bottom: 20px;
+  background-color: var(--secondary-bg, #161b22);
+  border-color: var(--border-color, #30363d);
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: var(--text-color, #e6edf3);
+  font-weight: 500;
 }
 
 .peer-id {
-  font-family: monospace;
+  font-family: var(--font-mono, monospace);
   font-size: 13px;
+  color: var(--text-color, #e6edf3);
 }
 
 .blob-digest {
-  font-family: monospace;
+  font-family: var(--font-mono, monospace);
   font-size: 12px;
+  color: var(--muted-text, #c9d1d9);
 }
 
 .addresses-section {
@@ -462,12 +468,47 @@ onUnmounted(() => {
 
 .addresses-section h4 {
   margin-bottom: 10px;
-  color: #606266;
+  color: var(--text-color, #e6edf3);
+  font-weight: 500;
 }
 
 .address-tag {
   margin: 4px;
-  font-family: monospace;
+  font-family: var(--font-mono, monospace);
   font-size: 12px;
+}
+
+/* 修复 el-descriptions 标签颜色 */
+:deep(.el-descriptions__label) {
+  color: var(--label-text, #c9d1d9) !important;
+  background-color: var(--bg-color, #0d1117) !important;
+  font-weight: 500;
+}
+
+:deep(.el-descriptions__content) {
+  color: var(--text-color, #e6edf3) !important;
+  background-color: var(--secondary-bg, #161b22) !important;
+}
+
+:deep(.el-descriptions--bordered .el-descriptions__cell) {
+  border-color: var(--border-color, #30363d) !important;
+}
+
+/* 修复卡片标题颜色 */
+:deep(.el-card__header) {
+  background-color: var(--secondary-bg, #161b22);
+  border-bottom-color: var(--border-color, #30363d);
+  color: var(--text-color, #e6edf3);
+}
+
+/* 修复表格样式 */
+:deep(.el-table) {
+  --el-table-bg-color: var(--secondary-bg, #161b22);
+  --el-table-tr-bg-color: var(--secondary-bg, #161b22);
+  --el-table-header-bg-color: var(--bg-color, #0d1117);
+  --el-table-row-hover-bg-color: rgba(88, 166, 255, 0.1);
+  --el-table-border-color: var(--border-color, #30363d);
+  --el-table-text-color: var(--text-color, #e6edf3);
+  --el-table-header-text-color: var(--label-text, #c9d1d9);
 }
 </style>

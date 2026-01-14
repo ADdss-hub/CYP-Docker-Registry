@@ -1,20 +1,20 @@
 /**
  * 应用版本信息
  * 自动生成，请勿手动修改
- * 最后更新: 2026-01-14T13:38:34.110Z
+ * 最后更新: 2026-01-14T14:35:35.659Z
  */
 
-export const APP_VERSION = "1.0.6";
-export const VERSION_NUMBER = "1.0.6";
-export const BUILD_TIME = '2026-01-14T13:38:34.110Z';
+export const APP_VERSION = "1.0.7";
+export const VERSION_NUMBER = "1.0.7";
+export const BUILD_TIME = '2026-01-14T14:35:35.659Z';
 
 export const VERSION_INFO = {
-  version: "1.0.6",
-  versionPlain: '1.0.6',
+  version: "1.0.7",
+  versionPlain: '1.0.7',
   projectName: 'CYP-memo',
-  buildTime: '2026-01-14T13:38:34.110Z',
-  buildTimeFormatted: '2026-01-14 21:38:34',
-  fullversion: "1.0.6",
+  buildTime: '2026-01-14T14:35:35.659Z',
+  buildTimeFormatted: '2026-01-14 22:35:35',
+  fullversion: "1.0.7",
 } as const;
 
 export default VERSION_INFO;

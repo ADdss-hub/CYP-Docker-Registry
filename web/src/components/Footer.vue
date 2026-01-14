@@ -14,7 +14,7 @@ onMounted(async () => {
       try {
         const response = await request.get(endpoint)
         const data = response.data
-        if (data?.version) {
+        if (data?.version && data.version.trim() !== '') {
           version.value = data.version
           return
         }
@@ -24,9 +24,9 @@ onMounted(async () => {
     }
     
     // 如果所有接口都失败，使用默认版本
-    version.value = '1.0.6'
+    version.value = '1.0.7'
   } catch {
-    version.value = '1.0.6'
+    version.value = '1.0.7'
   }
 })
 </script>

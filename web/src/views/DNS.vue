@@ -290,4 +290,22 @@ function copyValue(value: string) {
   --el-table-text-color: var(--text-primary, #ffffff);
   --el-table-header-text-color: var(--text-secondary, rgba(255, 255, 255, 0.6));
 }
+
+:deep(.el-table__row) {
+  background-color: var(--secondary-bg, #161b22) !important;
+}
+
+:deep(.el-table__row--striped) {
+  background-color: var(--bg-color, #0d1117) !important;
+}
+
+:deep(.el-table__row td) {
+  border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+:deep(.el-table__header th) {
+  background-color: var(--bg-color, #0d1117) !important;
+  color: var(--label-text, #c9d1d9) !important;
+  font-weight: 500;
+}
 </style>
