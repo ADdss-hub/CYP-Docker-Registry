@@ -2,21 +2,25 @@
   "schema": "2.1.0",
   "history": [
     {
-      "version": "1.0.4",
-      "timestamp": "2026-01-14T05:46:35.444Z",
-      "author": "CYP",
-      "changes": [],
-      "type": "chore",
-      "previousVersion": "1.0.4",
-      "metadata": {}
-    },
-    {
       "version": "1.0.3",
       "timestamp": "2026-01-14T05:47:48.495Z",
       "author": "CYP",
-      "changes": [],
-      "type": "chore",
-      "previousVersion": "1.0.4",
+      "changes": [
+        "fix: 修复生产环境使用条款字体不够明亮的问题",
+        "fix: 修复界面底部版本显示为v未知的问题",
+        "feat: 添加用户注册界面和功能",
+        "fix: 将后端所有英文错误消息改为中文",
+        "fix: 优化锁定界面设计，统一与登录界面风格",
+        "fix: 修复后端registry模块英文消息为中文",
+        "fix: 修复后端share_handler英文消息为中文",
+        "fix: 修复后端sbom_handler英文消息为中文",
+        "fix: 修复后端org_handler英文消息为中文",
+        "fix: 修复后端lock_handler英文消息为中文",
+        "fix: 修复前端所有Vue组件console英文消息为中文",
+        "fix: 添加锁定原因中文映射显示"
+      ],
+      "type": "patch",
+      "previousVersion": "1.0.2",
       "metadata": {}
     },
     {
