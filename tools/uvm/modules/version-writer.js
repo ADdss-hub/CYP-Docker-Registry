@@ -319,6 +319,13 @@ export const VERSION = {
         patterns: [
           { search: /(# Version: v)[\d.]+/g, replace: `$1${cleanVersion}` }
         ]
+      },
+      {
+        file: 'scripts/detect-env.sh',
+        patterns: [
+          { search: /(# Version: v)[\d.]+/g, replace: `$1${cleanVersion}` },
+          { search: /(环境检测工具 v)[\d.]+/g, replace: `$1${cleanVersion}` }
+        ]
       }
     ];
 
