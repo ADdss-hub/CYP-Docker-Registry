@@ -40,7 +40,7 @@ func (h *ShareHandler) ListShareLinks(c *gin.Context) {
 
 	user := getCurrentUser(c)
 	if user == nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未授权访问"})
 		return
 	}
 
@@ -62,13 +62,13 @@ func (h *ShareHandler) ListShareLinks(c *gin.Context) {
 func (h *ShareHandler) CreateShareLink(c *gin.Context) {
 	var req service.CreateShareRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的请求参数"})
 		return
 	}
 
 	user := getCurrentUser(c)
 	if user == nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未授权访问"})
 		return
 	}
 
@@ -88,7 +88,7 @@ func (h *ShareHandler) CreateShareLink(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{
 		"link":      link,
 		"share_url": shareURL,
-		"message":   "Share link created successfully",
+		"message":   "分享链接创建成功",
 	})
 }
 
@@ -119,7 +119,7 @@ func (h *ShareHandler) VerifyPassword(c *gin.Context) {
 		Password string `json:"password" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的请求参数"})
 		return
 	}
 
@@ -131,7 +131,7 @@ func (h *ShareHandler) VerifyPassword(c *gin.Context) {
 	// Increment usage count
 	h.shareService.IncrementUsage(code)
 
-	c.JSON(http.StatusOK, gin.H{"message": "Password verified"})
+	c.JSON(http.StatusOK, gin.H{"message": "密码验证成功"})
 }
 
 // RevokeShareLink revokes a share link.
@@ -140,7 +140,7 @@ func (h *ShareHandler) RevokeShareLink(c *gin.Context) {
 
 	user := getCurrentUser(c)
 	if user == nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未授权访问"})
 		return
 	}
 
@@ -149,5 +149,5 @@ func (h *ShareHandler) RevokeShareLink(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Share link revoked successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "分享链接已撤销"})
 }

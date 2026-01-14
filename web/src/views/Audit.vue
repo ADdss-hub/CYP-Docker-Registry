@@ -135,7 +135,7 @@ async function fetchLogs() {
     logs.value = response.data.logs || []
     pagination.total = response.data.total || 0
   } catch (error) {
-    console.error('Failed to fetch audit logs:', error)
+    console.error('获取审计日志失败:', error)
     // Use mock data for demo
     logs.value = generateMockLogs()
     pagination.total = logs.value.length

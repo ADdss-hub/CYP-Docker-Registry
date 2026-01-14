@@ -105,7 +105,7 @@ func (h *Handler) putManifest(c *gin.Context) {
 
 	data, err := io.ReadAll(c.Request.Body)
 	if err != nil {
-		h.v2Error(c, "MANIFEST_INVALID", "failed to read manifest", http.StatusBadRequest)
+		h.v2Error(c, "MANIFEST_INVALID", "读取清单数据失败", http.StatusBadRequest)
 		return
 	}
 
@@ -260,7 +260,7 @@ func (h *Handler) completeBlobUpload(c *gin.Context) {
 	digest := c.Query("digest")
 
 	if digest == "" {
-		h.v2Error(c, "DIGEST_INVALID", "digest parameter required", http.StatusBadRequest)
+		h.v2Error(c, "DIGEST_INVALID", "缺少摘要参数", http.StatusBadRequest)
 		return
 	}
 

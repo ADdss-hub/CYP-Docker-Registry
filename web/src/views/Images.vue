@@ -59,7 +59,7 @@ const fetchImages = async () => {
     images.value = res.data?.images || []
     total.value = res.data?.total || 0
   } catch (error) {
-    console.error('Failed to fetch images:', error)
+    console.error('获取镜像列表失败:', error)
     ElMessage.error('获取镜像列表失败')
   } finally {
     loading.value = false
@@ -108,7 +108,7 @@ const deleteImage = async (image: ImageInfo) => {
     fetchImages()
   } catch (error) {
     if (error !== 'cancel') {
-      console.error('Failed to delete image:', error)
+      console.error('删除镜像失败:', error)
       ElMessage.error('删除镜像失败')
     }
   }

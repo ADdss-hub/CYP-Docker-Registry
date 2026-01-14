@@ -54,7 +54,7 @@ func (h *LockHandler) Unlock(c *gin.Context) {
 	var req UnlockRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid request",
+			"error": "无效的请求参数",
 			"code":  "invalid_request",
 		})
 		return
@@ -62,7 +62,7 @@ func (h *LockHandler) Unlock(c *gin.Context) {
 
 	if h.lockService == nil {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "System is not locked",
+			"message": "系统未锁定",
 		})
 		return
 	}
@@ -71,7 +71,7 @@ func (h *LockHandler) Unlock(c *gin.Context) {
 	err := h.lockService.UnlockSystem(req.Password)
 	if err != nil {
 		c.JSON(http.StatusForbidden, gin.H{
-			"error": "Invalid password",
+			"error": "密码错误",
 			"code":  "invalid_password",
 		})
 		return
@@ -88,7 +88,7 @@ func (h *LockHandler) Unlock(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "System unlocked successfully",
+		"message": "系统解锁成功",
 	})
 }
 
@@ -102,7 +102,7 @@ func (h *LockHandler) Lock(c *gin.Context) {
 	var req LockRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid request",
+			"error": "无效的请求参数",
 			"code":  "invalid_request",
 		})
 		return
@@ -110,7 +110,7 @@ func (h *LockHandler) Lock(c *gin.Context) {
 
 	if h.lockService == nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Lock service not available",
+			"error": "锁定服务不可用",
 		})
 		return
 	}
@@ -118,7 +118,7 @@ func (h *LockHandler) Lock(c *gin.Context) {
 	err := h.lockService.LockSystem(req.Reason, c.ClientIP())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Failed to lock system",
+			"error": "系统锁定失败",
 		})
 		return
 	}
@@ -129,6 +129,6 @@ func (h *LockHandler) Lock(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "System locked successfully",
+		"message": "系统锁定成功",
 	})
 }

@@ -57,7 +57,7 @@ func (h *SBOMHandler) ListSBOMs(c *gin.Context) {
 func (h *SBOMHandler) GenerateSBOM(c *gin.Context) {
 	var req service.GenerateSBOMRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的请求参数"})
 		return
 	}
 
@@ -94,7 +94,7 @@ func (h *SBOMHandler) GenerateSBOM(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{
 		"sbom":    sbom,
-		"message": "SBOM generated successfully",
+		"message": "SBOM生成成功",
 	})
 }
 
@@ -132,7 +132,7 @@ func (h *SBOMHandler) ExportSBOM(c *gin.Context) {
 func (h *SBOMHandler) ScanVulnerabilities(c *gin.Context) {
 	var req service.ScanVulnRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的请求参数"})
 		return
 	}
 
@@ -180,5 +180,5 @@ func (h *SBOMHandler) DeleteSBOM(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "SBOM deleted successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "SBOM已删除"})
 }

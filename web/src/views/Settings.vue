@@ -51,7 +51,7 @@ const fetchCredentials = async () => {
     const res = await request.get('/credentials')
     credentials.value = res.data?.credentials || []
   } catch (error) {
-    console.error('Failed to fetch credentials:', error)
+    console.error('获取凭证列表失败:', error)
   }
 }
 
@@ -60,7 +60,7 @@ const fetchSyncHistory = async () => {
     const res = await request.get('/sync/history', { params: { page: 1, page_size: 10 } })
     syncHistory.value = res.data?.records || []
   } catch (error) {
-    console.error('Failed to fetch sync history:', error)
+    console.error('获取同步历史失败:', error)
   }
 }
 

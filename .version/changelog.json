@@ -2,10 +2,30 @@
   "schema": "2.1.0",
   "history": [
     {
+      "version": "1.0.4",
+      "timestamp": "2026-01-14T05:45:00.287Z",
+      "author": "CYP",
+      "changes": [],
+      "type": "patch",
+      "previousVersion": "1.0.3",
+      "metadata": {}
+    },
+    {
       "version": "1.0.3",
       "timestamp": "2026-01-14T05:38:23.270Z",
       "author": "CYP",
-      "changes": [],
+      "changes": [
+        "fix: 修复生产环境使用条款字体不够明亮的问题",
+        "fix: 修复界面底部版本显示为v未知的问题",
+        "feat: 添加用户注册界面和功能",
+        "fix: 将后端所有英文错误消息改为中文",
+        "fix: 修复系统锁定界面的英文提示问题",
+        "fix: 修复认证中间件的英文错误消息",
+        "fix: 修复安全中间件的英文错误消息",
+        "fix: 修复令牌处理器的英文错误消息",
+        "fix: 修复签名处理器的英文错误消息",
+        "chore: 在登录页面添加注册链接"
+      ],
       "type": "patch",
       "previousVersion": "1.0.2",
       "metadata": {}
@@ -37,7 +57,7 @@
     }
   ],
   "metadata": {
-    "updated": "2026-01-14T05:38:23.270Z",
+    "updated": "2026-01-14T05:45:00.287Z",
     "project": "CYP-memo"
   }
 }

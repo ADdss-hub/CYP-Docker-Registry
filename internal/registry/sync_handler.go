@@ -76,7 +76,7 @@ func (h *SyncHandler) saveCredential(c *gin.Context) {
 	var req CredentialRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		common.ErrorResponse(c, common.ErrInvalidRequest, gin.H{
-			"error": "registry, username, and password are required",
+			"error": "仓库地址、用户名和密码为必填项",
 		})
 		return
 	}
@@ -144,7 +144,7 @@ func (h *SyncHandler) syncImage(c *gin.Context) {
 	var req SyncRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		common.ErrorResponse(c, common.ErrInvalidRequest, gin.H{
-			"error": "image_name, image_tag, and target_registry are required",
+			"error": "镜像名称、镜像标签和目标仓库为必填项",
 		})
 		return
 	}

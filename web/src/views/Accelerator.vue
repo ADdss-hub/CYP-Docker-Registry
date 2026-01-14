@@ -65,7 +65,7 @@ const fetchCacheStats = async () => {
     const res = await request.get('/accel/cache/stats')
     cacheStats.value = res.data
   } catch (error) {
-    console.error('Failed to fetch cache stats:', error)
+    console.error('获取缓存统计失败:', error)
   }
 }
 
@@ -74,7 +74,7 @@ const fetchCacheEntries = async () => {
     const res = await request.get('/accel/cache/entries')
     cacheEntries.value = res.data?.entries || []
   } catch (error) {
-    console.error('Failed to fetch cache entries:', error)
+    console.error('获取缓存条目失败:', error)
   }
 }
 
@@ -83,7 +83,7 @@ const fetchUpstreams = async () => {
     const res = await request.get('/accel/upstreams')
     upstreams.value = res.data?.upstreams || []
   } catch (error) {
-    console.error('Failed to fetch upstreams:', error)
+    console.error('获取上游源失败:', error)
   }
 }
 

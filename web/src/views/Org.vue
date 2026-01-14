@@ -195,7 +195,7 @@ async function fetchOrganizations() {
     const response = await request.get('/api/v1/orgs')
     organizations.value = response.data.organizations || []
   } catch (error) {
-    console.error('Failed to fetch organizations:', error)
+    console.error('获取组织列表失败:', error)
   } finally {
     loading.value = false
   }
@@ -277,7 +277,7 @@ async function viewMembers(org: Organization) {
     const response = await request.get(`/api/v1/orgs/${org.id}/members`)
     members.value = response.data.members || []
   } catch (error) {
-    console.error('Failed to fetch members:', error)
+    console.error('获取成员列表失败:', error)
     members.value = []
   } finally {
     loadingMembers.value = false

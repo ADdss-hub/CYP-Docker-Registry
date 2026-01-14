@@ -209,7 +209,7 @@ async function fetchConfig() {
     Object.assign(storageConfig, response.data.storage || {})
     Object.assign(notifyConfig, response.data.notify || {})
   } catch (error) {
-    console.error('Failed to fetch config:', error)
+    console.error('获取配置失败:', error)
   }
 }
 

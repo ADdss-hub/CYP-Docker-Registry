@@ -75,7 +75,7 @@ const fetchData = async () => {
       imageCount.value = imagesRes.value.data?.total || 0
     }
   } catch (error) {
-    console.error('Failed to fetch dashboard data:', error)
+    console.error('获取仪表盘数据失败:', error)
   } finally {
     loading.value = false
   }

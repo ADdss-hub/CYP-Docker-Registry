@@ -62,7 +62,7 @@ const fetchSystemInfo = async () => {
     const res = await request.get('/system/info')
     systemInfo.value = res.data
   } catch (error) {
-    console.error('Failed to fetch system info:', error)
+    console.error('获取系统信息失败:', error)
   }
 }
 
@@ -71,7 +71,7 @@ const fetchCompatibility = async () => {
     const res = await request.get('/system/compatibility')
     compatibility.value = res.data
   } catch (error) {
-    console.error('Failed to fetch compatibility:', error)
+    console.error('获取兼容性信息失败:', error)
   }
 }
 
@@ -83,7 +83,7 @@ const fetchUpdateStatus = async () => {
       versionInfo.value = res.data.version_info
     }
   } catch (error) {
-    console.error('Failed to fetch update status:', error)
+    console.error('获取更新状态失败:', error)
   }
 }
 

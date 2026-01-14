@@ -169,7 +169,7 @@ async function fetchTokens() {
     const response = await request.get('/api/v1/tokens')
     tokens.value = response.data.tokens || []
   } catch (error) {
-    console.error('Failed to fetch tokens:', error)
+    console.error('获取令牌列表失败:', error)
   } finally {
     loading.value = false
   }

@@ -44,7 +44,7 @@ func (h *OrgHandler) ListOrganizations(c *gin.Context) {
 	// Get current user
 	user := getCurrentUser(c)
 	if user == nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未授权访问"})
 		return
 	}
 
@@ -77,13 +77,13 @@ func (h *OrgHandler) ListOrganizations(c *gin.Context) {
 func (h *OrgHandler) CreateOrganization(c *gin.Context) {
 	var req service.CreateOrgRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的请求参数"})
 		return
 	}
 
 	user := getCurrentUser(c)
 	if user == nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未授权访问"})
 		return
 	}
 
@@ -95,7 +95,7 @@ func (h *OrgHandler) CreateOrganization(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{
 		"organization": org,
-		"message":      "Organization created successfully",
+		"message":      "组织创建成功",
 	})
 }
 
@@ -103,7 +103,7 @@ func (h *OrgHandler) CreateOrganization(c *gin.Context) {
 func (h *OrgHandler) GetOrganization(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid organization ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的组织ID"})
 		return
 	}
 
@@ -120,7 +120,7 @@ func (h *OrgHandler) GetOrganization(c *gin.Context) {
 func (h *OrgHandler) UpdateOrganization(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid organization ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的组织ID"})
 		return
 	}
 
@@ -128,13 +128,13 @@ func (h *OrgHandler) UpdateOrganization(c *gin.Context) {
 		DisplayName string `json:"display_name"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的请求参数"})
 		return
 	}
 
 	user := getCurrentUser(c)
 	if user == nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未授权访问"})
 		return
 	}
 
@@ -143,20 +143,20 @@ func (h *OrgHandler) UpdateOrganization(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Organization updated successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "组织更新成功"})
 }
 
 // DeleteOrganization deletes an organization.
 func (h *OrgHandler) DeleteOrganization(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid organization ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的组织ID"})
 		return
 	}
 
 	user := getCurrentUser(c)
 	if user == nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未授权访问"})
 		return
 	}
 
@@ -165,14 +165,14 @@ func (h *OrgHandler) DeleteOrganization(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Organization deleted successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "组织删除成功"})
 }
 
 // GetMembers retrieves members of an organization.
 func (h *OrgHandler) GetMembers(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid organization ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的组织ID"})
 		return
 	}
 
@@ -189,7 +189,7 @@ func (h *OrgHandler) GetMembers(c *gin.Context) {
 func (h *OrgHandler) AddMember(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid organization ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的组织ID"})
 		return
 	}
 
@@ -198,13 +198,13 @@ func (h *OrgHandler) AddMember(c *gin.Context) {
 		Role   string `json:"role"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的请求参数"})
 		return
 	}
 
 	user := getCurrentUser(c)
 	if user == nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未授权访问"})
 		return
 	}
 
@@ -213,26 +213,26 @@ func (h *OrgHandler) AddMember(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Member added successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "成员添加成功"})
 }
 
 // RemoveMember removes a member from an organization.
 func (h *OrgHandler) RemoveMember(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid organization ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的组织ID"})
 		return
 	}
 
 	userID, err := strconv.ParseInt(c.Param("userId"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的用户ID"})
 		return
 	}
 
 	user := getCurrentUser(c)
 	if user == nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未授权访问"})
 		return
 	}
 
@@ -241,7 +241,7 @@ func (h *OrgHandler) RemoveMember(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Member removed successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "成员移除成功"})
 }
 
 // Helper function to get current user from context

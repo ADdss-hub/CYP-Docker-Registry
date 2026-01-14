@@ -193,7 +193,7 @@ async function fetchShareLinks() {
     shareLinks.value = response.data.links || []
     pagination.total = response.data.total || 0
   } catch (error) {
-    console.error('Failed to fetch share links:', error)
+    console.error('获取分享链接失败:', error)
   } finally {
     loading.value = false
   }
