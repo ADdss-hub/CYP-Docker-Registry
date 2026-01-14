@@ -84,7 +84,6 @@ type LoginResponse struct {
 // RegisterRequest represents a registration request.
 type RegisterRequest struct {
 	Username string `json:"username"`
-	Email    string `json:"email"`
 	Password string `json:"password"`
 	ClientIP string `json:"client_ip"`
 }
@@ -271,27 +270,19 @@ func (s *AuthService) Register(req *RegisterRequest) (*User, error) {
 		return nil, errors.New("用户名已存在")
 	}
 
-	// Check if email already exists
-	existingEmail, _ := dao.GetUserByEmail(req.Email)
-	if existingEmail != nil {
-		return nil, errors.New("邮箱已被注册")
-	}
-
 	// Hash password
 	passwordHash, err := HashPassword(req.Password)
 	if err != nil {
 		return nil, errors.New("密码加密失败")
 	}
 
-	// Create user in database
+	// Create user in database (without email)
 	daoUser := &dao.User{
 		Username:     req.Username,
 		PasswordHash: passwordHash,
 		Role:         "user", // Default role
 		IsActive:     true,
 	}
-	daoUser.Email.String = req.Email
-	daoUser.Email.Valid = true
 
 	if err := dao.CreateUser(daoUser); err != nil {
 		return nil, errors.New("创建用户失败")
@@ -300,8 +291,69 @@ func (s *AuthService) Register(req *RegisterRequest) (*User, error) {
 	return &User{
 		ID:       daoUser.ID,
 		Username: daoUser.Username,
-		Email:    req.Email,
 		Role:     daoUser.Role,
 		IsActive: daoUser.IsActive,
 	}, nil
+}
+
+// RegisterWithToken registers a new user and generates a personal access token.
+func (s *AuthService) RegisterWithToken(req *RegisterRequest) (*User, string, error) {
+	// Check if username already exists
+	existingUser, _ := dao.GetUserByUsername(req.Username)
+	if existingUser != nil {
+		return nil, "", errors.New("用户名已存在")
+	}
+
+	// Hash password
+	passwordHash, err := HashPassword(req.Password)
+	if err != nil {
+		return nil, "", errors.New("密码加密失败")
+	}
+
+	// Create user in database
+	daoUser := &dao.User{
+		Username:     req.Username,
+		PasswordHash: passwordHash,
+		Role:         "user",
+		IsActive:     true,
+	}
+
+	if err := dao.CreateUser(daoUser); err != nil {
+		return nil, "", errors.New("创建用户失败")
+	}
+
+	// Generate personal access token
+	plainToken := generatePersonalToken()
+	tokenHash := HashToken(plainToken)
+
+	daoToken := &dao.PersonalAccessToken{
+		UserID:    daoUser.ID,
+		Name:      "默认令牌",
+		TokenHash: tokenHash,
+		Scopes:    []string{"registry:read", "registry:write"},
+	}
+
+	if err := dao.CreateToken(daoToken); err != nil {
+		// User created but token failed, still return user
+		return &User{
+			ID:       daoUser.ID,
+			Username: daoUser.Username,
+			Role:     daoUser.Role,
+			IsActive: daoUser.IsActive,
+		}, "", nil
+	}
+
+	return &User{
+		ID:       daoUser.ID,
+		Username: daoUser.Username,
+		Role:     daoUser.Role,
+		IsActive: daoUser.IsActive,
+	}, "pat_" + plainToken, nil
+}
+
+// generatePersonalToken generates a random personal access token.
+func generatePersonalToken() string {
+	bytes := make([]byte, 32)
+	rand.Read(bytes)
+	return hex.EncodeToString(bytes)
 }

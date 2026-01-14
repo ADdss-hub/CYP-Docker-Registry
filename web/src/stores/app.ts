@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 const TERMS_ACCEPTED_KEY = 'cyp-docker-registry-terms-accepted'
-const DEFAULT_VERSION = '1.0.4'
+const DEFAULT_VERSION = '1.0.5'
 
 export const useAppStore = defineStore('app', () => {
   const version = ref(DEFAULT_VERSION)

@@ -18,7 +18,8 @@ import {
   Edit,
   List,
   Connection,
-  Lock
+  Lock,
+  Link
 } from '@element-plus/icons-vue'
 import Footer from './Footer.vue'
 
@@ -32,6 +33,7 @@ const menuItems = computed(() => {
     { path: '/images', name: '镜像管理', icon: Picture },
     { path: '/accelerator', name: '镜像加速', icon: Lightning },
     { path: '/p2p', name: 'P2P 分发', icon: Connection },
+    { path: '/dns', name: 'DNS 解析', icon: Link },
     { path: '/signatures', name: '镜像签名', icon: Edit },
     { path: '/sbom', name: 'SBOM 管理', icon: List },
     { path: '/orgs', name: '组织管理', icon: OfficeBuilding },

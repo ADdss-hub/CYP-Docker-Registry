@@ -175,11 +175,26 @@ class VersionHistory {
     const grouped = {};
     
     changes.forEach(change => {
-      const type = change.type || 'other';
+      // 支持字符串格式的变更记录（如 "fix: 修复xxx"）
+      let type = 'other';
+      let description = change;
+      
+      if (typeof change === 'string') {
+        // 解析 "type: description" 格式
+        const match = change.match(/^(feat|fix|docs|style|refactor|perf|test|chore|build|ci):\s*(.+)$/i);
+        if (match) {
+          type = match[1].toLowerCase();
+          description = match[2];
+        }
+      } else if (typeof change === 'object') {
+        type = change.type || 'other';
+        description = change.description || change;
+      }
+      
       if (!grouped[type]) {
         grouped[type] = [];
       }
-      grouped[type].push(change);
+      grouped[type].push({ type, description });
     });
 
     return grouped;

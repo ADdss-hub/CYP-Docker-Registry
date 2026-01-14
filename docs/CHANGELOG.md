@@ -5,6 +5,32 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.5] - 2026-01-14
+
+### 修复
+- 🔧 优化注册界面，移除邮箱字段
+  - 注册仅需账号和密码，简化注册流程
+  - 移除前端邮箱输入框和验证规则
+  - 移除后端邮箱验证逻辑
+- 🔧 优化系统锁定界面
+  - 确保锁定界面为完整独立的错误界面
+  - 更新版本号显示
+
+### 新增
+- 🔑 注册自动生成个人访问令牌
+  - 注册成功后自动生成个人访问令牌
+  - 令牌仅显示一次，提示用户妥善保存
+  - 添加令牌复制功能
+  - 后端添加 `RegisterWithToken` 方法
+- 🌐 DNS 解析服务
+  - 新增 DNS 解析后端服务 (`internal/service/dns_service.go`)
+  - 新增 DNS 解析 API 接口 `/api/v1/dns/resolve`
+  - 支持 POST 和 GET 两种请求方式
+  - 支持 A、AAAA、CNAME、MX、TXT、NS 记录查询
+  - 新增 DNS 解析前端界面 (`web/src/views/DNS.vue`)
+  - 显示解析耗时和记录数量
+  - 支持复制解析结果
+
 ## [1.0.4] - 2026-01-14
 
 ### 修复

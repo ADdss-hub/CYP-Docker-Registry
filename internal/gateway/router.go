@@ -47,6 +47,8 @@ type Router struct {
 	tokenService       *service.TokenService
 	signatureService   *service.SignatureService
 	sbomService        *service.SBOMService
+	dnsService         *service.DNSService
+	dnsHandler         *handler.DNSHandler
 }
 
 // NewRouter creates a new Router instance.
@@ -144,6 +146,9 @@ func (r *Router) initSecurityServices() {
 	}
 	r.sbomService = service.NewSBOMService(sbomConfig, logger)
 
+	// Initialize DNS service
+	r.dnsService = service.NewDNSService(logger)
+
 	// Initialize handlers
 	r.authHandler = handler.NewAuthHandler(r.authService, r.lockService, r.intrusionService, r.auditService)
 	r.lockHandler = handler.NewLockHandler(r.lockService, r.auditService)
@@ -154,6 +159,7 @@ func (r *Router) initSecurityServices() {
 	r.wsHandler = handler.NewWSHandler(logger)
 	r.signatureHandler = handler.NewSignatureHandler(r.signatureService, r.auditService)
 	r.sbomHandler = handler.NewSBOMHandler(r.sbomService, r.auditService)
+	r.dnsHandler = handler.NewDNSHandler(r.dnsService)
 }
 
 // initAccelerator initializes the accelerator service.
@@ -334,6 +340,12 @@ func (r *Router) setupRoutes() {
 	sbomGroup := r.engine.Group("/api/v1/sbom")
 	if r.sbomHandler != nil {
 		r.sbomHandler.RegisterRoutes(sbomGroup)
+	}
+
+	// DNS routes
+	dnsGroup := r.engine.Group("/api/v1")
+	if r.dnsHandler != nil {
+		r.dnsHandler.RegisterRoutes(dnsGroup)
 	}
 
 	// Docker Registry V2 API routes

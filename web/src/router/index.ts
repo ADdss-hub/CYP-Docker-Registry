@@ -110,6 +110,12 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
+      path: '/dns',
+      name: 'dns',
+      component: () => import('@/views/DNS.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/tuf',
       name: 'tuf',
       component: () => import('@/views/TUF.vue'),

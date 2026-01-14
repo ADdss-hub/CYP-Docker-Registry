@@ -220,7 +220,6 @@ func (h *AuthHandler) GetCurrentUser(c *gin.Context) {
 // RegisterRequest represents a registration request.
 type RegisterRequest struct {
 	Username string `json:"username" binding:"required,min=3,max=20"`
-	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required,min=6,max=32"`
 }
 
@@ -247,15 +246,14 @@ func (h *AuthHandler) Register(c *gin.Context) {
 		return
 	}
 
-	// Register user
+	// Register user (without email)
 	registerReq := &service.RegisterRequest{
 		Username: req.Username,
-		Email:    req.Email,
 		Password: req.Password,
 		ClientIP: clientIP,
 	}
 
-	user, err := h.authService.Register(registerReq)
+	user, token, err := h.authService.RegisterWithToken(registerReq)
 	if err != nil {
 		// Log registration failure
 		if h.auditService != nil {
@@ -266,7 +264,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 				IPAddress: clientIP,
 				Action:    "register",
 				Status:    "failure",
-				Details: map[string]interface{}{
+				Details: map[string]any{
 					"error": err.Error(),
 				},
 			})
@@ -297,7 +295,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 		"user": gin.H{
 			"id":       user.ID,
 			"username": user.Username,
-			"email":    user.Email,
 		},
+		"token": token,
 	})
 }
