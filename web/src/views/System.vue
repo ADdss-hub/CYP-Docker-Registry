@@ -17,10 +17,15 @@ interface SystemInfo {
   disk_free: number
 }
 
+interface CompatibilityWarning {
+  message?: string
+  component?: string
+}
+
 interface CompatibilityReport {
   compatible: boolean
-  warnings: string[]
-  errors: string[]
+  warnings: (string | CompatibilityWarning)[]
+  errors: (string | CompatibilityWarning)[]
 }
 
 interface VersionInfo {
