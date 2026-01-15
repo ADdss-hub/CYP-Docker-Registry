@@ -20,6 +20,11 @@ func NewHandler(proxy *ProxyService) *Handler {
 	}
 }
 
+// GetProxy 返回代理服务实例
+func (h *Handler) GetProxy() *ProxyService {
+	return h.proxy
+}
+
 // RegisterRoutes registers accelerator routes on the given router group.
 func (h *Handler) RegisterRoutes(group *gin.RouterGroup) {
 	// Proxy pull endpoints

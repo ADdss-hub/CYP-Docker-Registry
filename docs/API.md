@@ -1183,5 +1183,171 @@ curl http://localhost:8080/api/images \
 
 ---
 
-**文档版本**: v1.1.0  
+**文档版本**: v1.2.0  
 **最后更新**: 2026-01-15
+
+---
+
+## 全局服务 API
+
+### 获取全局服务状态
+
+```
+GET /api/v1/global/status
+```
+
+**响应示例：**
+
+```json
+{
+  "success": true,
+  "data": {
+    "initialized": true,
+    "accelerator_applied": true,
+    "dns_applied": true,
+    "p2p_applied": true,
+    "data_path": "./data/blobs",
+    "config_path": "./configs"
+  }
+}
+```
+
+### 手动应用镜像加速配置
+
+```
+POST /api/v1/global/apply/accelerator
+```
+
+**请求头：**
+- `Authorization: Bearer <token>` - 需要认证
+
+**请求体：**
+
+```json
+{
+  "mirrors": [
+    "https://registry.cn-hangzhou.aliyuncs.com",
+    "https://mirror.ccs.tencentyun.com"
+  ]
+}
+```
+
+**响应示例：**
+
+```json
+{
+  "success": true,
+  "data": {
+    "message": "镜像加速配置已应用",
+    "mirrors": [
+      "https://registry.cn-hangzhou.aliyuncs.com",
+      "https://mirror.ccs.tencentyun.com"
+    ]
+  }
+}
+```
+
+### 手动应用 DNS 配置
+
+```
+POST /api/v1/global/apply/dns
+```
+
+**请求头：**
+- `Authorization: Bearer <token>` - 需要认证
+
+**请求体：**
+
+```json
+{
+  "servers": ["8.8.8.8", "8.8.4.4", "114.114.114.114"]
+}
+```
+
+**响应示例：**
+
+```json
+{
+  "success": true,
+  "data": {
+    "message": "DNS配置已应用",
+    "servers": ["8.8.8.8", "8.8.4.4", "114.114.114.114"]
+  }
+}
+```
+
+### 手动应用 P2P 配置
+
+```
+POST /api/v1/global/apply/p2p
+```
+
+**请求头：**
+- `Authorization: Bearer <token>` - 需要认证
+
+**请求体：**
+
+```json
+{
+  "listen_port": 4001
+}
+```
+
+**响应示例：**
+
+```json
+{
+  "success": true,
+  "data": {
+    "message": "P2P配置已应用",
+    "listen_port": 4001
+  }
+}
+```
+
+---
+
+## 全局服务说明
+
+全局服务管理器在系统启动时自动初始化，并将以下配置应用到系统：
+
+1. **镜像加速配置**
+   - 自动生成 Docker daemon 配置文件
+   - 配置镜像加速源（阿里云、腾讯云等）
+   - 保存到 `./data/docker-daemon-config.json`
+   - **自动应用到镜像加速代理服务**，所有通过本系统拉取的镜像都会使用配置的镜像源
+
+2. **DNS 配置**
+   - 自动生成 DNS 配置文件
+   - 配置 DNS 服务器（8.8.8.8、114.114.114.114 等）
+   - 保存到 `./data/dns-config.txt`
+   - **自动应用到镜像加速代理服务的 HTTP 客户端**，所有上游请求都使用配置的 DNS 服务器解析域名
+
+3. **P2P 配置**
+   - 自动生成 P2P 配置文件
+   - 配置 P2P 监听端口和连接参数
+   - 保存到 `./data/p2p-config.json`
+   - **自动集成到镜像加速代理服务**：
+     - 拉取镜像时优先从 P2P 网络获取
+     - 成功拉取后自动向 P2P 网络宣布拥有该镜像层
+
+## 全局服务工作流程
+
+```
+Docker 客户端 (docker pull)
+        ↓
+CYP-Docker-Registry (本系统)
+        ↓
+┌───────────────────────────────────────┐
+│         ProxyService (镜像加速)        │
+│  ┌─────────────────────────────────┐  │
+│  │ 1. 检查本地缓存                  │  │
+│  │ 2. 检查P2P网络 (如果启用)        │  │
+│  │ 3. 从上游镜像源拉取              │  │
+│  │    - 使用自定义DNS解析器         │  │
+│  │    - 按优先级尝试多个镜像源      │  │
+│  │ 4. 缓存到本地                    │  │
+│  │ 5. 向P2P网络宣布 (如果启用)      │  │
+│  └─────────────────────────────────┘  │
+└───────────────────────────────────────┘
+```

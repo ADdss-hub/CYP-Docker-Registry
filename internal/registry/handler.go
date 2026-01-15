@@ -3,6 +3,8 @@ package registry
 
 import (
 	"cyp-docker-registry/internal/common"
+	"cyp-docker-registry/internal/service"
+	"cyp-docker-registry/pkg/compression"
 	"io"
 	"net/http"
 	"strconv"
@@ -10,17 +12,64 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 // Handler provides HTTP handlers for registry operations.
 type Handler struct {
-	service *Service
+	service          *Service
+	signatureService *service.SignatureService
+	sbomService      *service.SBOMService
+	compressor       *compression.Compressor
+	logger           *zap.Logger
+
+	// 配置选项
+	autoSign         bool
+	autoGenerateSBOM bool
+	autoCompress     bool
+}
+
+// HandlerConfig 配置选项
+type HandlerConfig struct {
+	AutoSign         bool
+	AutoGenerateSBOM bool
+	AutoCompress     bool
+	CompressionLevel int
 }
 
 // NewHandler creates a new registry handler.
 func NewHandler(service *Service) *Handler {
 	return &Handler{
 		service: service,
+	}
+}
+
+// SetSignatureService 设置签名服务
+func (h *Handler) SetSignatureService(svc *service.SignatureService) {
+	h.signatureService = svc
+}
+
+// SetSBOMService 设置SBOM服务
+func (h *Handler) SetSBOMService(svc *service.SBOMService) {
+	h.sbomService = svc
+}
+
+// SetCompressor 设置压缩服务
+func (h *Handler) SetCompressor(c *compression.Compressor) {
+	h.compressor = c
+}
+
+// SetLogger 设置日志
+func (h *Handler) SetLogger(logger *zap.Logger) {
+	h.logger = logger
+}
+
+// Configure 配置Handler选项
+func (h *Handler) Configure(config *HandlerConfig) {
+	if config != nil {
+		h.autoSign = config.AutoSign
+		h.autoGenerateSBOM = config.AutoGenerateSBOM
+		h.autoCompress = config.AutoCompress
 	}
 }
 
@@ -91,6 +140,23 @@ func (h *Handler) getManifest(c *gin.Context) {
 		return
 	}
 
+	imageRef := name + ":" + reference
+
+	// 验证签名（如果签名服务启用且要求签名）
+	if h.signatureService != nil && h.signatureService.IsSignatureRequired(imageRef) {
+		req := &service.VerifyRequest{
+			ImageRef: imageRef,
+		}
+		result, _ := h.signatureService.VerifyImage(req)
+		if result != nil && !result.Verified {
+			if h.logger != nil {
+				h.logger.Warn("镜像签名验证失败", zap.String("image", imageRef), zap.String("error", result.Error))
+			}
+			// 根据配置决定是否阻止拉取
+			// 当前仅记录警告，不阻止拉取
+		}
+	}
+
 	c.Header("Docker-Distribution-API-Version", "registry/2.0")
 	c.Header("Content-Type", "application/vnd.docker.distribution.manifest.v2+json")
 	c.Header("Docker-Content-Digest", manifest.Digest)
@@ -113,6 +179,45 @@ func (h *Handler) putManifest(c *gin.Context) {
 	if err != nil {
 		h.v2Error(c, "MANIFEST_INVALID", err.Error(), http.StatusBadRequest)
 		return
+	}
+
+	imageRef := name + ":" + reference
+
+	// 自动签名（如果启用）
+	if h.autoSign && h.signatureService != nil {
+		go func() {
+			req := &service.SignRequest{
+				ImageRef: imageRef,
+				KeyID:    "default",
+			}
+			if _, err := h.signatureService.SignImage(req, 0, "system"); err != nil {
+				if h.logger != nil {
+					h.logger.Warn("自动签名失败", zap.String("image", imageRef), zap.Error(err))
+				}
+			} else {
+				if h.logger != nil {
+					h.logger.Info("镜像已自动签名", zap.String("image", imageRef))
+				}
+			}
+		}()
+	}
+
+	// 自动生成SBOM（如果启用）
+	if h.autoGenerateSBOM && h.sbomService != nil {
+		go func() {
+			req := &service.GenerateSBOMRequest{
+				ImageRef: imageRef,
+			}
+			if _, err := h.sbomService.GenerateSBOM(req); err != nil {
+				if h.logger != nil {
+					h.logger.Warn("自动生成SBOM失败", zap.String("image", imageRef), zap.Error(err))
+				}
+			} else {
+				if h.logger != nil {
+					h.logger.Info("SBOM已自动生成", zap.String("image", imageRef))
+				}
+			}
+		}()
 	}
 
 	c.Header("Docker-Distribution-API-Version", "registry/2.0")
@@ -210,7 +315,32 @@ func (h *Handler) startBlobUpload(c *gin.Context) {
 	digest := c.Query("digest")
 	if digest != "" {
 		// Monolithic upload
-		size, err := h.service.PushBlobWithDigest(digest, c.Request.Body)
+		var reader io.Reader = c.Request.Body
+
+		// 自动压缩（如果启用且数据未压缩）
+		if h.autoCompress && h.compressor != nil {
+			// 读取数据进行压缩
+			data, err := io.ReadAll(c.Request.Body)
+			if err != nil {
+				h.v2Error(c, "BLOB_UPLOAD_INVALID", err.Error(), http.StatusBadRequest)
+				return
+			}
+
+			// 检查是否已压缩
+			if !compression.IsCompressed(data) {
+				compressedData, err := h.compressor.Compress(data)
+				if err == nil && len(compressedData) < len(data) {
+					data = compressedData
+					if h.logger != nil {
+						h.logger.Debug("Blob已压缩", zap.String("digest", digest))
+					}
+				}
+			}
+
+			reader = strings.NewReader(string(data))
+		}
+
+		size, err := h.service.PushBlobWithDigest(digest, reader)
 		if err != nil {
 			h.v2Error(c, "BLOB_UPLOAD_INVALID", err.Error(), http.StatusBadRequest)
 			return

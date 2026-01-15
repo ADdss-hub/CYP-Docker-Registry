@@ -19,7 +19,8 @@ import {
   List,
   Connection,
   Lock,
-  Link
+  Link,
+  QuestionFilled
 } from '@element-plus/icons-vue'
 import Footer from './Footer.vue'
 
@@ -41,6 +42,7 @@ const menuItems = computed(() => {
     { path: '/tokens', name: '访问令牌', icon: Key },
     { path: '/system', name: '系统信息', icon: Monitor },
     { path: '/settings', name: '系统设置', icon: Setting },
+    { path: '/usage', name: '使用方法', icon: QuestionFilled },
   ]
 
   // Admin-only items

@@ -2,9 +2,11 @@
 package accelerator
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -26,13 +28,23 @@ type ProxyConfig struct {
 	Upstreams []UpstreamSource `json:"upstreams"`
 }
 
+// P2PProvider 定义P2P服务接口
+type P2PProvider interface {
+	IsRunning() bool
+	HasBlob(ctx context.Context, digest string) bool
+	RequestBlob(ctx context.Context, digest string) (io.ReadCloser, int64, error)
+	AnnounceBlob(ctx context.Context, digest string) error
+}
+
 // ProxyService handles proxying requests to upstream registries.
 type ProxyService struct {
-	cache      *LRUCache
-	upstreams  []UpstreamSource
-	httpClient *http.Client
-	configPath string
-	mu         sync.RWMutex
+	cache          *LRUCache
+	upstreams      []UpstreamSource
+	httpClient     *http.Client
+	configPath     string
+	mu             sync.RWMutex
+	customResolver *net.Resolver
+	p2pProvider    P2PProvider
 }
 
 // NewProxyService creates a new proxy service.
@@ -64,9 +76,25 @@ func getDefaultUpstreams() []UpstreamSource {
 
 // ProxyPull pulls an image layer through the proxy, using cache if available.
 func (p *ProxyService) ProxyPull(name, digest string) (io.ReadCloser, int64, error) {
+	ctx := context.Background()
+
 	// Check cache first
 	if reader, size, err := p.cache.Get(digest); err == nil {
 		return reader, size, nil
+	}
+
+	// Try P2P network if available
+	if p.p2pProvider != nil && p.p2pProvider.IsRunning() {
+		if p.p2pProvider.HasBlob(ctx, digest) {
+			reader, size, err := p.p2pProvider.RequestBlob(ctx, digest)
+			if err == nil {
+				// Cache the blob from P2P
+				cachedReader, cachedSize, err := p.cacheAndReturn(digest, reader, size)
+				if err == nil {
+					return cachedReader, cachedSize, nil
+				}
+			}
+		}
 	}
 
 	// Try upstreams in priority order
@@ -90,6 +118,13 @@ func (p *ProxyService) ProxyPull(name, digest string) (io.ReadCloser, int64, err
 			reader.Close()
 			lastErr = err
 			continue
+		}
+
+		// Announce to P2P network after successful pull
+		if p.p2pProvider != nil && p.p2pProvider.IsRunning() {
+			go func(d string) {
+				_ = p.p2pProvider.AnnounceBlob(context.Background(), d)
+			}(digest)
 		}
 
 		return cachedReader, cachedSize, nil
@@ -368,4 +403,47 @@ func (p *ProxyService) CheckUpstreamHealth(name string) (bool, error) {
 
 	// Docker Registry V2 returns 200 or 401 for valid registries
 	return resp.StatusCode == http.StatusOK || resp.StatusCode == http.StatusUnauthorized, nil
+}
+
+// SetCustomResolver 设置自定义DNS解析器
+func (p *ProxyService) SetCustomResolver(resolver *net.Resolver) {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
+	p.customResolver = resolver
+
+	// 重新创建HTTP客户端，使用自定义DNS解析器
+	dialer := &net.Dialer{
+		Timeout:   30 * time.Second,
+		KeepAlive: 30 * time.Second,
+	}
+
+	if resolver != nil {
+		dialer.Resolver = resolver
+	}
+
+	p.httpClient = &http.Client{
+		Timeout: 30 * time.Second,
+		Transport: &http.Transport{
+			DialContext:           dialer.DialContext,
+			MaxIdleConns:          100,
+			IdleConnTimeout:       90 * time.Second,
+			TLSHandshakeTimeout:   10 * time.Second,
+			ExpectContinueTimeout: 1 * time.Second,
+		},
+	}
+}
+
+// SetP2PProvider 设置P2P服务提供者
+func (p *ProxyService) SetP2PProvider(provider P2PProvider) {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	p.p2pProvider = provider
+}
+
+// GetP2PProvider 获取P2P服务提供者
+func (p *ProxyService) GetP2PProvider() P2PProvider {
+	p.mu.RLock()
+	defer p.mu.RUnlock()
+	return p.p2pProvider
 }

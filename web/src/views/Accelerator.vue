@@ -57,8 +57,13 @@ const formatDate = (dateStr: string): string => {
 }
 
 const hitRatePercent = computed(() => {
-  if (!cacheStats.value) return 0
-  return (cacheStats.value.hit_rate * 100).toFixed(1)
+  if (!cacheStats.value) return '0.0'
+  const hitRate = cacheStats.value.hit_rate
+  // 修复NaN%显示问题：当hit_rate为null、undefined、NaN或0时返回0.0
+  if (hitRate === null || hitRate === undefined || isNaN(hitRate)) {
+    return '0.0'
+  }
+  return (hitRate * 100).toFixed(1)
 })
 
 const fetchCacheStats = async () => {

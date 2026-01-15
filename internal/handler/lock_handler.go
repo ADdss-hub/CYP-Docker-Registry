@@ -50,6 +50,7 @@ type UnlockRequest struct {
 }
 
 // Unlock handles system unlock requests.
+// 问题9修复：系统锁定后不允许手动解锁，只能联系管理员或重新安装
 func (h *LockHandler) Unlock(c *gin.Context) {
 	var req UnlockRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -67,28 +68,29 @@ func (h *LockHandler) Unlock(c *gin.Context) {
 		return
 	}
 
-	// Verify admin password or recovery key
-	err := h.lockService.UnlockSystem(req.Password)
-	if err != nil {
-		c.JSON(http.StatusForbidden, gin.H{
-			"error": "密码错误",
-			"code":  "invalid_password",
+	// 检查系统是否锁定
+	status := h.lockService.GetLockStatus()
+	if !status.IsLocked {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "系统未锁定",
 		})
 		return
 	}
 
-	// Log unlock event
-	if h.auditService != nil {
-		user, _ := c.Get("currentUser")
-		username := ""
-		if user != nil {
-			username = user.(*service.User).Username
-		}
-		h.auditService.LogUnlockEvent(c.ClientIP(), username)
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"message": "系统解锁成功",
+	// 系统锁定后不允许手动解锁
+	// 只能通过以下方式解锁：
+	// 1. 联系管理员进行后台操作
+	// 2. 重新安装系统
+	c.JSON(http.StatusForbidden, gin.H{
+		"error":   "系统已锁定，不允许手动解锁",
+		"code":    "manual_unlock_disabled",
+		"message": "系统锁定后不允许手动解锁。请联系管理员或重新安装系统。",
+		"details": gin.H{
+			"lock_reason":   status.LockReason,
+			"lock_type":     status.LockType,
+			"locked_at":     status.LockedAt,
+			"require_admin": true,
+		},
 	})
 }
 

@@ -133,7 +133,7 @@ const appStore = useAppStore()
 const formRef = ref()
 const loading = ref(false)
 const errorMessage = ref('')
-const version = ref(appStore.version || '1.0.9')
+const version = ref(appStore.version || '1.2.0')
 const registerSuccess = ref(false)
 const generatedToken = ref('')
 

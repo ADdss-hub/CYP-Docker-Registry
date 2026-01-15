@@ -1,6 +1,8 @@
 package common
 
 import (
+	"cyp-docker-registry/pkg/p2p"
+
 	"github.com/spf13/viper"
 )
 
@@ -11,6 +13,7 @@ type Config struct {
 	Accelerator AcceleratorConfig `mapstructure:"accelerator"`
 	Update      UpdateConfig      `mapstructure:"update"`
 	Auth        AuthConfig        `mapstructure:"auth"`
+	P2P         *p2p.Config       `mapstructure:"p2p"`
 }
 
 // ServerConfig represents server configuration.
@@ -116,4 +119,9 @@ func setDefaults(v *viper.Viper) {
 	v.SetDefault("auth.enabled", false)
 	v.SetDefault("auth.username", "")
 	v.SetDefault("auth.password", "")
+
+	// P2P defaults
+	v.SetDefault("p2p.enabled", false)
+	v.SetDefault("p2p.listen_port", 4001)
+	v.SetDefault("p2p.share_mode", "selective")
 }

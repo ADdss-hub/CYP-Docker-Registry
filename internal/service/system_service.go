@@ -87,7 +87,7 @@ func (s *SystemService) GetSystemInfo() *SystemInfo {
 	hostname, _ := os.Hostname()
 
 	return &SystemInfo{
-		Version:     "1.0.9",
+		Version:     "1.2.0",
 		BuildTime:   "2026-01-14",
 		GoVersion:   runtime.Version(),
 		OS:          runtime.GOOS,

@@ -5,6 +5,65 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.2.0] - 2026-01-15
+
+### 修复
+- 🔧 修复组织管理、分享管理、访问令牌页面自动跳转登录界面的问题
+  - 为 `/api/v1/orgs`、`/api/v1/share`、`/api/v1/tokens` 路由正确应用认证中间件
+  - 创建 `createAuthCheckMiddleware` 方法统一处理认证检查
+- 🔧 修复关于页面版本号显示不完全的问题
+  - 新增 `/api/version/full` 接口返回完整版本信息
+  - 优化前端版本 API 调用，正确处理响应数据格式
+- 🔧 修复镜像加速命中率显示 NaN% 的问题
+  - 增强 `hitRatePercent` 计算属性对 null/undefined/NaN 值的处理
+- 🔧 全面检查并修复所有界面中的数据引入问题
+  - 确保所有 API 响应数据正确解析
+  - 统一数据格式处理逻辑
+- 🔧 修复系统锁定允许手动解锁的安全漏洞
+  - 系统锁定后不允许手动解锁
+  - 只能联系管理员或重新安装系统解锁
+- 🔧 修复 P2P 服务无法使用的问题
+  - 在 router.go 中添加 P2P 服务初始化和路由注册
+  - 配置文件添加 P2P 配置支持
+- 🔧 修复 DNS 服务没有对系统自动应用和配置的问题
+  - 系统启动时自动应用 DNS 配置到全局
+  - 支持自定义 DNS 服务器列表
+
+### 新增
+- ✨ 新增使用方法界面 (`/usage`)
+  - 提供完整的系统使用指南
+  - 包含快速开始、访问令牌、镜像加速、组织管理等使用说明
+  - 包含常见问题解答
+- ✨ 新增密码安全保护服务 (`internal/service/security_service.go`)
+  - 检测强制查询密码的行为
+  - 超过阈值时立即删除所有数据库信息并锁定系统
+  - 创建安全标记文件记录触发信息
+- ✨ 新增全局服务管理器 (`internal/service/global_service.go`)
+  - 镜像加速、DNS、P2P 服务自动应用到系统全局配置
+  - 系统启动时自动初始化并应用配置
+  - 自动生成 Docker daemon 镜像加速配置
+  - 自动生成 DNS 配置文件
+  - 自动生成 P2P 配置文件
+  - 新增 API 接口：
+    - `GET /api/v1/global/status` - 获取全局服务状态
+    - `POST /api/v1/global/apply/accelerator` - 手动应用镜像加速配置
+    - `POST /api/v1/global/apply/dns` - 手动应用 DNS 配置
+    - `POST /api/v1/global/apply/p2p` - 手动应用 P2P 配置
+- ✨ 镜像加速服务全局集成
+  - DNS 解析器自动应用到镜像加速代理服务
+  - P2P 服务自动集成到镜像加速代理服务
+  - 拉取镜像时优先从 P2P 网络获取
+  - 成功拉取后自动向 P2P 网络宣布
+- ✨ Registry Handler 全局服务集成
+  - 签名服务自动集成，推送镜像时自动签名
+  - SBOM 服务自动集成，推送镜像时自动生成 SBOM
+  - 压缩服务自动集成，支持自动压缩/解压（默认关闭）
+  - 拉取镜像时自动验证签名
+
+### 变更
+- 🔧 版本号同步更新至 1.2.0
+- 🔧 前端版本文件 `frontend/src/utils/version.ts` 同步更新
+
 ## [1.1.0] - 2026-01-15
 
 ### 修复

@@ -116,6 +116,12 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
+      path: '/usage',
+      name: 'usage',
+      component: () => import('@/views/Usage.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/tuf',
       name: 'tuf',
       component: () => import('@/views/TUF.vue'),
