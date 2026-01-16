@@ -1,0 +1,44 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Shell scripts must use LF line endings
+*.sh text eol=lf
+
+# Batch files use CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# PowerShell scripts
+*.ps1 text eol=crlf
+
+# Docker files
+Dockerfile text eol=lf
+docker-compose*.yaml text eol=lf
+docker-compose*.yml text eol=lf
+
+# Go files
+*.go text eol=lf
+
+# Frontend files
+*.js text eol=lf
+*.ts text eol=lf
+*.vue text eol=lf
+*.json text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+
+# Config files
+*.yaml text eol=lf
+*.yml text eol=lf
+*.toml text eol=lf
+
+# Markdown
+*.md text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.exe binary

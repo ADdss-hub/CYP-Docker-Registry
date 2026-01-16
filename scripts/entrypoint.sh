@@ -1,11 +1,10 @@
 #!/bin/sh
-# CYP-Docker-Registry 瀹瑰櫒鍏ュ彛鑴氭湰
-# Version: v1.2.1
+# CYP-Docker-Registry 鐎圭懓娅掗崗銉ュ經閼存碍婀?# Version: v1.2.1
 # Author: CYP | Contact: nasDSSCYP@outlook.com
 
 set -e
 
-# 棰滆壊杈撳嚭
+# 妫版粏澹婃潏鎾冲毉
 log_info() {
     echo "[INFO] $(date '+%Y-%m-%d %H:%M:%S') $1"
 }
@@ -18,66 +17,64 @@ log_error() {
     echo "[ERROR] $(date '+%Y-%m-%d %H:%M:%S') $1"
 }
 
-# 鎵撳嵃鍚姩淇℃伅
-print_banner() {
+# 閹垫挸宓冮崥顖氬З娣団剝浼?print_banner() {
     echo ""
-    echo "鈺斺晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晽"
-    echo "鈺?       CYP-Docker-Registry v1.2.1              鈺?
-    echo "鈺?    闆朵俊浠诲鍣ㄩ暅鍍忕鏈変粨搴撶鐞嗙郴缁?            鈺?
-    echo "鈺氣晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨暆"
+    echo "閳烘柡鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏅?
+    echo "閳?       CYP-Docker-Registry v1.2.1              閳?
+    echo "閳?    闂嗘湹淇婃禒璇差啇閸ｃ劑鏆呴崓蹇曨潌閺堝绮ㄦ惔鎾额吀閻炲棛閮寸紒?            閳?
+    echo "閳烘埃鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏅查埡鎰ㄦ櫜閳烘劏鏆?
     echo ""
 }
 
-# 妫€鏌ョ洰褰曟潈闄?
+# 濡偓閺屻儳娲拌ぐ鏇熸綀闂?
 check_directories() {
-    log_info "妫€鏌ョ洰褰曟潈闄?.."
+    log_info "濡偓閺屻儳娲拌ぐ鏇熸綀闂?.."
     
     for dir in /app/data/blobs /app/data/meta /app/data/cache /app/data/signatures /app/data/sboms; do
         if [ ! -d "$dir" ]; then
-            log_info "鍒涘缓鐩綍: $dir"
+            log_info "閸掓稑缂撻惄顔肩秿: $dir"
             mkdir -p "$dir"
         fi
         
         if [ ! -w "$dir" ]; then
-            log_error "鐩綍涓嶅彲鍐? $dir"
+            log_error "閻╊喖缍嶆稉宥呭讲閸? $dir"
             exit 1
         fi
     done
     
-    log_info "鐩綍妫€鏌ュ畬鎴?
+    log_info "閻╊喖缍嶅Λ鈧弻銉ョ暚閹?
 }
 
-# 妫€鏌ラ厤缃枃浠?
+# 濡偓閺屻儵鍘ょ純顔芥瀮娴?
 check_config() {
-    log_info "妫€鏌ラ厤缃枃浠?.."
+    log_info "濡偓閺屻儵鍘ょ純顔芥瀮娴?.."
     
     CONFIG_FILE="${CONFIG_FILE:-/app/configs/config.yaml}"
     
     if [ ! -f "$CONFIG_FILE" ]; then
-        log_warn "閰嶇疆鏂囦欢涓嶅瓨鍦紝浣跨敤榛樿閰嶇疆"
+        log_warn "闁板秶鐤嗛弬鍥︽娑撳秴鐡ㄩ崷顭掔礉娴ｈ法鏁ゆ妯款吇闁板秶鐤?
         if [ -f "/app/configs/config.yaml.example" ]; then
             cp /app/configs/config.yaml.example "$CONFIG_FILE"
-            log_info "宸蹭粠绀轰緥鍒涘缓閰嶇疆鏂囦欢"
+            log_info "瀹歌弓绮犵粈杞扮伐閸掓稑缂撻柊宥囩枂閺傚洣娆?
         fi
     fi
     
-    log_info "閰嶇疆鏂囦欢: $CONFIG_FILE"
+    log_info "闁板秶鐤嗛弬鍥︽: $CONFIG_FILE"
 }
 
-# 鍒濆鍖栨暟鎹簱
-init_database() {
-    log_info "鍒濆鍖栨暟鎹簱..."
+# 閸掓繂顫愰崠鏍ㄦ殶閹诡喖绨?init_database() {
+    log_info "閸掓繂顫愰崠鏍ㄦ殶閹诡喖绨?.."
     
     DB_FILE="/app/data/meta/registry.db"
     
     if [ ! -f "$DB_FILE" ]; then
-        log_info "鍒涘缓鏂版暟鎹簱..."
+        log_info "閸掓稑缂撻弬鐗堟殶閹诡喖绨?.."
     else
-        log_info "鏁版嵁搴撳凡瀛樺湪"
+        log_info "閺佺増宓佹惔鎾冲嚒鐎涙ê婀?
     fi
 }
 
-# 璁剧疆鐜鍙橀噺榛樿鍊?
+# 鐠佸墽鐤嗛悳顖氼暔閸欐﹢鍣烘妯款吇閸?
 set_defaults() {
     export PORT="${PORT:-8080}"
     export HOST="${HOST:-0.0.0.0}"
@@ -85,32 +82,32 @@ set_defaults() {
     export TZ="${TZ:-Asia/Shanghai}"
 }
 
-# 鍋ュ悍妫€鏌?
+# 閸嬨儱鎮嶅Λ鈧弻?
 health_check() {
     curl -sf http://localhost:${PORT}/health > /dev/null 2>&1
     return $?
 }
 
-# 浼橀泤鍏抽棴
+# 娴兼﹢娉ら崗鎶芥４
 graceful_shutdown() {
-    log_info "鏀跺埌鍏抽棴淇″彿锛屾鍦ㄤ紭闆呭叧闂?.."
+    log_info "閺€璺哄煂閸忔娊妫存穱鈥冲娇閿涘本顒滈崷銊ょ喘闂嗗懎鍙ч梻?.."
     
-    # 鍙戦€?SIGTERM 缁欎富杩涚▼
+    # 閸欐垿鈧?SIGTERM 缂佹瑤瀵屾潻娑氣柤
     if [ -n "$SERVER_PID" ]; then
         kill -TERM "$SERVER_PID" 2>/dev/null
         
-        # 绛夊緟杩涚▼閫€鍑?
+        # 缁涘绶熸潻娑氣柤闁偓閸?
         wait "$SERVER_PID"
     fi
     
-    log_info "鏈嶅姟宸插叧闂?
+    log_info "閺堝秴濮熷鎻掑彠闂?
     exit 0
 }
 
-# 鎹曡幏淇″彿
+# 閹规洝骞忔穱鈥冲娇
 trap graceful_shutdown SIGTERM SIGINT SIGQUIT
 
-# 涓诲嚱鏁?
+# 娑撹鍤遍弫?
 main() {
     print_banner
     set_defaults
@@ -118,12 +115,12 @@ main() {
     check_config
     init_database
     
-    log_info "鍚姩 CYP-Docker-Registry 鏈嶅姟..."
-    log_info "鐩戝惉鍦板潃: ${HOST}:${PORT}"
+    log_info "閸氼垰濮?CYP-Docker-Registry 閺堝秴濮?.."
+    log_info "閻╂垵鎯夐崷鏉挎絻: ${HOST}:${PORT}"
     
-    # 鍚姩鏈嶅姟鍣?
+    # 閸氼垰濮╅張宥呭閸?
     exec /app/server "$@"
 }
 
-# 杩愯涓诲嚱鏁?
+# 鏉╂劘顢戞稉璇插毐閺?
 main "$@"
