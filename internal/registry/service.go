@@ -34,23 +34,13 @@ func NewService(storage *Storage) *Service {
 
 // PushManifest stores an image manifest.
 func (s *Service) PushManifest(name, tag string, manifestData []byte) (*ImageManifest, error) {
-	// Parse manifest to extract layer information
-	var rawManifest struct {
+	// First, try to detect manifest type
+	var baseManifest struct {
 		SchemaVersion int    `json:"schemaVersion"`
 		MediaType     string `json:"mediaType"`
-		Config        struct {
-			MediaType string `json:"mediaType"`
-			Size      int64  `json:"size"`
-			Digest    string `json:"digest"`
-		} `json:"config"`
-		Layers []struct {
-			MediaType string `json:"mediaType"`
-			Size      int64  `json:"size"`
-			Digest    string `json:"digest"`
-		} `json:"layers"`
 	}
 
-	if err := json.Unmarshal(manifestData, &rawManifest); err != nil {
+	if err := json.Unmarshal(manifestData, &baseManifest); err != nil {
 		return nil, fmt.Errorf("invalid manifest format: %w", err)
 	}
 
@@ -58,16 +48,94 @@ func (s *Service) PushManifest(name, tag string, manifestData []byte) (*ImageMan
 	hash := sha256.Sum256(manifestData)
 	digest := "sha256:" + hex.EncodeToString(hash[:])
 
-	// Calculate total size
 	var totalSize int64
 	var layers []Layer
-	for _, l := range rawManifest.Layers {
-		totalSize += l.Size
-		layers = append(layers, Layer{
-			Digest:    l.Digest,
-			Size:      l.Size,
-			MediaType: l.MediaType,
-		})
+
+	// Check if this is a manifest list/index (multi-arch image)
+	if baseManifest.MediaType == "application/vnd.docker.distribution.manifest.list.v2+json" ||
+		baseManifest.MediaType == "application/vnd.oci.image.index.v1+json" {
+		// Parse as manifest list
+		var manifestList struct {
+			Manifests []struct {
+				MediaType string `json:"mediaType"`
+				Size      int64  `json:"size"`
+				Digest    string `json:"digest"`
+				Platform  struct {
+					Architecture string `json:"architecture"`
+					OS           string `json:"os"`
+				} `json:"platform"`
+			} `json:"manifests"`
+		}
+
+		if err := json.Unmarshal(manifestData, &manifestList); err != nil {
+			return nil, fmt.Errorf("invalid manifest list format: %w", err)
+		}
+
+		// For manifest list, we need to resolve the actual manifest for the target platform
+		// Try to find linux/amd64 manifest first, then fall back to first available
+		var targetDigest string
+		var targetSize int64
+		for _, m := range manifestList.Manifests {
+			totalSize += m.Size
+			if m.Platform.OS == "linux" && m.Platform.Architecture == "amd64" {
+				targetDigest = m.Digest
+				targetSize = m.Size
+			}
+			// Add each platform manifest as a "layer" for display purposes
+			layers = append(layers, Layer{
+				Digest:    m.Digest,
+				Size:      m.Size,
+				MediaType: m.MediaType,
+			})
+		}
+
+		// If we found a target manifest, try to resolve its layers
+		if targetDigest != "" {
+			resolvedLayers, resolvedSize := s.resolveManifestLayers(targetDigest)
+			if len(resolvedLayers) > 0 {
+				layers = resolvedLayers
+				totalSize = resolvedSize
+			}
+		} else if len(manifestList.Manifests) > 0 {
+			// Fall back to first manifest
+			targetDigest = manifestList.Manifests[0].Digest
+			targetSize = manifestList.Manifests[0].Size
+			resolvedLayers, resolvedSize := s.resolveManifestLayers(targetDigest)
+			if len(resolvedLayers) > 0 {
+				layers = resolvedLayers
+				totalSize = resolvedSize
+			} else {
+				totalSize = targetSize
+			}
+		}
+	} else {
+		// Parse as regular manifest (v2 or OCI)
+		var rawManifest struct {
+			Config struct {
+				MediaType string `json:"mediaType"`
+				Size      int64  `json:"size"`
+				Digest    string `json:"digest"`
+			} `json:"config"`
+			Layers []struct {
+				MediaType string `json:"mediaType"`
+				Size      int64  `json:"size"`
+				Digest    string `json:"digest"`
+			} `json:"layers"`
+		}
+
+		if err := json.Unmarshal(manifestData, &rawManifest); err != nil {
+			return nil, fmt.Errorf("invalid manifest format: %w", err)
+		}
+
+		// Calculate total size from layers
+		for _, l := range rawManifest.Layers {
+			totalSize += l.Size
+			layers = append(layers, Layer{
+				Digest:    l.Digest,
+				Size:      l.Size,
+				MediaType: l.MediaType,
+			})
+		}
 	}
 
 	// Store manifest as blob
@@ -91,6 +159,45 @@ func (s *Service) PushManifest(name, tag string, manifestData []byte) (*ImageMan
 	}
 
 	return manifest, nil
+}
+
+// resolveManifestLayers tries to resolve layers from a manifest digest
+func (s *Service) resolveManifestLayers(digest string) ([]Layer, int64) {
+	reader, _, err := s.storage.GetBlob(digest)
+	if err != nil {
+		return nil, 0
+	}
+	defer reader.Close()
+
+	data, err := io.ReadAll(reader)
+	if err != nil {
+		return nil, 0
+	}
+
+	var manifest struct {
+		Layers []struct {
+			MediaType string `json:"mediaType"`
+			Size      int64  `json:"size"`
+			Digest    string `json:"digest"`
+		} `json:"layers"`
+	}
+
+	if err := json.Unmarshal(data, &manifest); err != nil {
+		return nil, 0
+	}
+
+	var layers []Layer
+	var totalSize int64
+	for _, l := range manifest.Layers {
+		totalSize += l.Size
+		layers = append(layers, Layer{
+			Digest:    l.Digest,
+			Size:      l.Size,
+			MediaType: l.MediaType,
+		})
+	}
+
+	return layers, totalSize
 }
 
 // PullManifest retrieves an image manifest.
@@ -198,7 +305,6 @@ func (s *Service) SearchImages(keyword string, page, pageSize int) (*ImageList, 
 		TotalPages: totalPages,
 	}, nil
 }
-
 
 // PushBlob stores a blob and returns its digest.
 func (s *Service) PushBlob(data io.Reader) (string, int64, error) {

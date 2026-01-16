@@ -1,6 +1,6 @@
 #!/bin/bash
 # CYP-Docker-Registry 快速启动脚本
-# Version: v1.2.0
+# Version: v1.2.1
 # Author: CYP | Contact: nasDSSCYP@outlook.com
 
 set -e
@@ -14,7 +14,7 @@ NC='\033[0m'
 
 echo -e "${BLUE}"
 echo "╔════════════════════════════════════════════════╗"
-echo "║   CYP-Docker-Registry 快速启动脚本 v1.2.0    ║"
+echo "║   CYP-Docker-Registry 快速启动脚本 v1.2.1    ║"
 echo "╚════════════════════════════════════════════════╝"
 echo -e "${NC}"
 

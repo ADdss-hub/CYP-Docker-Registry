@@ -1,30 +1,30 @@
 #!/bin/bash
-# CYP-Docker-Registry 解锁脚本
-# Version: v1.2.0
-# 用于在系统被锁定时手动解锁
+# CYP-Docker-Registry 瑙ｉ攣鑴氭湰
+# Version: v1.2.1
+# 鐢ㄤ簬鍦ㄧ郴缁熻閿佸畾鏃舵墜鍔ㄨВ閿?
 
 set -e
 
-echo "╔════════════════════════════════════════════════╗"
-echo "║     CYP-Docker-Registry 系统解锁工具          ║"
-echo "╚════════════════════════════════════════════════╝"
+echo "鈺斺晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晽"
+echo "鈺?    CYP-Docker-Registry 绯荤粺瑙ｉ攣宸ュ叿          鈺?
+echo "鈺氣晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨暆"
 echo ""
 
-# 检查是否在容器内运行
+# 妫€鏌ユ槸鍚﹀湪瀹瑰櫒鍐呰繍琛?
 if [ -f /.dockerenv ]; then
     HOST="localhost:8080"
 else
     HOST="${CYP_HOST:-localhost:8080}"
 fi
 
-# 检查系统锁定状态
-echo "正在检查系统状态..."
+# 妫€鏌ョ郴缁熼攣瀹氱姸鎬?
+echo "姝ｅ湪妫€鏌ョ郴缁熺姸鎬?.."
 STATUS=$(curl -s "http://${HOST}/api/v1/system/lock/status" 2>/dev/null || echo '{"is_locked":false}')
 
 IS_LOCKED=$(echo "$STATUS" | grep -o '"is_locked":[^,}]*' | cut -d':' -f2)
 
 if [ "$IS_LOCKED" != "true" ]; then
-    echo "✓ 系统当前未锁定，无需解锁。"
+    echo "鉁?绯荤粺褰撳墠鏈攣瀹氾紝鏃犻渶瑙ｉ攣銆?
     exit 0
 fi
 
@@ -33,40 +33,40 @@ LOCKED_AT=$(echo "$STATUS" | grep -o '"locked_at":"[^"]*"' | cut -d'"' -f4)
 LOCKED_BY_IP=$(echo "$STATUS" | grep -o '"locked_by_ip":"[^"]*"' | cut -d'"' -f4)
 
 echo ""
-echo "⚠ 系统已锁定"
-echo "  锁定原因: $LOCK_REASON"
-echo "  锁定时间: $LOCKED_AT"
-echo "  触发 IP:  $LOCKED_BY_IP"
+echo "鈿?绯荤粺宸查攣瀹?
+echo "  閿佸畾鍘熷洜: $LOCK_REASON"
+echo "  閿佸畾鏃堕棿: $LOCKED_AT"
+echo "  瑙﹀彂 IP:  $LOCKED_BY_IP"
 echo ""
 
-# 请求管理员密码
-read -p "请输入管理员密码: " -s PASSWORD
+# 璇锋眰绠＄悊鍛樺瘑鐮?
+read -p "璇疯緭鍏ョ鐞嗗憳瀵嗙爜: " -s PASSWORD
 echo ""
 
 if [ -z "$PASSWORD" ]; then
-    echo "✗ 密码不能为空"
+    echo "鉁?瀵嗙爜涓嶈兘涓虹┖"
     exit 1
 fi
 
-# 发送解锁请求
-echo "正在解锁系统..."
+# 鍙戦€佽В閿佽姹?
+echo "姝ｅ湪瑙ｉ攣绯荤粺..."
 RESPONSE=$(curl -s -X POST "http://${HOST}/api/v1/system/lock/unlock" \
     -H "Content-Type: application/json" \
     -d "{\"password\": \"$PASSWORD\"}" 2>/dev/null)
 
 if echo "$RESPONSE" | grep -q '"message"'; then
     echo ""
-    echo "╔════════════════════════════════════════════════╗"
-    echo "║              ✓ 系统解锁成功！                  ║"
-    echo "╚════════════════════════════════════════════════╝"
+    echo "鈺斺晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晽"
+    echo "鈺?             鉁?绯荤粺瑙ｉ攣鎴愬姛锛?                 鈺?
+    echo "鈺氣晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨暆"
     echo ""
-    echo "建议操作："
-    echo "  1. 检查审计日志，了解锁定原因"
-    echo "  2. 如有必要，修改安全策略"
-    echo "  3. 考虑更改管理员密码"
+    echo "寤鸿鎿嶄綔锛?
+    echo "  1. 妫€鏌ュ璁℃棩蹇楋紝浜嗚В閿佸畾鍘熷洜"
+    echo "  2. 濡傛湁蹇呰锛屼慨鏀瑰畨鍏ㄧ瓥鐣?
+    echo "  3. 鑰冭檻鏇存敼绠＄悊鍛樺瘑鐮?
 else
     echo ""
-    echo "✗ 解锁失败: $RESPONSE"
+    echo "鉁?瑙ｉ攣澶辫触: $RESPONSE"
     exit 1
 fi
 # CYP-Docker-Registry Unlock Script
@@ -75,7 +75,7 @@ fi
 set -e
 
 echo "=========================================="
-echo "  CYP-Docker-Registry 系统解锁工具"
+echo "  CYP-Docker-Registry 绯荤粺瑙ｉ攣宸ュ叿"
 echo "=========================================="
 echo ""
 
@@ -87,35 +87,35 @@ else
 fi
 
 # Check lock status
-echo "检查系统锁定状态..."
+echo "妫€鏌ョ郴缁熼攣瀹氱姸鎬?.."
 LOCK_STATUS=$(curl -s "${API_URL}/api/v1/system/lock/status" 2>/dev/null || echo '{"is_locked": false}')
 
 IS_LOCKED=$(echo "$LOCK_STATUS" | grep -o '"is_locked":[^,}]*' | cut -d':' -f2 | tr -d ' ')
 
 if [ "$IS_LOCKED" != "true" ]; then
-    echo "系统未被锁定，无需解锁。"
+    echo "绯荤粺鏈閿佸畾锛屾棤闇€瑙ｉ攣銆?
     exit 0
 fi
 
-echo "系统当前处于锁定状态。"
+echo "绯荤粺褰撳墠澶勪簬閿佸畾鐘舵€併€?
 echo ""
 
 # Get lock reason
 LOCK_REASON=$(echo "$LOCK_STATUS" | grep -o '"lock_reason":"[^"]*"' | cut -d'"' -f4)
-echo "锁定原因: $LOCK_REASON"
+echo "閿佸畾鍘熷洜: $LOCK_REASON"
 echo ""
 
 # Prompt for password
-read -sp "请输入管理员密码: " PASSWORD
+read -sp "璇疯緭鍏ョ鐞嗗憳瀵嗙爜: " PASSWORD
 echo ""
 
 if [ -z "$PASSWORD" ]; then
-    echo "错误: 密码不能为空"
+    echo "閿欒: 瀵嗙爜涓嶈兘涓虹┖"
     exit 1
 fi
 
 # Attempt unlock
-echo "正在尝试解锁..."
+echo "姝ｅ湪灏濊瘯瑙ｉ攣..."
 RESPONSE=$(curl -s -X POST "${API_URL}/api/v1/system/lock/unlock" \
     -H "Content-Type: application/json" \
     -d "{\"password\": \"$PASSWORD\"}" 2>/dev/null)
@@ -123,12 +123,12 @@ RESPONSE=$(curl -s -X POST "${API_URL}/api/v1/system/lock/unlock" \
 if echo "$RESPONSE" | grep -q '"message"'; then
     echo ""
     echo "=========================================="
-    echo "  系统解锁成功！"
+    echo "  绯荤粺瑙ｉ攣鎴愬姛锛?
     echo "=========================================="
     echo ""
-    echo "请重新登录系统。"
+    echo "璇烽噸鏂扮櫥褰曠郴缁熴€?
 else
     echo ""
-    echo "解锁失败: $RESPONSE"
+    echo "瑙ｉ攣澶辫触: $RESPONSE"
     exit 1
 fi

@@ -1,5 +1,5 @@
 # CYP-Docker-Registry - Multi-stage Dockerfile
-# Version: v1.2.0
+# Version: v1.2.1
 # Author: CYP | Contact: nasDSSCYP@outlook.com
 # 
 # 重要说明：
@@ -16,6 +16,10 @@ FROM golang:1.21-alpine AS backend-builder
 RUN apk add --no-cache git ca-certificates tzdata
 
 WORKDIR /build
+
+# 设置 Go 代理加速（国内镜像）
+ENV GOPROXY=https://goproxy.cn,https://goproxy.io,direct
+ENV GO111MODULE=on
 
 # Copy go mod files first for better caching
 COPY go.mod go.sum* ./
@@ -61,7 +65,7 @@ FROM alpine:3.19
 # Labels
 LABEL maintainer="CYP <nasDSSCYP@outlook.com>"
 LABEL description="CYP-Docker-Registry - Private Docker Image Registry"
-LABEL version="1.2.0"
+LABEL version="1.2.1"
 
 # Install runtime dependencies
 RUN apk add --no-cache \
