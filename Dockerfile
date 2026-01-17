@@ -99,8 +99,10 @@ COPY configs/config.yaml.example /app/configs/config.yaml.example
 COPY scripts/entrypoint.sh /app/entrypoint.sh
 COPY scripts/unlock.sh /app/scripts/unlock.sh
 
-# Set ownership and permissions
-RUN chown -R registry:registry /app && \
+# Convert line endings and set permissions
+RUN dos2unix /app/entrypoint.sh /app/scripts/unlock.sh 2>/dev/null || \
+    (sed -i 's/\r$//' /app/entrypoint.sh /app/scripts/unlock.sh) && \
+    chown -R registry:registry /app && \
     chmod +x /app/entrypoint.sh /app/scripts/unlock.sh
 
 # Switch to non-root user
