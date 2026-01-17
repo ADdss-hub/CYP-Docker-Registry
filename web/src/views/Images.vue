@@ -46,7 +46,7 @@ const formatDate = (dateStr: string): string => {
 const fetchImages = async () => {
   loading.value = true
   try {
-    const endpoint = searchKeyword.value ? '/images/search' : '/images'
+    const endpoint = searchKeyword.value ? '/api/images/search' : '/api/images'
     const params: Record<string, unknown> = {
       page: currentPage.value,
       page_size: pageSize.value
@@ -56,8 +56,8 @@ const fetchImages = async () => {
     }
     
     const res = await request.get(endpoint, { params })
-    images.value = res.data?.images || []
-    total.value = res.data?.total || 0
+    images.value = res.data?.data?.images || []
+    total.value = res.data?.data?.total || 0
   } catch (error) {
     console.error('获取镜像列表失败:', error)
     ElMessage.error('获取镜像列表失败')
