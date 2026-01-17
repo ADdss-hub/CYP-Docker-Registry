@@ -1,5 +1,5 @@
 # CYP-Docker-Registry - Multi-stage Dockerfile
-# Version: v1.2.1
+# Version: v1.2.2
 # Author: CYP | Contact: nasDSSCYP@outlook.com
 # 
 # 重要说明：
@@ -65,7 +65,7 @@ FROM alpine:3.19
 # Labels
 LABEL maintainer="CYP <nasDSSCYP@outlook.com>"
 LABEL description="CYP-Docker-Registry - Private Docker Image Registry"
-LABEL version="1.2.1"
+LABEL version="1.2.2"
 
 # Install runtime dependencies
 RUN apk add --no-cache \

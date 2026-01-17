@@ -2,6 +2,17 @@
   "schema": "2.1.0",
   "history": [
     {
+      "version": "1.2.2",
+      "timestamp": "2026-01-17T00:00:00.000Z",
+      "author": "CYP",
+      "changes": [
+        "fix: 修复 entrypoint.sh 脚本行尾格式问题，将 CRLF 转换为 LF 以支持 Linux 容器环境"
+      ],
+      "type": "patch",
+      "previousVersion": "1.2.1",
+      "metadata": {}
+    },
+    {
       "version": "1.2.1",
       "timestamp": "2026-01-16T13:54:48.010Z",
       "author": "CYP",
