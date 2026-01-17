@@ -109,5 +109,5 @@ docker restart cyp-docker-registry
 
 ---
 
-**版本**: v1.2.2  
+**版本**: v1.2.3  
 **最后更新**: 2026-01-15
