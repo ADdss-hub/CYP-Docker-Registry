@@ -77,7 +77,7 @@
       </div>
 
       <div class="login-footer">
-        <p>CYP-Docker Registry v1.2.3</p>
+        <p>CYP-Docker Registry v1.2.4</p>
         <p>版权所有 © 2026 CYP</p>
       </div>
     </div>

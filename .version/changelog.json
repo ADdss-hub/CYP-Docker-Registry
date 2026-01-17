@@ -2,6 +2,19 @@
   "schema": "2.1.0",
   "history": [
     {
+      "version": "1.2.4",
+      "timestamp": "2026-01-17T00:20:00.000Z",
+      "author": "CYP",
+      "changes": [
+        "fix: 在 Dockerfile 中直接创建 entrypoint.sh 脚本，避免从 Windows 复制文件导致的格式问题",
+        "fix: 使用 heredoc 在容器内生成脚本文件，确保正确的 Unix 格式和行尾",
+        "fix: 彻底解决 exec format error 问题"
+      ],
+      "type": "patch",
+      "previousVersion": "1.2.3",
+      "metadata": {}
+    },
+    {
       "version": "1.2.3",
       "timestamp": "2026-01-17T00:10:00.000Z",
       "author": "CYP",

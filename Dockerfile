@@ -1,5 +1,5 @@
 # CYP-Docker-Registry - Multi-stage Dockerfile
-# Version: v1.2.3
+# Version: v1.2.4
 # Author: CYP | Contact: nasDSSCYP@outlook.com
 # 
 # 重要说明：
@@ -65,7 +65,7 @@ FROM alpine:3.19
 # Labels
 LABEL maintainer="CYP <nasDSSCYP@outlook.com>"
 LABEL description="CYP-Docker-Registry - Private Docker Image Registry"
-LABEL version="1.2.3"
+LABEL version="1.2.4"
 
 # Install runtime dependencies
 RUN apk add --no-cache \
@@ -102,7 +102,7 @@ COPY scripts/unlock.sh /app/scripts/unlock.sh
 RUN cat > /app/entrypoint.sh << 'ENTRYPOINT_EOF'
 #!/bin/sh
 # CYP-Docker-Registry Container Entrypoint Script
-# Version: v1.2.3
+# Version: v1.2.4
 # Author: CYP | Contact: nasDSSCYP@outlook.com
 
 set -e
